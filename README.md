@@ -1,142 +1,107 @@
-# Web3 Smart Contract Projects — Complete Portfolio
+# s0sta — Web3 Security Researcher · Smart Contract Auditor · Solidity Developer
 
-> **10 complete, production-quality Solidity projects, built from scratch with Foundry — ordered from easy to hard.**
-> Every contract is implemented by hand (no OpenZeppelin, no dependencies), so every single line is code I wrote and can explain.
+> **I build DeFi-grade smart contracts from scratch — and I test them like an attacker.**
 
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.26-363636?logo=solidity&logoColor=white)
 ![Foundry](https://img.shields.io/badge/Foundry-1.5.1-8b5cf6)
-![Tests](https://img.shields.io/badge/tests-unit%20%2B%20fuzz-brightgreen)
+![Tests](https://img.shields.io/badge/tests-251%20passing-brightgreen)
+![CI](https://img.shields.io/badge/CI-10%2F10%20green-2ea44f)
 ![License](https://img.shields.io/badge/License-MIT-green)
+![Live](https://img.shields.io/badge/Live-erc--20Token.s0sta.com-06b6d4)
 
 ---
 
-## What this repo is
+## About
 
-A portfolio of 10 realistic smart-contract projects — the same kinds of products real clients pay for:
-tokens, fundraising platforms, multisig wallets, escrow services, NFT drops, staking, vesting, DEXs, DAOs and lending protocols.
+Web3 security researcher and smart-contract developer focused on the EVM ecosystem. I design,
+develop and audit Ethereum protocols — tokens, DeFi (AMMs, lending, staking), NFTs, DAO
+governance, multisig and escrow — and ship each one with the engineering rigor an auditor
+expects: **full test suites, fuzz testing, live attack PoCs, deploy scripts and CI.**
 
-Each project is a **complete, self-contained Foundry project**:
+This repository is the proof: **10 complete protocols, every contract written from scratch**
+(no OpenZeppelin, zero dependencies), **251 passing tests**, and a production-style dApp
+live at [erc-20Token.s0sta.com](https://erc-20Token.s0sta.com).
 
-```
-01-erc20-token/
-├── src/          # Solidity contracts
-├── test/         # Full test suite (unit + fuzz)
-├── script/       # Deployment script
-├── foundry.toml
-├── Makefile
-├── README.md     # Docs, design decisions, security notes
-└── LICENSE
-```
+## What I do
 
-Every project **compiles and its entire test suite passes** on Foundry 1.5.1.
-
----
-
-## Why "from scratch"?
-
-Deliberate design choice, explained honestly in each project README:
-
-| From scratch | Trade-off |
+| Service | What you get |
 |---|---|
-| I understand 100% of every line I ship | OpenZeppelin code is battle-tested and standard in production |
-| I can re-derive any primitive (ERC-20, Merkle proofs, AMM math…) on demand | I must write (and test) everything myself |
-| Zero supply-chain risk, zero dependencies | Slower to build |
+| 🔐 **Smart-contract security auditing** | Manual line-by-line review, invariant & fuzz testing, exploit PoCs, severity-ranked findings |
+| 🛠 **Smart-contract development** | Protocol design → implementation → deployment → verification, Foundry-first |
+| 📐 **Protocol & tokenomics design** | DeFi math (AMM invariants, vesting, interest/liquidation), governance design |
+| 🌐 **dApp frontends** | Wallet integration, admin panels, EIP-2612 UX, live on-chain feeds — deployable to any hosting |
 
-This repo optimizes for **deep learning and audit-readiness**. In production work I use the same
-architecture but swap hand-written primitives for OpenZeppelin equivalents — each README has a
-"Production hardening" section that says exactly what to swap.
+## Security methodology
 
----
+Every audit and every build in this repo follows the same discipline:
 
-## The Roadmap (easy → hard)
+1. **Specify invariants** — what must never break (supply caps, `x·y ≥ k`, pull-payment soundness, quorum math)
+2. **Manual review** — reentrancy, access-control matrices, rounding direction, DoS vectors, flash-loan & MEV exposure, storage layout
+3. **Automated testing** — Foundry unit + fuzz suites; time-travel (`vm.warp`), signature forging (`vm.sign`), pranking
+4. **Attack PoCs** — write the exploit and prove the guard blocks it (e.g. live reentrancy attack contracts in 02 & 04, flash-vote-buying test in 09)
+5. **Report** — findings with severity, exploit scenario, fix and regression test
 
-| # | Project | What it is | Core skills learned | Difficulty |
-|---|---------|-----------|--------------------|:----------:|
-| 01 | [ERC-20 Token](01-erc20-token) 🖥️ [live dApp](https://erc-20Token.s0sta.com) | Supply-capped token with mint, burn, pause & EIP-2612 permit | ERC-20 standard, access control, ECDSA signatures, EIP-712 | ★☆☆☆☆ |
-| 02 | [Crowdfunding](02-crowdfunding) | Kickstarter-style factory: pledge ETH, goal or refund | Factory pattern, payable flows, refunds, deadlines | ★★☆☆☆ |
-| 03 | [MultiSig Wallet](03-multisig-wallet) | Gnosis-style N-of-M wallet: propose, confirm, execute | Multi-party approval, replay protection, edge cases | ★★★☆☆ |
-| 04 | [Escrow Service](04-escrow-service) | Buyer/seller escrow with arbitration and platform fees | State machines, dispute resolution, fee accounting | ★★★☆☆ |
-| 05 | [NFT Collection](05-nft-collection) | ERC-721 drop: Merkle whitelist, mint phases, royalties | ERC-721, Merkle proofs, gas-optimized metadata | ★★★☆☆ |
-| 06 | [Staking Rewards](06-staking-rewards) | Stake tokens, earn rewards, claim, emergency exit | Time-weighted reward math, accounting snapshots | ★★★★☆ |
-| 07 | [Token Vesting](07-token-vesting) | Cliff + linear vesting for teams and investors | Time-based math, partial claims, schedule management | ★★★☆☆ |
-| 08 | [AMM DEX](08-amm-dex) | Uniswap-V2-style constant-product AMM with router | x·y=k math, LP tokens, price impact, fees | ★★★★★ |
-| 09 | [DAO Governance](09-dao-governance) | Token voting, proposals, quorum, on-chain execution | Governance lifecycle, vote counting, arbitrary calls | ★★★★★ |
-| 10 | [Lending Protocol](10-lending-protocol) | Collateralized ETH lending with liquidation | Health factors, interest rates, liquidations | ★★★★★ |
+## Portfolio — 10 protocols, easy → hard
 
-### Skills you can demonstrate after this repo
+| # | Project | What it is | Skills demonstrated | Difficulty | Tests |
+|---|---------|-----------|--------------------|:---:|:---:|
+| 01 | [ERC-20 Token](01-erc20-token) 🖥️ [live](https://erc-20Token.s0sta.com) | Supply-capped token: mint, burn, pause, EIP-2612 permit | ERC-20, ECDSA, EIP-712, access control | ★☆☆☆☆ | 31 ✅ |
+| 02 | [Crowdfunding](02-crowdfunding) | Kickstarter-style factory: pledge → claim/refund, platform fees | Factory pattern, pull payments, reentrancy defense | ★★☆☆☆ | 30 ✅ |
+| 03 | [MultiSig Wallet](03-multisig-wallet) | Gnosis-style N-of-M treasury with arbitrary calls | Multi-party auth, execution ordering, replay safety | ★★★☆☆ | 27 ✅ |
+| 04 | [Escrow Service](04-escrow-service) | Buyer/seller escrow with arbitration & fees | State machines, dispute resolution, fee accounting | ★★★☆☆ | 30 ✅ |
+| 05 | [NFT Collection](05-nft-collection) | ERC-721 *from scratch*: Merkle whitelist, royalties, reveal | ERC-721 internals, Merkle proofs, ERC-2981 | ★★★☆☆ | 33 ✅ |
+| 06 | [Staking Rewards](06-staking-rewards) | Synthetix-style time-weighted emissions | Accumulator math, checkpoints, O(1) rewards | ★★★★☆ | 23 ✅ |
+| 07 | [Token Vesting](07-token-vesting) | Cliff + linear vesting, revocable schedules | Time-based unlock curves, revocation accounting | ★★★☆☆ | 20 ✅ |
+| 08 | [AMM DEX](08-amm-dex) | Uniswap-V2-style factory/pair/router, flash swaps | `x·y=k` math, LP accounting, multi-hop routing | ★★★★★ | 21 ✅ |
+| 09 | [DAO Governance](09-dao-governance) | Snapshot voting power, quorum, on-chain execution | Checkpoint data structures, flash-loan defense | ★★★★★ | 16 ✅ |
+| 10 | [Lending Protocol](10-lending-protocol) | Collateralized lending with interest & liquidations | Health factors, compounding interest, liquidation economics | ★★★★★ | 20 ✅ |
 
-- Solidity 0.8.x: custom errors, NatSpec, checked math, assembly-free gas patterns
-- All major standards: ERC-20, ERC-721, EIP-2612, EIP-712, ERC-2981
-- Foundry: unit tests, fuzz tests, `vm.warp`/`vm.prank`/`vm.sign`, deploy scripts, gas snapshots
-- DeFi math: AMM invariants, reward accrual, vesting curves, interest & liquidation math
-- Security mindset: reentrancy, replay protection, access-control matrices, rounding direction
-- Real-world patterns: factory contracts, state machines, Merkle airdrops, snapshots
+**Live deployment:** NovaToken on [Sepolia](https://sepolia.etherscan.io/address/0x26b420683E6F6Df39CFceBd7C5bB78B7459b8B62) · owner `0x3198…9B853` · frontend dApp at [erc-20Token.s0sta.com](https://erc-20Token.s0sta.com)
 
----
+## Stats
 
-## Getting started
+| 10 protocols | 251 tests · 0 failures | ~60 Solidity files | 0 external dependencies | CI 10/10 green |
+|---|---|---|---|---|
+
+## Stack
+
+**Languages & tooling** — Solidity 0.8.x (custom errors, NatSpec, checked math) · Foundry (unit/fuzz/invariant tests, deploy scripts, gas snapshots) · ethers.js v6 · Git/GitHub Actions CI · PHP/static hosting for dApps
+
+**Standards** — ERC-20 · ERC-721 · ERC-165 · ERC-2981 · EIP-2612 · EIP-712 typed data
+
+**Security patterns** — checks-effects-interactions · pull payments · reentrancy guards · two-step ownership · Merkle whitelists · snapshot voting · rounding-direction analysis
+
+**DeFi math** — constant-product invariants & slippage · reward accrual with global accumulators · vesting curves · per-second compounding interest · health factors, close factors & liquidation bonuses
+
+## Verify it yourself
 
 ```bash
-# 1. Install Foundry (one time)
-curl -L https://foundry.paradigm.xyz | bash
-foundryup
+# one-time
+curl -L https://foundry.paradigm.xyz | bash && foundryup
 
-# 2. Run any project
+# any project — build AND test (CI runs both, so should you)
 cd 01-erc20-token
-forge build      # compile
-forge test       # run the full suite
-make test        # same, via Makefile
-forge snapshot   # gas report
+forge build && forge test        # or: make build && make test
+forge snapshot                   # gas report
 ```
 
-## Deploy locally (per project)
+GitHub Actions runs `forge build` + `forge test` on all 10 projects for every push.
 
-```bash
-anvil                                 # local chain in terminal 1
-cd <project>
-forge script script/Deploy.s.sol --rpc-url http://127.0.0.1:8545 --broadcast -vvvv
-```
+## Working together
 
-## Publishing to GitHub
+I'm available for smart-contract audits, protocol development and security consultations.
 
-This portfolio lives at **[github.com/s0sta/Web3-Smart-Contract-Projects](https://github.com/s0sta/Web3-Smart-Contract-Projects)**.
-
-**Option A — one repo (this layout):** push the whole folder as-is.
-
-```bash
-git remote add origin https://github.com/s0sta/Web3-Smart-Contract-Projects.git
-git push -u origin main
-```
-
-**Option B — 10 separate repos (recommended for a portfolio):** every project folder is
-fully self-contained (`foundry.toml`, `Makefile`, own README and LICENSE), so:
-
-```bash
-cd 01-erc20-token
-git init && git add -A && git commit -m "ERC-20 token: cap, burn, pause, permit"
-gh repo create 01-erc20-token --public --source=. --push
-```
-
-Repeat for each folder. Each repo gets its own README with a link back to this master roadmap.
-
----
-
-## Status
-
-| Check | Result |
-|---|---|
-| Compiles on Foundry 1.5.1 / solc 0.8.26 | ✅ all 10 projects |
-| Unit + fuzz test suites | ✅ **251 tests, 0 failures** across the portfolio |
-| CI workflow (GitHub Actions) | ✅ runs `forge test` on every project |
-
-Per-project test counts: 01 · 31 · 02 · 30 · 03 · 27 · 04 · 30 · 05 · 33 · 06 · 23 · 07 · 20 · 08 · 21 · 09 · 16 · 10 · 20
+- 📫 **GitHub:** [@s0sta](https://github.com/s0sta)
+- 🌐 **Live work:** [erc-20Token.s0sta.com](https://erc-20Token.s0sta.com)
 
 ## Security note
 
-These projects are **educational portfolio work** — do not deploy them to mainnet with real
-funds without an independent security audit. Each README's "Security considerations" section
-lists the known trade-offs of the from-scratch approach.
+This repository is portfolio work demonstrating engineering and security methodology. Each
+project's README documents its design decisions and known trade-offs (the from-scratch
+primitives intentionally mirror OpenZeppelin semantics). Production deployments with real
+funds should use battle-tested libraries and an independent audit — see
+[SECURITY.md](SECURITY.md).
 
 ## License
 
-MIT — see each project folder for its own LICENSE file.
+MIT — each project folder carries its own LICENSE file.
