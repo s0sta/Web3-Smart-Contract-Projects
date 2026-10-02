@@ -1,0 +1,12 @@
+# Foundry
+out/
+cache/
+broadcast/
+*.gas-snapshot
+
+# Env
+.env
+.env.*
+
+# OS
+.DS_Store

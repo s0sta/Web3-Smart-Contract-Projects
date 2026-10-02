@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - 01-erc20-token
+          - 02-crowdfunding
+          - 03-multisig-wallet
+          - 04-escrow-service
+          - 05-nft-collection
+          - 06-staking-rewards
+          - 07-token-vesting
+          - 08-amm-dex
+          - 09-dao-governance
+          - 10-lending-protocol
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Build
+        run: forge build
+        working-directory: ${{ matrix.project }}
+
+      - name: Run tests
+        run: forge test -vv
+        working-directory: ${{ matrix.project }}
