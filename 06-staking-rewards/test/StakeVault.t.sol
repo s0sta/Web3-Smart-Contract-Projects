@@ -280,6 +280,31 @@ contract StakeVaultTest is Test {
         assertApproxEqAbs(vault.earned(alice), REWARDS, 1e15); // capped, no runaway accrual
     }
 
+    function test_RecoverERC20_ReturnsStrayTokens() public {
+        MockToken stray = new MockToken("Stray", "STR");
+        stray.mint(address(vault), 100 ether); // accidentally sent to the vault
+
+        uint256 ownerBefore = stray.balanceOf(owner);
+        vault.recoverERC20(address(stray), 100 ether);
+
+        assertEq(stray.balanceOf(owner) - ownerBefore, 100 ether);
+        assertEq(stray.balanceOf(address(vault)), 0);
+    }
+
+    function test_RecoverERC20_ProtectsStakeAndRewardTokens() public {
+        staking.mint(address(vault), 5 ether);
+        vm.expectRevert(abi.encodeWithSelector(StakeVault.ProtectedToken.selector, address(staking)));
+        vault.recoverERC20(address(staking), 1 ether);
+        vm.expectRevert(abi.encodeWithSelector(StakeVault.ProtectedToken.selector, address(reward)));
+        vault.recoverERC20(address(reward), 1 ether);
+    }
+
+    function test_RecoverERC20_OnlyOwner() public {
+        vm.prank(alice);
+        vm.expectRevert(abi.encodeWithSelector(Ownable.NotOwner.selector, alice));
+        vault.recoverERC20(makeAddr("stray"), 1 ether);
+    }
+
     /* ==================== FUZZ ==================== */
 
     function testFuzz_SingleStakerEarnsLinear(uint256 amount, uint256 elapsed) public {

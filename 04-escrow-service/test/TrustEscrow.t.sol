@@ -77,14 +77,36 @@ contract TrustEscrowTest is Test {
         vm.prank(buyer);
         uint256 dealId = escrow.openDeal{value: 10 ether}(seller, arbiter);
 
-        (address b, address s, address a, uint256 amount, TrustEscrow.DealState state) = escrow.deals(dealId);
+        (address b, address s, address a, uint256 amount, uint256 dealFee, TrustEscrow.DealState state) = escrow.deals(dealId);
         assertEq(b, buyer);
         assertEq(s, seller);
         assertEq(a, arbiter);
         assertEq(amount, 10 ether);
+        assertEq(dealFee, FEE_BPS); // frozen at open time
         assertEq(uint256(state), uint256(TrustEscrow.DealState.Active));
         assertEq(escrow.dealCount(), 1);
         assertEq(address(escrow).balance, 10 ether);
+    }
+
+    function test_FeeChange_DoesNotAffectOpenDeals() public {
+        uint256 dealId = _openDeal(); // opened at 50 bps
+
+        // Platform changes the fee while the deal is open — the deal keeps the frozen fee.
+        escrow.setFeeBps(500);
+
+        uint256 expectedFee = (10 ether * FEE_BPS) / 10_000; // still the OLD 50 bps
+        uint256 sellerBefore = seller.balance;
+        vm.prank(seller);
+        escrow.release(dealId);
+
+        assertEq(seller.balance - sellerBefore, 10 ether - expectedFee);
+        assertEq(escrow.accruedFees(), expectedFee);
+
+        // A NEW deal after the change uses the new fee.
+        vm.prank(buyer);
+        uint256 dealId2 = escrow.openDeal{value: 10 ether}(seller, arbiter);
+        (, , , , uint256 dealFee2,) = escrow.deals(dealId2);
+        assertEq(dealFee2, 500);
     }
 
     function test_OpenDeal_ZeroDepositReverts() public {
@@ -132,7 +154,7 @@ contract TrustEscrowTest is Test {
         assertEq(seller.balance - sellerBefore, 10 ether - fee);
         assertEq(escrow.accruedFees(), fee);
         assertEq(address(escrow).balance, fee); // only the fee ETH remains, for the platform
-        (, , , , TrustEscrow.DealState state) = escrow.deals(dealId);
+        (, , , , , TrustEscrow.DealState state) = escrow.deals(dealId);
         assertEq(uint256(state), uint256(TrustEscrow.DealState.Released));
     }
 
@@ -178,7 +200,7 @@ contract TrustEscrowTest is Test {
         assertEq(buyer.balance - buyerBefore, 10 ether);
         assertEq(escrow.accruedFees(), 0);
         assertEq(address(escrow).balance, 0);
-        (, , , , TrustEscrow.DealState state) = escrow.deals(dealId);
+        (, , , , , TrustEscrow.DealState state) = escrow.deals(dealId);
         assertEq(uint256(state), uint256(TrustEscrow.DealState.Refunded));
     }
 
@@ -206,7 +228,7 @@ contract TrustEscrowTest is Test {
         emit DisputeRaised(dealId, buyer);
         vm.prank(buyer);
         escrow.dispute(dealId);
-        (, , , , TrustEscrow.DealState state) = escrow.deals(dealId);
+        (, , , , , TrustEscrow.DealState state) = escrow.deals(dealId);
         assertEq(uint256(state), uint256(TrustEscrow.DealState.Disputed));
     }
 
@@ -214,7 +236,7 @@ contract TrustEscrowTest is Test {
         uint256 dealId = _openDeal();
         vm.prank(seller);
         escrow.dispute(dealId);
-        (, , , , TrustEscrow.DealState state) = escrow.deals(dealId);
+        (, , , , , TrustEscrow.DealState state) = escrow.deals(dealId);
         assertEq(uint256(state), uint256(TrustEscrow.DealState.Disputed));
     }
 
@@ -271,7 +293,7 @@ contract TrustEscrowTest is Test {
         assertEq(seller.balance - sellerBefore, sellerAmount);
         assertEq(escrow.accruedFees(), fee);
         assertEq(address(escrow).balance, fee);
-        (, , , , TrustEscrow.DealState state) = escrow.deals(dealId);
+        (, , , , , TrustEscrow.DealState state) = escrow.deals(dealId);
         assertEq(uint256(state), uint256(TrustEscrow.DealState.Resolved));
     }
 
@@ -375,7 +397,7 @@ contract TrustEscrowTest is Test {
         vm.prank(address(ms));
         vm.expectRevert();
         ms.trigger();
-        (, , , , TrustEscrow.DealState state) = escrow.deals(dealId);
+        (, , , , , TrustEscrow.DealState state) = escrow.deals(dealId);
         assertEq(uint256(state), uint256(TrustEscrow.DealState.Active));
         assertEq(address(escrow).balance, 10 ether);
 

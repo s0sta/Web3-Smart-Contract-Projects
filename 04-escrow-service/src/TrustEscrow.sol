@@ -27,10 +27,12 @@ contract TrustEscrow is Ownable, ReentrancyGuard {
         address seller;
         address arbiter;
         uint256 amount;
+        uint256 feeBps; // platform fee FROZEN at open time — later fee changes never touch open deals
         DealState state;
     }
 
     /// @notice Platform fee in basis points (e.g. 50 = 0.5%), charged on release/resolve.
+    ///         Applies to NEW deals only — each deal freezes its own fee at creation.
     uint256 public feeBps;
 
     /// @notice Hard cap on the platform fee.
@@ -88,7 +90,14 @@ contract TrustEscrow is Ownable, ReentrancyGuard {
         if (seller == msg.sender || arbiter == msg.sender || arbiter == seller) revert InvalidParties();
 
         dealId = dealCount++;
-        deals[dealId] = Deal({buyer: msg.sender, seller: seller, arbiter: arbiter, amount: msg.value, state: DealState.Active});
+        deals[dealId] = Deal({
+            buyer: msg.sender,
+            seller: seller,
+            arbiter: arbiter,
+            amount: msg.value,
+            feeBps: feeBps, // frozen: later platform fee changes never touch this deal
+            state: DealState.Active
+        });
         emit DealOpened(dealId, msg.sender, seller, arbiter, msg.value);
     }
 
@@ -99,7 +108,7 @@ contract TrustEscrow is Ownable, ReentrancyGuard {
         if (d.state != DealState.Active) revert NotActive(dealId);
 
         d.state = DealState.Released;
-        uint256 fee = (d.amount * feeBps) / 10_000;
+        uint256 fee = (d.amount * d.feeBps) / 10_000;
         uint256 payout = d.amount - fee;
 
         if (fee > 0) {
@@ -141,7 +150,7 @@ contract TrustEscrow is Ownable, ReentrancyGuard {
         if (msg.sender != d.arbiter) revert NotArbiter();
         if (d.state != DealState.Disputed) revert NotDisputed(dealId);
 
-        uint256 fee = (d.amount * feeBps) / 10_000;
+        uint256 fee = (d.amount * d.feeBps) / 10_000;
         if (buyerAmount > d.amount - fee) revert InvalidSplit(buyerAmount, d.amount - fee);
         uint256 sellerAmount = d.amount - fee - buyerAmount;
 

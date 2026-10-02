@@ -3,8 +3,17 @@
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.26-363636?logo=solidity&logoColor=white)
 ![Foundry](https://img.shields.io/badge/Foundry-1.5.1-8b5cf6)
 ![License](https://img.shields.io/badge/License-MIT-green)
+![Live](https://img.shields.io/badge/Live-multisig.s0sta.com-6366f1)
+
+<p align="center">
+  <img src="../assets/multisig.svg" alt="MultiSig Vault — N-of-M shared treasury" width="100%" />
+</p>
 
 > **Difficulty: ★★★☆☆** · Project 3 of the [Web3 Smart Contract Projects](../README.md) portfolio.
+>
+> 🌐 **Live demo: [https://multisig.s0sta.com](https://multisig.s0sta.com)** — a full dApp dashboard for this wallet (see [`frontend/`](frontend/README.md)).
+>
+> 📍 **Deployed on Sepolia: [`MultiSigWallet 0x07212677caE6aa93331d6E18205EB5898c3079f4`](https://sepolia.etherscan.io/address/0x07212677caE6aa93331d6E18205EB5898c3079f4)** · 2-of-3 · owner1 `0x319899FaAAD730519B8a2Bd72d2Eba2370a9B853`
 
 A multi-signature wallet written **from scratch** following the classic Gnosis pattern: a group
 of owners shares a treasury, and nothing leaves it until `threshold` owners confirm the
@@ -30,6 +39,7 @@ transaction. Handles ETH *and* arbitrary calls (ERC-20 transfers, contract inter
 | `MultiSigWallet` | [`src/MultiSigWallet.sol`](src/MultiSigWallet.sol) | The wallet: owners, threshold, transaction queue |
 | `ReentrancyGuard` | [`src/ReentrancyGuard.sol`](src/ReentrancyGuard.sol) | Execution reentrancy protection |
 | `DeployMultiSig` | [`script/Deploy.s.sol`](script/Deploy.s.sol) | Deploys a 2-of-3 wallet with anvil's first three keys |
+| `frontend/` | [`frontend/README.md`](frontend/README.md) | The hosted dApp (multisig.s0sta.com) |
 
 ## Flow
 

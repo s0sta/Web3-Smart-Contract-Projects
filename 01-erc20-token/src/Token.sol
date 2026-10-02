@@ -99,6 +99,25 @@ contract NovaToken is Ownable {
         return true;
     }
 
+    /// @notice Atomically increases the allowance granted to `spender` by `addedValue`.
+    /// @dev Mitigates the classic ERC-20 `approve` race: `approve` first reads the current
+    ///      allowance, so two concurrent changes can overwrite each other. The
+    ///      increase/decrease variants apply the delta to the *latest* on-chain value,
+    ///      making concurrent adjustments safe.
+    function increaseAllowance(address spender, uint256 addedValue) external returns (bool) {
+        _approve(msg.sender, spender, allowance[msg.sender][spender] + addedValue);
+        return true;
+    }
+
+    /// @notice Atomically decreases the allowance granted to `spender` by `subtractedValue`.
+    /// @dev Never underflows — an overshoot simply zeroes the allowance.
+    function decreaseAllowance(address spender, uint256 subtractedValue) external returns (bool) {
+        uint256 current = allowance[msg.sender][spender];
+        uint256 decreased = current > subtractedValue ? current - subtractedValue : 0;
+        _approve(msg.sender, spender, decreased);
+        return true;
+    }
+
     /* ==================== MINT / BURN ==================== */
 
     /// @notice Mints `amount` new tokens to `to`. Owner only, never above `MAX_SUPPLY`.

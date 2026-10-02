@@ -2,6 +2,7 @@
 pragma solidity 0.8.26;
 
 import {IERC20} from "./IERC20.sol";
+import {Ownable} from "./Ownable.sol";
 import {ReentrancyGuard} from "./ReentrancyGuard.sol";
 import {MockStable} from "./MockStable.sol";
 
@@ -11,9 +12,14 @@ import {MockStable} from "./MockStable.sol";
 ///         above the 80% liquidation threshold can be liquidated — liquidators repay debt and
 ///         seize collateral at a 10% discount.
 /// @dev Prices are fixed at 2000 USD/ETH (no oracle) — see README "Production hardening".
-contract LendVault is ReentrancyGuard {
+///      The owner holds only the emergency brake (`setPaused`): pausing blocks NEW deposits
+///      and borrows, while withdrawals, repayments and liquidations ALWAYS stay enabled.
+contract LendVault is Ownable, ReentrancyGuard {
     /// @notice The stablecoin the vault issues on borrow.
     IERC20 public immutable stable;
+
+    /// @notice Emergency brake: while true, `deposit` and `borrow` are blocked.
+    bool public paused;
 
     /// @notice Fixed collateral price: 2000 USD per ETH (18-decimal fixed point).
     uint256 public constant PRICE = 2000e18;
@@ -55,6 +61,8 @@ contract LendVault is ReentrancyGuard {
     event Borrowed(address indexed user, uint256 amount);
     event Repaid(address indexed user, uint256 amount);
     event Liquidated(address indexed user, address indexed liquidator, uint256 debtRepaid, uint256 collateralSeized);
+    event Paused(address indexed by);
+    event Unpaused(address indexed by);
 
     error ZeroAmount();
     error InsufficientCollateral(uint256 available, uint256 requested);
@@ -64,16 +72,34 @@ contract LendVault is ReentrancyGuard {
     error NotLiquidatable();
     error TransferFailed();
     error EthTransferFailed();
+    error VaultPaused();
 
-    constructor(IERC20 stable_) {
+    modifier whenNotPaused() {
+        if (paused) revert VaultPaused();
+        _;
+    }
+
+    /// @param stable_ The stablecoin the vault mints/burns (must be wired via MockStable.setVault).
+    /// @param initialOwner Address allowed to toggle the emergency pause.
+    constructor(IERC20 stable_, address initialOwner) Ownable(initialOwner) {
         stable = stable_;
         ratePerSecond = PRECISION * ANNUAL_RATE_BPS / 10_000 / 365 days;
+    }
+
+    /* ==================== EMERGENCY BRAKE ==================== */
+
+    /// @notice Blocks new deposits and borrows. Withdrawals, repayments and liquidations
+    ///         remain open so users can always exit and bad debt can always be cleared.
+    function setPaused(bool paused_) external onlyOwner {
+        paused = paused_;
+        if (paused_) emit Paused(msg.sender);
+        else emit Unpaused(msg.sender);
     }
 
     /* ==================== USER ACTIONS ==================== */
 
     /// @notice Deposits ETH as collateral.
-    function deposit() external payable nonReentrant {
+    function deposit() external payable nonReentrant whenNotPaused {
         if (msg.value == 0) revert ZeroAmount();
         _accrue(msg.sender);
         collateral[msg.sender] += msg.value;
@@ -100,7 +126,7 @@ contract LendVault is ReentrancyGuard {
     }
 
     /// @notice Borrows stable against collateral, capped by LTV.
-    function borrow(uint256 amount) external nonReentrant {
+    function borrow(uint256 amount) external nonReentrant whenNotPaused {
         _accrue(msg.sender);
         if (amount == 0) revert ZeroAmount();
         uint256 limit = _maxBorrow(collateral[msg.sender]);

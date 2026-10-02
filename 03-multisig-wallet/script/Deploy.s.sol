@@ -9,8 +9,11 @@ import {MultiSigWallet} from "../src/MultiSigWallet.sol";
 contract DeployMultiSig is Script {
     function run() external returns (MultiSigWallet wallet) {
         uint256 deployerKey = vm.envOr(
-            "PRIVATE_KEY",
-            uint256(0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80)
+            "DEPLOYER_PRIVATE_KEY",
+            vm.envOr(
+                "PRIVATE_KEY",
+                uint256(0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80)
+            )
         );
         address owner1 = vm.addr(deployerKey);
         address owner2 = vm.envOr("OWNER_2", address(0x70997970C51812dc3A010C7d01b50e0d17dc79C8));

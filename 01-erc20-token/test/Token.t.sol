@@ -144,6 +144,43 @@ contract NovaTokenTest is Test {
         assertEq(token.allowance(alice, bob), 20 ether);
     }
 
+    function test_IncreaseAllowance_AddsToCurrentValue() public {
+        vm.prank(alice);
+        token.approve(bob, 50 ether);
+        vm.expectEmit(true, true, true, true);
+        emit Approval(alice, bob, 80 ether);
+        vm.prank(alice);
+        token.increaseAllowance(bob, 30 ether);
+        assertEq(token.allowance(alice, bob), 80 ether);
+    }
+
+    function test_DecreaseAllowance_SubtractsAndClampsAtZero() public {
+        vm.prank(alice);
+        token.approve(bob, 50 ether);
+        vm.prank(alice);
+        token.decreaseAllowance(bob, 20 ether);
+        assertEq(token.allowance(alice, bob), 30 ether);
+        // overshoot clamps to zero instead of reverting/underflowing
+        vm.prank(alice);
+        token.decreaseAllowance(bob, 40 ether);
+        assertEq(token.allowance(alice, bob), 0);
+    }
+
+    function testFuzz_IncreaseDecreaseAllowanceRoundTrip(uint256 base, uint256 add, uint256 sub) public {
+        base = bound(base, 0, type(uint128).max);
+        add = bound(add, 0, type(uint128).max);
+        sub = bound(sub, 0, type(uint128).max);
+        vm.prank(alice);
+        token.approve(bob, base);
+        vm.prank(alice);
+        token.increaseAllowance(bob, add);
+        assertEq(token.allowance(alice, bob), base + add);
+        vm.prank(alice);
+        token.decreaseAllowance(bob, sub);
+        uint256 expected = base + add > sub ? base + add - sub : 0;
+        assertEq(token.allowance(alice, bob), expected);
+    }
+
     function test_TransferFrom_InfiniteAllowanceNotReduced() public {
         token.mint(alice, 100 ether);
         vm.prank(alice);

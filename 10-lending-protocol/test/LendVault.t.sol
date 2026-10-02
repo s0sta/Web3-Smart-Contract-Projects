@@ -4,11 +4,13 @@ pragma solidity 0.8.26;
 import {Test} from "forge-std/Test.sol";
 import {LendVault} from "../src/LendVault.sol";
 import {MockStable} from "../src/MockStable.sol";
+import {Ownable} from "../src/Ownable.sol";
 
 contract LendVaultTest is Test {
     LendVault vault;
     MockStable stable;
 
+    address owner = address(this);
     address alice = makeAddr("alice");
     address bob = makeAddr("bob");
     address liquidator = makeAddr("liquidator");
@@ -27,7 +29,7 @@ contract LendVaultTest is Test {
 
     function setUp() public {
         stable = new MockStable();
-        vault = new LendVault(stable);
+        vault = new LendVault(stable, owner);
         stable.setVault(address(vault));
 
         vm.deal(alice, 100 ether);
@@ -263,6 +265,49 @@ contract LendVaultTest is Test {
         vm.prank(liquidator);
         vm.expectRevert(abi.encodeWithSelector(LendVault.RepayExceedsCloseFactor.selector, maxRepay));
         vault.liquidate(alice, maxRepay + 1);
+    }
+
+    /* ==================== EMERGENCY PAUSE ==================== */
+
+    function test_Pause_BlocksNewDepositsAndBorrows() public {
+        vault.setPaused(true);
+        assertTrue(vault.paused());
+
+        vm.prank(alice);
+        vm.expectRevert(LendVault.VaultPaused.selector);
+        vault.deposit{value: 1 ether}();
+
+        vm.prank(alice);
+        vm.expectRevert(LendVault.VaultPaused.selector);
+        vault.borrow(1000 ether);
+
+        // Unpause restores both.
+        vault.setPaused(false);
+        vm.prank(alice);
+        vault.deposit{value: 1 ether}();
+        assertEq(vault.collateral(alice), 1 ether);
+    }
+
+    function test_Pause_WithdrawAndRepayStayOpen() public {
+        _depositAlice();
+        vm.prank(alice);
+        vault.borrow(5000 ether);
+
+        vault.setPaused(true);
+
+        // Exits must ALWAYS work, even while paused.
+        vm.prank(alice);
+        vault.withdraw(1 ether);
+        assertEq(vault.collateral(alice), COLLATERAL - 1 ether);
+        vm.prank(alice);
+        vault.repay(1000 ether);
+        assertEq(vault.debt(alice), 4000 ether);
+    }
+
+    function test_Pause_OnlyOwner() public {
+        vm.prank(alice);
+        vm.expectRevert(abi.encodeWithSelector(Ownable.NotOwner.selector, alice));
+        vault.setPaused(true);
     }
 
     /* ==================== FUZZ ==================== */

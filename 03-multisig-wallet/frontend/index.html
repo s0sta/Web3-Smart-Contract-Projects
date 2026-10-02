@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MultiSig Vault — N-of-M Treasury | multisig.s0sta.com</title>
+  <meta name="description" content="A modern dApp for the from-scratch MultiSigWallet: propose, confirm and execute treasury transactions with live threshold rings, owner badges and on-chain activity." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="shards" id="shards" aria-hidden="true"></div>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-mark">🔐</div>
+        <div>
+          <h1>MultiSig <span class="accent">Vault</span></h1>
+          <p class="brand-sub">N-of-M treasury · Solidity 0.8.26 · from scratch</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙ Settings</button>
+        <span class="chain-badge" id="chain-badge">—</span>
+        <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== SETUP BANNER ===================== -->
+  <section class="container" id="setup-banner" hidden>
+    <div class="card banner">
+      <div class="banner-icon">🛠</div>
+      <div>
+        <h3>Wallet not configured yet</h3>
+        <p>Paste your deployed <strong>MultiSigWallet</strong> address below, or deploy locally with
+           <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.
+           See <code>frontend/README.md</code> for the full guide.</p>
+        <form id="form-setup" class="row">
+          <input type="text" id="setup-address" placeholder="0x… wallet address" autocomplete="off" spellcheck="false" />
+          <button class="btn btn-primary" type="submit">Use this wallet</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+
+    <!-- ===================== SETTINGS ===================== -->
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Wallet contract address
+          <input type="text" id="set-wallet-address" placeholder="0x…" autocomplete="off" spellcheck="false" />
+        </label>
+        <label>Network
+          <select id="set-chain"></select>
+        </label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- ===================== HERO / WALLET ===================== -->
+    <section class="hero">
+      <div class="hero-text">
+        <h2>Shared treasury. <span>N-of-M trust.</span></h2>
+        <p class="muted">A Gnosis-style multi-signature wallet written from scratch: nothing leaves the
+          vault until enough owners confirm. Submit, confirm, execute — with failure-retry and full
+          on-chain transparency.</p>
+        <div class="hero-links">
+          <a id="link-contract" href="#" target="_blank" rel="noopener">Wallet ↗</a>
+          <button class="link-btn" id="btn-copy-address" title="Copy wallet address">Copy address</button>
+          <span class="muted" id="hero-address">0x…</span>
+        </div>
+        <div class="deposit-box">
+          <span class="muted">Fund this vault:</span>
+          <div class="row">
+            <input type="number" id="deposit-amount" placeholder="0.1" min="0" step="any" />
+            <button class="btn btn-accent" id="btn-deposit">Deposit ETH</button>
+          </div>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat"><span class="stat-label">Vault balance</span><span class="stat-value accent" id="stat-balance">—</span></div>
+        <div class="stat"><span class="stat-label">Signers</span><span class="stat-value" id="stat-owners">—</span></div>
+        <div class="stat"><span class="stat-label">Threshold</span><span class="stat-value" id="stat-threshold">—</span></div>
+        <div class="stat"><span class="stat-label">Transactions</span><span class="stat-value" id="stat-txcount">—</span></div>
+        <div class="stat stat-wide"><span class="stat-label">You are</span><span class="stat-value stat-small" id="stat-role">—</span></div>
+      </div>
+    </section>
+
+    <!-- ===================== OWNERS ===================== -->
+    <section class="section">
+      <h2 class="section-title">Signers</h2>
+      <div class="owners-strip" id="owners-strip">loading…</div>
+    </section>
+
+    <!-- ===================== SUBMIT TX ===================== -->
+    <section class="section">
+      <div class="card create-card">
+        <div class="card-head"><span class="card-icon">📮</span><h3>Propose a transaction</h3></div>
+        <p class="muted">Owners propose outgoing operations — ETH transfers, token moves via calldata, or any call.</p>
+        <form id="form-submit" class="create-row">
+          <label>Destination
+            <input type="text" id="submit-to" placeholder="0x…" autocomplete="off" spellcheck="false" />
+          </label>
+          <label>Value (ETH)
+            <input type="number" id="submit-value" placeholder="0.0" min="0" step="any" />
+          </label>
+          <label>Calldata (hex, optional)
+            <input type="text" id="submit-data" placeholder="0x" autocomplete="off" spellcheck="false" />
+          </label>
+          <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===================== TRANSACTIONS ===================== -->
+    <section class="section">
+      <h2 class="section-title">Transactions <span class="muted" id="txs-note">loading…</span></h2>
+      <div class="tx-list" id="tx-list">
+        <div class="card center muted">Loading transactions…</div>
+      </div>
+    </section>
+
+    <!-- ===================== OWNER PANEL ===================== -->
+    <section class="section" id="admin-section" hidden>
+      <h2 class="section-title">Wallet Settings <span class="tag tag-admin">you are a signer</span></h2>
+      <div class="card" style="max-width: 480px">
+        <div class="card-head"><span class="card-icon">🎚</span><h3>Change threshold</h3></div>
+        <p class="muted">Confirmations required to execute. Between 1 and the signer count.</p>
+        <form id="form-threshold">
+          <label>New threshold <input type="number" id="threshold-value" min="1" placeholder="2" step="1" /></label>
+          <button class="btn btn-primary" type="submit">Update threshold</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===================== ACTIVITY ===================== -->
+    <section class="section">
+      <h2 class="section-title">Live Activity <span class="muted">(recent events from the chain)</span></h2>
+      <div class="card table-card">
+        <table class="activity-table">
+          <thead>
+            <tr><th>Event</th><th>Details</th><th>Block</th><th>Tx</th></tr>
+          </thead>
+          <tbody id="activity-body">
+            <tr><td colspan="4" class="muted center">Loading…</td></tr>
+          </tbody>
+        </table>
+        <div class="row between">
+          <button class="btn btn-ghost btn-sm" id="btn-refresh-events">↻ Refresh</button>
+          <span class="muted" id="events-note">showing the latest 15 events</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>MultiSig Vault · from-scratch multisig wallet — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">multisig.s0sta.com</span>
+      </span>
+    </div>
+  </footer>
+
+  <!-- ===================== TOASTS ===================== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

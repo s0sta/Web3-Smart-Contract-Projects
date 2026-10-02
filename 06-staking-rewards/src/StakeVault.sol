@@ -48,11 +48,13 @@ contract StakeVault is Ownable, ReentrancyGuard {
     event RewardPaid(address indexed user, uint256 amount);
     event RewardsNotified(uint256 amount, uint256 duration, uint256 rate);
     event EmergencyWithdrawn(address indexed user, uint256 amount);
+    event Recovered(address indexed token, uint256 amount);
 
     error ZeroAmount();
     error InsufficientStake(uint256 balance, uint256 amount);
     error InvalidDuration();
     error TransferFailed();
+    error ProtectedToken(address token);
 
     /// @dev Updates the global accumulator and (if `account != 0`) that user's checkpoint
     ///      before any balance-changing operation.
@@ -167,5 +169,17 @@ contract StakeVault is Ownable, ReentrancyGuard {
         periodFinish = block.timestamp + duration;
         if (!rewardsToken.transferFrom(msg.sender, address(this), amount)) revert TransferFailed();
         emit RewardsNotified(amount, duration, rewardRate);
+    }
+
+    /// @notice Owner escape hatch: recover ERC-20s accidentally sent to the vault.
+    /// @dev The staking token and the rewards token are PROTECTED — the owner can never
+    ///      sweep user stakes or the emission pool. This bounds the trust placed in the owner.
+    function recoverERC20(address tokenAddress, uint256 amount) external onlyOwner nonReentrant {
+        if (tokenAddress == address(stakingToken) || tokenAddress == address(rewardsToken)) {
+            revert ProtectedToken(tokenAddress);
+        }
+        if (amount == 0) revert ZeroAmount();
+        if (!IERC20(tokenAddress).transfer(owner, amount)) revert TransferFailed();
+        emit Recovered(tokenAddress, amount);
     }
 }

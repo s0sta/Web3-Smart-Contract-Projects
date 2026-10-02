@@ -17,7 +17,7 @@ contract DeployLendVault is Script {
 
         vm.startBroadcast(deployerKey);
         stable = new MockStable();
-        vault = new LendVault(stable);
+        vault = new LendVault(stable, deployer);
         stable.setVault(address(vault));
         vm.stopBroadcast();
 
