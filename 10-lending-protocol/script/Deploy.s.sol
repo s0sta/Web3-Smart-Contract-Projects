@@ -25,6 +25,6 @@ contract DeployLendVault is Script {
         console2.log("Stable   :", address(stable));
         console2.log("Vault    :", address(vault));
         console2.log("Rate/s   :", vault.ratePerSecond(), "(1e18-scaled)");
-        console2.log("LTV      :", vault.LTV_BPS(), "bps | LiqThreshold:", vault.LIQ_THRESHOLD_BPS(), "bps");
+        console2.log("LTV      :", vault.LTV_BPS(), "bps | LiqThreshold:", vault.LIQ_THRESHOLD_BPS());
     }
 }
