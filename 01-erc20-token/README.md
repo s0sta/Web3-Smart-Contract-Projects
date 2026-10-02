@@ -3,8 +3,11 @@
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.26-363636?logo=solidity&logoColor=white)
 ![Foundry](https://img.shields.io/badge/Foundry-1.5.1-8b5cf6)
 ![License](https://img.shields.io/badge/License-MIT-green)
+![Live](https://img.shields.io/badge/Live-erc--20Token.s0sta.com-06b6d4)
 
 > **Difficulty: ★☆☆☆☆** · Project 1 of the [Web3 Smart Contract Projects](../README.md) portfolio.
+>
+> 🌐 **Live demo: [https://erc-20Token.s0sta.com](https://erc-20Token.s0sta.com)** — a full dApp dashboard for this contract (see [`frontend/`](frontend/README.md)).
 
 A complete ERC-20 token written **from scratch** (no OpenZeppelin): a 100M hard supply cap,
 owner-controlled minting and burning, an emergency pause switch, two-step ownership, and
@@ -31,6 +34,7 @@ EIP-2612 `permit` for gasless approvals.
 | `NovaToken` | [`src/Token.sol`](src/Token.sol) | ERC-20 core + cap, mint/burn, pause, permit |
 | `DeployNovaToken` | [`script/Deploy.s.sol`](script/Deploy.s.sol) | Deployment script |
 | `NovaTokenTest` | [`test/Token.t.sol`](test/Token.t.sol) | Full unit + fuzz suite |
+| `frontend/` | [`frontend/README.md`](frontend/README.md) | The hosted dApp (erc-20Token.s0sta.com) |
 
 ## Quickstart
 
