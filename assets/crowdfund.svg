@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#10b981"/>
+      <stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="coin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fbbf24"/>
+      <stop offset="1" stop-color="#f59e0b"/>
+    </linearGradient>
+    <radialGradient id="glowG" cx="0.14" cy="0.2" r="0.8">
+      <stop offset="0" stop-color="#10b981" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#10b981" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowA" cx="0.86" cy="0.4" r="0.9">
+      <stop offset="0" stop-color="#f59e0b" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#f59e0b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="300" fill="#0a100d"/>
+  <rect width="1200" height="300" fill="url(#glowG)"/>
+  <rect width="1200" height="300" fill="url(#glowA)"/>
+
+  <!-- rising coins (left cluster) -->
+  <g>
+    <circle r="7" fill="url(#coin)" stroke="#fcd34d" stroke-width="1.5" opacity="0">
+      <animate attributeName="opacity" values="0;0.9;0" dur="6s" repeatCount="indefinite" begin="0s"/>
+      <animateTransform attributeName="transform" type="translate" values="0 0; -18 -170" dur="6s" repeatCount="indefinite" begin="0s"/>
+      <animateTransform attributeName="transform" type="rotate" values="0 220 240; 360 220 240" dur="6s" repeatCount="indefinite" begin="0s" additive="sum"/>
+      <animate attributeName="cy" values="240;70" dur="6s" repeatCount="indefinite" begin="0s"/>
+      <animate attributeName="cx" values="220;202" dur="6s" repeatCount="indefinite" begin="0s"/>
+    </circle>
+    <circle r="5.5" fill="url(#coin)" stroke="#fcd34d" stroke-width="1.5" opacity="0">
+      <animate attributeName="opacity" values="0;0.85;0" dur="7s" repeatCount="indefinite" begin="1.4s"/>
+      <animate attributeName="cy" values="250;60" dur="7s" repeatCount="indefinite" begin="1.4s"/>
+      <animate attributeName="cx" values="300;326" dur="7s" repeatCount="indefinite" begin="1.4s"/>
+    </circle>
+    <circle r="6" fill="url(#coin)" stroke="#fcd34d" stroke-width="1.5" opacity="0">
+      <animate attributeName="opacity" values="0;0.8;0" dur="5.4s" repeatCount="indefinite" begin="2.6s"/>
+      <animate attributeName="cy" values="260;80" dur="5.4s" repeatCount="indefinite" begin="2.6s"/>
+      <animate attributeName="cx" values="390;378" dur="5.4s" repeatCount="indefinite" begin="2.6s"/>
+    </circle>
+  </g>
+
+  <!-- identity -->
+  <text x="470" y="92" font-size="44" font-weight="700" fill="url(#g1)" opacity="0">
+    CrowdFund
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.3s"/>
+  </text>
+  <text x="472" y="132" font-size="20" font-weight="600" fill="#e7eee9" opacity="0">
+    Decentralized Crowdfunding Platform
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.7s"/>
+  </text>
+  <text x="472" y="162" font-size="14" fill="#93a49b" opacity="0">
+    Kickstarter-style campaigns · goal or full refund · 1% platform fee · from scratch, no OpenZeppelin
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1s"/>
+  </text>
+
+  <!-- funding progress panel -->
+  <g transform="translate(470 188)">
+    <rect width="680" height="64" rx="14" fill="#0d1612" stroke="#22304f" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1.4s"/>
+    </rect>
+    <text x="22" y="26" font-size="12.5" fill="#93a49b" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      Campaign #0 — goal 10 ETH
+      <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1.6s"/>
+    </text>
+    <text x="630" y="26" font-size="12.5" fill="#fcd34d" text-anchor="end" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      7.5 / 10 ETH · 75%
+      <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1.6s"/>
+    </text>
+    <rect x="22" y="38" width="636" height="12" rx="6" fill="#1b2440" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.7s"/>
+    </rect>
+    <rect x="22" y="38" width="0" height="12" rx="6" fill="url(#g1)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.2s" fill="freeze" begin="1.7s"/>
+      <animate attributeName="width" from="0" to="477" dur="2.4s" fill="freeze" begin="1.7s" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+    </rect>
+    <!-- check on funded -->
+    <path d="M584 32 l9 9 l17 -20" fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
+          pathLength="60" stroke-dasharray="60" stroke-dashoffset="60">
+      <animate attributeName="stroke-dashoffset" from="60" to="0" dur="0.45s" fill="freeze" begin="4.2s"/>
+    </path>
+    <text x="612" y="36" font-size="12.5" fill="#6ee7b7" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      funded
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="4.5s"/>
+    </text>
+  </g>
+
+  <!-- terminal strip, right -->
+  <g transform="translate(80 40)">
+    <rect width="330" height="212" rx="14" fill="#0d1612" stroke="#22304f"/>
+    <circle cx="26" cy="22" r="5" fill="#f43f5e"/>
+    <circle cx="44" cy="22" r="5" fill="#f59e0b"/>
+    <circle cx="62" cy="22" r="5" fill="#10b981"/>
+    <text x="90" y="26" font-size="12" fill="#93a49b" font-family="ui-monospace, Menlo, monospace">s0sta@crowdfund</text>
+
+    <text x="24" y="66" font-size="14" fill="#93a49b" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      $ forge test --match-contract CrowdFund
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1s"/>
+    </text>
+    <text x="24" y="96" font-size="14" fill="#10b981" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      ✔ 30 passed · 0 failed
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.8s"/>
+    </text>
+    <text x="24" y="126" font-size="14" fill="#93a49b" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      ✔ refunds use pull pattern — no DoS
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.6s"/>
+    </text>
+    <text x="24" y="156" font-size="14" fill="#f43f5e" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      ✘ attacker re-enters refund()
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="3.4s"/>
+    </text>
+    <text x="24" y="186" font-size="14" fill="#10b981" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      ✔ blocked — ReentrancyGuard
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="4.2s"/>
+    </text>
+  </g>
+
+  <!-- sweep line -->
+  <rect y="296" width="1200" height="2.5" fill="url(#g1)" opacity="0.55">
+    <animate attributeName="y" values="296;0;296" dur="7s" repeatCount="indefinite"/>
+  </rect>
+</svg>

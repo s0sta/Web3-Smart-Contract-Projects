@@ -54,7 +54,7 @@ Every audit and every build in this repo follows the same discipline:
 | # | Project | What it is | Skills demonstrated | Difficulty | Tests |
 |---|---------|-----------|--------------------|:---:|:---:|
 | 01 | [ERC-20 Token](01-erc20-token) 🖥️ [live](https://erc-20Token.s0sta.com) | Supply-capped token: mint, burn, pause, EIP-2612 permit | ERC-20, ECDSA, EIP-712, access control | ★☆☆☆☆ | 31 ✅ |
-| 02 | [Crowdfunding](02-crowdfunding) | Kickstarter-style factory: pledge → claim/refund, platform fees | Factory pattern, pull payments, reentrancy defense | ★★☆☆☆ | 30 ✅ |
+| 02 | [Crowdfunding](02-crowdfunding) 🖥️ [live dApp](https://crowdfund.s0sta.com) | Kickstarter-style factory: pledge → claim/refund, platform fees | Factory pattern, pull payments, reentrancy defense | ★★☆☆☆ | 30 ✅ |
 | 03 | [MultiSig Wallet](03-multisig-wallet) | Gnosis-style N-of-M treasury with arbitrary calls | Multi-party auth, execution ordering, replay safety | ★★★☆☆ | 27 ✅ |
 | 04 | [Escrow Service](04-escrow-service) | Buyer/seller escrow with arbitration & fees | State machines, dispute resolution, fee accounting | ★★★☆☆ | 30 ✅ |
 | 05 | [NFT Collection](05-nft-collection) | ERC-721 *from scratch*: Merkle whitelist, royalties, reveal | ERC-721 internals, Merkle proofs, ERC-2981 | ★★★☆☆ | 33 ✅ |

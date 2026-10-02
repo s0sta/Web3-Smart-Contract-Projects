@@ -6,11 +6,16 @@ import {CrowdFundFactory} from "../src/CrowdFundFactory.sol";
 import {CrowdFundCampaign} from "../src/CrowdFundCampaign.sol";
 
 /// @notice Deploys the factory with a 1% platform fee and one example campaign.
+/// @dev Set DEPLOYER_PRIVATE_KEY (or PRIVATE_KEY) in a .env file — otherwise anvil's
+///      first default key is used for local testing.
 contract DeployCrowdFund is Script {
     function run() external returns (CrowdFundFactory factory, CrowdFundCampaign example) {
         uint256 deployerKey = vm.envOr(
-            "PRIVATE_KEY",
-            uint256(0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80)
+            "DEPLOYER_PRIVATE_KEY",
+            vm.envOr(
+                "PRIVATE_KEY",
+                uint256(0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80)
+            )
         );
         address deployer = vm.addr(deployerKey);
 

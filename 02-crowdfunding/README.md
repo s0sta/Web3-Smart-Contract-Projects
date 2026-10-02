@@ -3,8 +3,17 @@
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.26-363636?logo=solidity&logoColor=white)
 ![Foundry](https://img.shields.io/badge/Foundry-1.5.1-8b5cf6)
 ![License](https://img.shields.io/badge/License-MIT-green)
+![Live](https://img.shields.io/badge/Live-crowdfund.s0sta.com-10b981)
+
+<p align="center">
+  <img src="../assets/crowdfund.svg" alt="CrowdFund — decentralized crowdfunding platform" width="100%" />
+</p>
 
 > **Difficulty: ★★☆☆☆** · Project 2 of the [Web3 Smart Contract Projects](../README.md) portfolio.
+>
+> 🌐 **Live demo: [https://crowdfund.s0sta.com](https://crowdfund.s0sta.com)** — a full dApp dashboard for this platform (see [`frontend/`](frontend/README.md)).
+>
+> 📍 **Deployed on Sepolia: [`CrowdFundFactory 0x49Ed445AB73b0397B8946c6BCDCa4bFcF04C9FdB`](https://sepolia.etherscan.io/address/0x49Ed445AB73b0397B8946c6BCDCa4bFcF04C9FdB)** · owner `0x319899FaAAD730519B8a2Bd72d2Eba2370a9B853` · example campaign [`0xf2455A06…3a6E`](https://sepolia.etherscan.io/address/0xf2455A060eF697878d86463c7e7AFeBd69293a6E)
 
 A complete crowdfunding platform written **from scratch**: anyone creates a campaign with a
 funding goal and deadline; backers pledge ETH; if the goal is met the creator claims the funds
@@ -32,6 +41,7 @@ funding goal and deadline; backers pledge ETH; if the goal is met the creator cl
 | `CrowdFundCampaign` | [`src/CrowdFundCampaign.sol`](src/CrowdFundCampaign.sol) | Pledge → claim/refund state machine |
 | `CrowdFundFactory` | [`src/CrowdFundFactory.sol`](src/CrowdFundFactory.sol) | Campaign deployment, fees, registry |
 | `DeployCrowdFund` | [`script/Deploy.s.sol`](script/Deploy.s.sol) | Deploys factory + example campaign |
+| `frontend/` | [`frontend/README.md`](frontend/README.md) | The hosted dApp (crowdfund.s0sta.com) |
 
 ## Flow
 
