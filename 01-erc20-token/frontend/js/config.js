@@ -9,8 +9,8 @@
    ============================================================ */
 
 window.APP_CONFIG = {
-  // ← paste your deployed NovaToken address here, e.g. "0x1234…"
-  tokenAddress: "",
+  // Deployed on Sepolia testnet (owner: 0x319899FaAAD730519B8a2Bd72d2Eba2370a9B853).
+  tokenAddress: "0x26b420683E6F6Df39CFceBd7C5bB78B7459b8B62",
 
   // Chain the app opens on by default (Sepolia testnet recommended).
   defaultChainId: 11155111,

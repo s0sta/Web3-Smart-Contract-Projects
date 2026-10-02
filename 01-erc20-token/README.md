@@ -8,6 +8,8 @@
 > **Difficulty: ★☆☆☆☆** · Project 1 of the [Web3 Smart Contract Projects](../README.md) portfolio.
 >
 > 🌐 **Live demo: [https://erc-20Token.s0sta.com](https://erc-20Token.s0sta.com)** — a full dApp dashboard for this contract (see [`frontend/`](frontend/README.md)).
+>
+> 📍 **Deployed on Sepolia: [`0x26b420683E6F6Df39CFceBd7C5bB78B7459b8B62`](https://sepolia.etherscan.io/address/0x26b420683E6F6Df39CFceBd7C5bB78B7459b8B62)** · owner `0x319899FaAAD730519B8a2Bd72d2Eba2370a9B853`
 
 A complete ERC-20 token written **from scratch** (no OpenZeppelin): a 100M hard supply cap,
 owner-controlled minting and burning, an emergency pause switch, two-step ownership, and

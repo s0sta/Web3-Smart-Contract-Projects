@@ -7,6 +7,10 @@ Uploads directly to any PHP/static hosting (Hostinger).
 
 Live: **https://erc-20Token.s0sta.com**
 
+> ✅ **Already deployed on Sepolia**: `0x26b420683E6F6Df39CFceBd7C5bB78B7459b8B62`
+> (owner `0x319899FaAAD730519B8a2Bd72d2Eba2370a9B853`) — the config files below are
+> pre-filled with this address. Just upload this folder to Hostinger and the site is live.
+
 ---
 
 ## Features
