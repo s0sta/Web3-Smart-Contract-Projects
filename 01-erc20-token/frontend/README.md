@@ -117,8 +117,9 @@ Pick one:
 
 ## 4. Reference the live site from GitHub
 
-The project README (`../README.md`) already links the live demo. On your GitHub profile,
-pin the repo and mention:
+The project README (`../README.md`) already links the live demo. The contract + frontend
+live in **[github.com/s0sta/Web3-Smart-Contract-Projects](https://github.com/s0sta/Web3-Smart-Contract-Projects/tree/main/01-erc20-token)**.
+On your GitHub profile, pin the repo and mention:
 
 > Live demo: https://erc-20Token.s0sta.com · Sepolia testnet · contracts + tests in `src/`, `test/`
 

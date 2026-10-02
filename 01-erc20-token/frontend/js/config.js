@@ -44,5 +44,5 @@ window.APP_CONFIG = {
   eventLookbackBlocks: 50000,
 
   // GitHub link shown in the footer.
-  github: "https://github.com/YOUR_USERNAME/web3-smart-contract-projects/tree/main/01-erc20-token",
+  github: "https://github.com/s0sta/Web3-Smart-Contract-Projects/tree/main/01-erc20-token",
 };

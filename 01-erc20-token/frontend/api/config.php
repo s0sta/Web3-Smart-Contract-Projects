@@ -19,6 +19,6 @@ echo json_encode([
     // ← paste your deployed NovaToken address here, e.g. "0xAbC123…"
     "tokenAddress"  => "",
     "defaultChainId"=> 11155111, // 1 = mainnet, 11155111 = Sepolia, 31337 = anvil
-    "github"        => "https://github.com/YOUR_USERNAME/web3-smart-contract-projects/tree/main/01-erc20-token",
+    "github"        => "https://github.com/s0sta/Web3-Smart-Contract-Projects/tree/main/01-erc20-token",
     "liveUrl"       => "https://erc-20Token.s0sta.com",
 ]);
