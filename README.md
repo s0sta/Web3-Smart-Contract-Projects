@@ -1,5 +1,9 @@
 # s0sta — Web3 Security Researcher · Smart Contract Auditor · Solidity Developer
 
+<p align="center">
+  <img src="assets/hero.svg" alt="s0sta — Web3 Security Researcher · Smart Contract Auditor · Solidity Developer" width="100%" />
+</p>
+
 > **I build DeFi-grade smart contracts from scratch — and I test them like an attacker.**
 
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.26-363636?logo=solidity&logoColor=white)
@@ -32,6 +36,10 @@ live at [erc-20Token.s0sta.com](https://erc-20Token.s0sta.com).
 | 🌐 **dApp frontends** | Wallet integration, admin panels, EIP-2612 UX, live on-chain feeds — deployable to any hosting |
 
 ## Security methodology
+
+<p align="center">
+  <img src="assets/audit-run.svg" alt="audit run — security checklist" width="420" />
+</p>
 
 Every audit and every build in this repo follows the same discipline:
 
