@@ -333,8 +333,10 @@
       $("#stat-total").title = totalF.full;
 
       const perDay = fmtUnits(rate * 86400n);
-      $("#stat-rate").textContent = perDay.short + " REWARD / day";
+      const rateText = perDay.short + " REWARD / day";
+      $("#stat-rate").textContent = rateText;
       $("#stat-rate").title = perDay.full + " per day (" + fmtUnits(rate).full + "/s)";
+      $("#stat-rate-2").textContent = rateText;
 
       const cd = fmtCountdown(Number(finish) - Math.floor(Date.now() / 1000));
       $("#stat-period").textContent = "⏳ " + cd.text;
@@ -351,7 +353,10 @@
         $("#allowance-row").hidden = true;
       }
 
+      $("#stat-share").textContent = account ? ((Number(myShare) / 1e18) * 100).toFixed(2) + "%" : "—";
+
       updateEarnedDisplay();
+      await updatePeriodGauge(finish);
     } catch (err) {
       console.warn("stats:", err);
       if (!silent) toast("Could not read the vault — is the address correct on this network?", "error", 9000);
@@ -363,6 +368,47 @@
     $("#stat-earned").textContent = (account ? "" : "connect to see · ") + f.short + " REWARD";
     $("#stat-earned").title = f.full;
     $("#claim-preview").textContent = f.short;
+    $("#claim-preview-2").textContent = f.short;
+  }
+
+  /* period progress gauge: derive the period start from the latest RewardsNotified event */
+  async function updatePeriodGauge(finish) {
+    const fill = $("#period-fill");
+    const pct = $("#period-pct");
+    try {
+      const latest = await readProvider.getBlockNumber();
+      const fromBlock = Math.max(0, latest - (cfg.eventLookbackBlocks || 50000));
+      const logs = await readProvider.getLogs({
+        address: vaultAddress,
+        topics: [ifaceV.getEvent("RewardsNotified").topicHash],
+        fromBlock,
+        toBlock: latest,
+      });
+      const last = logs
+        .map((l) => {
+          try { return { ...ifaceV.parseLog({ topics: l.topics, data: l.data }), blockNumber: Number(l.blockNumber) }; } catch { return null; }
+        })
+        .filter(Boolean)
+        .sort((a, b) => b.blockNumber - a.blockNumber)[0];
+
+      if (!last) {
+        fill.style.width = "0%";
+        pct.textContent = "no emission period found in the lookback window";
+        return;
+      }
+      const startBlock = await readProvider.getBlock(last.blockNumber);
+      const start = Number(startBlock.timestamp);
+      const now = Math.floor(Date.now() / 1000);
+      const duration = Number(last.args.duration);
+      const elapsed = Math.max(0, Math.min(now - start, duration));
+      const p = (elapsed / duration) * 100;
+      fill.style.width = p.toFixed(1) + "%";
+      const left = duration - elapsed;
+      pct.textContent = p.toFixed(0) + "% elapsed · " + fmtCountdown(left).text + " remaining";
+    } catch (err) {
+      console.warn("period gauge:", err);
+      pct.textContent = "—";
+    }
   }
 
   /* the live ticker: advance earned locally at the exact per-second rate between on-chain refreshes */
@@ -387,15 +433,15 @@
 
   function renderAdmin() {
     const isOwner = account && vaultOwner && account.toLowerCase() === vaultOwner.toLowerCase();
-    $("#admin-section").hidden = !isOwner;
+    $("#admin-controls").hidden = !isOwner;
   }
 
   /* ---------------- event feed ---------------- */
 
   async function refreshEvents() {
-    const tbody = $("#activity-body");
+    const box = $("#activity-timeline");
     if (!vaultRO) {
-      tbody.innerHTML = '<tr><td colspan="4" class="muted center">Deploy the vault to see activity</td></tr>';
+      box.innerHTML = '<p class="muted center" style="padding:24px 0">Deploy the vault to see activity</p>';
       return;
     }
     try {
@@ -412,21 +458,21 @@
         })
         .filter(Boolean)
         .sort((a, b) => (b.blockNumber - a.blockNumber) || (b.index - a.index))
-        .slice(0, 15);
+        .slice(0, 12);
 
       if (decoded.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="muted center">No events in the last ' + (cfg.eventLookbackBlocks || 50000) + " blocks</td></tr>";
+        box.innerHTML = '<p class="muted center" style="padding:24px 0">No events in the last ' + (cfg.eventLookbackBlocks || 50000) + " blocks</p>";
       } else {
-        tbody.innerHTML = decoded.map(renderEventRow).join("");
+        box.innerHTML = decoded.map(renderEventItem).join("");
       }
-      $("#events-note").textContent = "showing the latest " + decoded.length + " events";
+      $("#events-note").textContent = "latest " + decoded.length + " events";
     } catch (err) {
-      tbody.innerHTML = '<tr><td colspan="4" class="muted center">Could not load events</td></tr>';
+      box.innerHTML = '<p class="muted center" style="padding:24px 0">Could not load events</p>';
       console.warn("events:", err);
     }
   }
 
-  function renderEventRow(ev) {
+  function renderEventItem(ev) {
     let details = "";
     switch (ev.name) {
       case "Staked":
@@ -450,13 +496,19 @@
       default:
         details = Object.entries(ev.args).map(([k, v]) => k + ": " + shortAddr(String(v))).join(" · ");
     }
+    const tx = explorerLink("/tx/" + ev.tx);
     return (
-      "<tr>" +
-      '<td><span class="ev-pill ev-' + ev.name + '">' + ev.name + "</span></td>" +
-      '<td class="mono">' + details + "</td>" +
-      '<td class="mono muted">' + ev.blockNumber + "</td>" +
-      "<td>" + txLink(ev.tx) + "</td>" +
-      "</tr>"
+      '<div class="tl-item" style="animation-delay:' + Math.min(ev.blockNumber % 10 * 40, 320) + 'ms">' +
+      '<span class="tl-dot ev-' + ev.name + '"></span>' +
+      '<div class="tl-body">' +
+      '<div class="tl-head">' +
+      '<span class="ev-pill ev-' + ev.name + '">' + ev.name + "</span>" +
+      '<span class="block-num">block ' + ev.blockNumber + "</span>" +
+      "</div>" +
+      '<p class="mono">' + details + "</p>" +
+      (tx ? '<a class="tl-tx" href="' + tx + '" target="_blank" rel="noopener">' + shortAddr(ev.tx) + " ↗</a>" : '<span class="tl-tx">' + shortAddr(ev.tx) + "</span>") +
+      "</div>" +
+      "</div>"
     );
   }
 
@@ -522,8 +574,19 @@
       }
     });
 
-    // claim / exit / emergency
+    // tabs
+    document.querySelectorAll(".tab-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll(".tab-panel").forEach((p) => { p.hidden = true; });
+        btn.classList.add("active");
+        $("#panel-" + btn.dataset.tab).hidden = false;
+      });
+    });
+
+    // claim / exit / emergency (band + claim tab share handlers)
     $("#btn-claim").addEventListener("click", () => guarded("getReward()", "Claimed"));
+    $("#btn-claim-2").addEventListener("click", () => guarded("getReward()", "Claimed"));
     $("#btn-exit").addEventListener("click", () => guarded("exitAll()", "Exited"));
     $("#btn-emergency").addEventListener("click", async () => {
       try {
