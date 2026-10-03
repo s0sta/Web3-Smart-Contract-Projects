@@ -3,7 +3,7 @@
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.26-363636?logo=solidity&logoColor=white)
 ![Foundry](https://img.shields.io/badge/Foundry-1.5.1-8b5cf6)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Live](https://img.shields.io/badge/Live-dao.s0sta.com-b91c1c)
+![Live](https://img.shields.io/badge/Live-s0sta.com/dao-b91c1c)
 
 <p align="center">
   <img src="../assets/dao.svg" alt="Senate DAO — token governance with snapshot voting" width="100%" />
@@ -11,7 +11,7 @@
 
 > **Difficulty: ★★★★★** · Project 9 of the [Web3 Smart Contract Projects](../README.md) portfolio.
 >
-> 🌐 **Live demo: [https://dao.s0sta.com](https://dao.s0sta.com)** — a full dApp dashboard for this governor (see [`frontend/`](frontend/README.md)).
+> 🌐 **Live demo: [https://s0sta.com/dao](https://s0sta.com/dao)** — a full dApp dashboard for this governor (see [`frontend/`](frontend/README.md)).
 >
 > 📍 **Deployed on Sepolia: [`Governor 0x9a9Cb0c2Ac2A08d3A4590Aaa1B5637A16dDBcC48`](https://sepolia.etherscan.io/address/0x9a9Cb0c2Ac2A08d3A4590Aaa1B5637A16dDBcC48)** · GOV `0xEf96…47c60` · two live proposals, one already with 910k for / 60k against
 
@@ -40,7 +40,7 @@ time-boxed voting, and automatic execution of arbitrary on-chain calls.
 | `GovToken` | [`src/GovToken.sol`](src/GovToken.sol) | ERC-20 + per-block voting-power checkpoints |
 | `Governor` | [`src/Governor.sol`](src/Governor.sol) | Proposals, voting, quorum, execution |
 | `DeployDAO` | [`script/Deploy.s.sol`](script/Deploy.s.sol) | 1M GOV, 3-day voting, 10k threshold, 4% quorum |
-| `frontend/` | [`frontend/README.md`](frontend/README.md) | The hosted dApp (dao.s0sta.com) |
+| `frontend/` | [`frontend/README.md`](frontend/README.md) | The hosted dApp (s0sta.com/dao) |
 
 ## Lifecycle
 

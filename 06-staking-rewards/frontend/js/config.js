@@ -42,5 +42,5 @@ window.APP_CONFIG = {
 
   // Links shown in the footer.
   github: "https://github.com/s0sta/Web3-Smart-Contract-Projects/tree/main/06-staking-rewards",
-  site: "https://stake.s0sta.com",
+  site: "https://s0sta.com/stake",
 };

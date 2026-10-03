@@ -17,5 +17,5 @@ echo json_encode([
     "vestingAddress" => "0xCf406a9b6EF721B38421eFd9860Af921E765B935",
     "defaultChainId" => 11155111, // 1 = mainnet, 11155111 = Sepolia, 31337 = anvil
     "github"        => "https://github.com/s0sta/Web3-Smart-Contract-Projects/tree/main/07-token-vesting",
-    "liveUrl"       => "https://vesting.s0sta.com",
+    "liveUrl"       => "https://s0sta.com/vesting",
 ]);

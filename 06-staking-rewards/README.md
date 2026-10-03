@@ -3,7 +3,7 @@
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.26-363636?logo=solidity&logoColor=white)
 ![Foundry](https://img.shields.io/badge/Foundry-1.5.1-8b5cf6)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Live](https://img.shields.io/badge/Live-stake.s0sta.com-14b8a6)
+![Live](https://img.shields.io/badge/Live-s0sta.com/stake-14b8a6)
 
 <p align="center">
   <img src="../assets/staking.svg" alt="StakeVault — time-weighted staking rewards" width="100%" />
@@ -11,7 +11,7 @@
 
 > **Difficulty: ★★★★☆** · Project 6 of the [Web3 Smart Contract Projects](../README.md) portfolio.
 >
-> 🌐 **Live demo: [https://stake.s0sta.com](https://stake.s0sta.com)** — a full dApp dashboard for this vault (see [`frontend/`](frontend/README.md)).
+> 🌐 **Live demo: [https://s0sta.com/stake](https://s0sta.com/stake)** — a full dApp dashboard for this vault (see [`frontend/`](frontend/README.md)).
 >
 > 📍 **Deployed on Sepolia: [`StakeVault 0xacc9353CecE7344064b20060A712C7B6A8f8450e`](https://sepolia.etherscan.io/address/0xacc9353CecE7344064b20060A712C7B6A8f8450e)** · STAKE `0x2B12…5085` · REWARD `0x9d54…0010` · 1,000,000 REW over 30 days · 1,500 STAKE already staked
 
@@ -41,7 +41,7 @@ whenever anyone enters, exits or claims.
 | `MockToken` | [`src/MockToken.sol`](src/MockToken.sol) | Mintable ERC-20 for demos/tests |
 | `Ownable` / `ReentrancyGuard` | [`src/`](src) | Shared primitives |
 | `DeployStakeVault` | [`script/Deploy.s.sol`](script/Deploy.s.sol) | Deploys tokens + vault, funds 1M REW over 30 days |
-| `frontend/` | [`frontend/README.md`](frontend/README.md) | The hosted dApp (stake.s0sta.com) |
+| `frontend/` | [`frontend/README.md`](frontend/README.md) | The hosted dApp (s0sta.com/stake) |
 
 ## The core invariant
 

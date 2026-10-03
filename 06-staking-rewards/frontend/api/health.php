@@ -1,7 +1,7 @@
 <?php
 /**
  * StakeVault dApp — health check endpoint.
- *   https://stake.s0sta.com/api/health.php
+ *   https://s0sta.com/stake/api/health.php
  */
 
 header("Content-Type: application/json; charset=utf-8");

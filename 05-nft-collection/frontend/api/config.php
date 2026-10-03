@@ -17,5 +17,5 @@ echo json_encode([
     "nftAddress"    => "0x57446cB7B0E8ac94892A5cB2b61C8cb377BC7Fea",
     "defaultChainId"=> 11155111, // 1 = mainnet, 11155111 = Sepolia, 31337 = anvil
     "github"        => "https://github.com/s0sta/Web3-Smart-Contract-Projects/tree/main/05-nft-collection",
-    "liveUrl"       => "https://nft.s0sta.com",
+    "liveUrl"       => "https://s0sta.com/nft",
 ]);

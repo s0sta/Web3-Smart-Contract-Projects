@@ -3,11 +3,11 @@
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.26-363636?logo=solidity&logoColor=white)
 ![Foundry](https://img.shields.io/badge/Foundry-1.5.1-8b5cf6)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Live](https://img.shields.io/badge/Live-erc--20Token.s0sta.com-06b6d4)
+![Live](https://img.shields.io/badge/Live-s0sta.com%2Ferc20-token-06b6d4)
 
 > **Difficulty: ★☆☆☆☆** · Project 1 of the [Web3 Smart Contract Projects](../README.md) portfolio.
 >
-> 🌐 **Live demo: [https://erc-20Token.s0sta.com](https://erc-20Token.s0sta.com)** — a full dApp dashboard for this contract (see [`frontend/`](frontend/README.md)).
+> 🌐 **Live demo: [https://s0sta.com/erc20-token](https://s0sta.com/erc20-token)** — a full dApp dashboard for this contract (see [`frontend/`](frontend/README.md)).
 >
 > 📍 **Deployed on Sepolia: [`0x26b420683E6F6Df39CFceBd7C5bB78B7459b8B62`](https://sepolia.etherscan.io/address/0x26b420683E6F6Df39CFceBd7C5bB78B7459b8B62)** · owner `0x319899FaAAD730519B8a2Bd72d2Eba2370a9B853`
 
@@ -36,7 +36,7 @@ EIP-2612 `permit` for gasless approvals.
 | `NovaToken` | [`src/Token.sol`](src/Token.sol) | ERC-20 core + cap, mint/burn, pause, permit |
 | `DeployNovaToken` | [`script/Deploy.s.sol`](script/Deploy.s.sol) | Deployment script |
 | `NovaTokenTest` | [`test/Token.t.sol`](test/Token.t.sol) | Full unit + fuzz suite |
-| `frontend/` | [`frontend/README.md`](frontend/README.md) | The hosted dApp (erc-20Token.s0sta.com) |
+| `frontend/` | [`frontend/README.md`](frontend/README.md) | The hosted dApp (s0sta.com/erc20-token) |
 
 ## Quickstart
 

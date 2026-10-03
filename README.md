@@ -11,7 +11,7 @@
 ![Tests](https://img.shields.io/badge/tests-251%20passing-brightgreen)
 ![CI](https://img.shields.io/badge/CI-10%2F10%20green-2ea44f)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Live](https://img.shields.io/badge/Live-erc--20Token.s0sta.com-06b6d4)
+![Live](https://img.shields.io/badge/Live-s0sta.com%2Ferc20-token-06b6d4)
 
 ---
 
@@ -24,7 +24,7 @@ expects: **full test suites, fuzz testing, live attack PoCs, deploy scripts and 
 
 This repository is the proof: **10 complete protocols, every contract written from scratch**
 (no OpenZeppelin, zero dependencies), **251 passing tests**, and a production-style dApp
-live at [erc-20Token.s0sta.com](https://erc-20Token.s0sta.com).
+live at [s0sta.com/erc20-token](https://s0sta.com/erc20-token).
 
 ## What I do
 
@@ -53,18 +53,18 @@ Every audit and every build in this repo follows the same discipline:
 
 | # | Project | What it is | Skills demonstrated | Difficulty | Tests |
 |---|---------|-----------|--------------------|:---:|:---:|
-| 01 | [ERC-20 Token](01-erc20-token) 🖥️ [live](https://erc-20Token.s0sta.com) | Supply-capped token: mint, burn, pause, EIP-2612 permit | ERC-20, ECDSA, EIP-712, access control | ★☆☆☆☆ | 31 ✅ |
-| 02 | [Crowdfunding](02-crowdfunding) 🖥️ [live dApp](https://crowdfund.s0sta.com) | Kickstarter-style factory: pledge → claim/refund, platform fees | Factory pattern, pull payments, reentrancy defense | ★★☆☆☆ | 30 ✅ |
-| 03 | [MultiSig Wallet](03-multisig-wallet) 🖥️ [live dApp](https://multisig.s0sta.com) | Gnosis-style N-of-M treasury with arbitrary calls | Multi-party auth, execution ordering, replay safety | ★★★☆☆ | 27 ✅ |
-| 04 | [Escrow Service](04-escrow-service) 🖥️ [live dApp](https://escrow.s0sta.com) | Buyer/seller escrow with arbitration & fees | State machines, dispute resolution, fee accounting | ★★★☆☆ | 30 ✅ |
-| 05 | [NFT Collection](05-nft-collection) 🖥️ [live dApp](https://nft.s0sta.com) | ERC-721 *from scratch*: Merkle whitelist, royalties, reveal | ERC-721 internals, Merkle proofs, ERC-2981 | ★★★☆☆ | 33 ✅ |
-| 06 | [Staking Rewards](06-staking-rewards) 🖥️ [live dApp](https://stake.s0sta.com) | Synthetix-style time-weighted emissions | Accumulator math, checkpoints, O(1) rewards | ★★★★☆ | 26 ✅ |
-| 07 | [Token Vesting](07-token-vesting) 🖥️ [live dApp](https://vesting.s0sta.com) | Cliff + linear vesting, revocable schedules | Time-based unlock curves, revocation accounting | ★★★☆☆ | 20 ✅ |
-| 08 | [AMM DEX](08-amm-dex) 🖥️ [live dApp](https://dex.s0sta.com) | Uniswap-V2-style factory/pair/router, flash swaps | `x·y=k` math, LP accounting, multi-hop routing | ★★★★★ | 21 ✅ |
-| 09 | [DAO Governance](09-dao-governance) 🖥️ [live dApp](https://dao.s0sta.com) | Snapshot voting power, quorum, on-chain execution | Checkpoint data structures, flash-loan defense | ★★★★★ | 16 ✅ |
+| 01 | [ERC-20 Token](01-erc20-token) 🖥️ [live](https://s0sta.com/erc20-token) | Supply-capped token: mint, burn, pause, EIP-2612 permit | ERC-20, ECDSA, EIP-712, access control | ★☆☆☆☆ | 31 ✅ |
+| 02 | [Crowdfunding](02-crowdfunding) 🖥️ [live dApp](https://s0sta.com/crowdfund) | Kickstarter-style factory: pledge → claim/refund, platform fees | Factory pattern, pull payments, reentrancy defense | ★★☆☆☆ | 30 ✅ |
+| 03 | [MultiSig Wallet](03-multisig-wallet) 🖥️ [live dApp](https://s0sta.com/multisig) | Gnosis-style N-of-M treasury with arbitrary calls | Multi-party auth, execution ordering, replay safety | ★★★☆☆ | 27 ✅ |
+| 04 | [Escrow Service](04-escrow-service) 🖥️ [live dApp](https://s0sta.com/escrow) | Buyer/seller escrow with arbitration & fees | State machines, dispute resolution, fee accounting | ★★★☆☆ | 30 ✅ |
+| 05 | [NFT Collection](05-nft-collection) 🖥️ [live dApp](https://s0sta.com/nft) | ERC-721 *from scratch*: Merkle whitelist, royalties, reveal | ERC-721 internals, Merkle proofs, ERC-2981 | ★★★☆☆ | 33 ✅ |
+| 06 | [Staking Rewards](06-staking-rewards) 🖥️ [live dApp](https://s0sta.com/stake) | Synthetix-style time-weighted emissions | Accumulator math, checkpoints, O(1) rewards | ★★★★☆ | 26 ✅ |
+| 07 | [Token Vesting](07-token-vesting) 🖥️ [live dApp](https://s0sta.com/vesting) | Cliff + linear vesting, revocable schedules | Time-based unlock curves, revocation accounting | ★★★☆☆ | 20 ✅ |
+| 08 | [AMM DEX](08-amm-dex) 🖥️ [live dApp](https://s0sta.com/dex) | Uniswap-V2-style factory/pair/router, flash swaps | `x·y=k` math, LP accounting, multi-hop routing | ★★★★★ | 21 ✅ |
+| 09 | [DAO Governance](09-dao-governance) 🖥️ [live dApp](https://s0sta.com/dao) | Snapshot voting power, quorum, on-chain execution | Checkpoint data structures, flash-loan defense | ★★★★★ | 16 ✅ |
 | 10 | [Lending Protocol](10-lending-protocol) | Collateralized lending with interest & liquidations | Health factors, compounding interest, liquidation economics | ★★★★★ | 20 ✅ |
 
-**Live deployment:** NovaToken on [Sepolia](https://sepolia.etherscan.io/address/0x26b420683E6F6Df39CFceBd7C5bB78B7459b8B62) · owner `0x3198…9B853` · frontend dApp at [erc-20Token.s0sta.com](https://erc-20Token.s0sta.com)
+**Live deployment:** NovaToken on [Sepolia](https://sepolia.etherscan.io/address/0x26b420683E6F6Df39CFceBd7C5bB78B7459b8B62) · owner `0x3198…9B853` · frontend dApp at [s0sta.com/erc20-token](https://s0sta.com/erc20-token)
 
 ## Stats
 
@@ -100,7 +100,7 @@ GitHub Actions runs `forge build` + `forge test` on all 10 projects for every pu
 I'm available for smart-contract audits, protocol development and security consultations.
 
 - 📫 **GitHub:** [@s0sta](https://github.com/s0sta)
-- 🌐 **Live work:** [erc-20Token.s0sta.com](https://erc-20Token.s0sta.com)
+- 🌐 **Portfolio portal:** [s0sta.com](https://s0sta.com) — one hub linking all live dApps (`/erc20-token`, `/crowdfund`, `/multisig`, `/escrow`, `/nft`, `/stake`, `/vesting`, `/dex`, `/dao`, soon `/lend`)
 
 ## Security note
 

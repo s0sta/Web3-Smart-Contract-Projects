@@ -17,5 +17,5 @@ echo json_encode([
     "governorAddress" => "0x9a9Cb0c2Ac2A08d3A4590Aaa1B5637A16dDBcC48",
     "defaultChainId"  => 11155111, // 1 = mainnet, 11155111 = Sepolia, 31337 = anvil
     "github"          => "https://github.com/s0sta/Web3-Smart-Contract-Projects/tree/main/09-dao-governance",
-    "liveUrl"         => "https://dao.s0sta.com",
+    "liveUrl"         => "https://s0sta.com/dao",
 ]);

@@ -44,5 +44,5 @@ window.APP_CONFIG = {
 
   // Links shown in the footer.
   github: "https://github.com/s0sta/Web3-Smart-Contract-Projects/tree/main/09-dao-governance",
-  site: "https://dao.s0sta.com",
+  site: "https://s0sta.com/dao",
 };

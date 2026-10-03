@@ -1,10 +1,10 @@
-# MultiSig Vault dApp — Frontend for multisig.s0sta.com
+# MultiSig Vault dApp — Frontend for s0sta.com/multisig
 
 A modern, self-contained web3 dashboard for the from-scratch MultiSigWallet (Project 03).
 **No build step, no Node server** — pure HTML/CSS/JS with ethers.js v6 from a CDN,
 plus an optional tiny PHP config layer. Uploads directly to any PHP/static hosting.
 
-Live: **https://multisig.s0sta.com**
+Live: **https://s0sta.com/multisig**
 
 > ✅ **Already deployed on Sepolia** (2-of-3 wallet with demo owner keys) — the config
 > files below are pre-filled. Just upload this folder to Hostinger and the site is live.
@@ -98,16 +98,16 @@ Then open the dApp → Settings → Network: Local (Anvil) → paste the wallet 
 | `api/config.php` | set `walletAddress` — takes priority when hosted on PHP |
 | Browser UI | Settings ⚙ saves the address in localStorage |
 
-## 3. Upload to Hostinger (subdomain multisig.s0sta.com)
+## 3. Upload to Hostinger (path s0sta.com/multisig)
 
-1. hPanel → **Domains → Subdomains**, create `multisig` pointing at your domain.
-2. Upload the **contents of `frontend/`** into the subdomain's document root.
+1. hPanel → **Files → File Manager**, open your main domain's `public_html`.
+2. Create the project folder and upload the **contents of `frontend/`** into it.
 3. Edit `api/config.php` (or `js/config.js` before uploading) and paste the wallet address.
-4. Open `https://multisig.s0sta.com` — done. Verify PHP via `https://multisig.s0sta.com/api/health.php`.
+4. Open `https://s0sta.com/multisig` — done. Verify PHP via `https://s0sta.com/multisig/api/health.php`.
 
 ## 4. Reference the live site from GitHub
 
-> Live demo: https://multisig.s0sta.com · Sepolia testnet · wallet in `src/`
+> Live demo: https://s0sta.com/multisig · Sepolia testnet · wallet in `src/`
 
 ## Rebranding
 

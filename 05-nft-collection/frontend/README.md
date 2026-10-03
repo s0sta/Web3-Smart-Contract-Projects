@@ -1,10 +1,10 @@
-# Genesis Collection dApp — Frontend for nft.s0sta.com
+# Genesis Collection dApp — Frontend for s0sta.com/nft
 
 A modern, self-contained web3 dashboard for the GenesisNFT collection (Project 05).
 **No build step, no Node server** — pure HTML/CSS/JS with ethers.js v6 from a CDN,
 plus an optional tiny PHP config layer. Uploads directly to any PHP/static hosting.
 
-Live: **https://nft.s0sta.com**
+Live: **https://s0sta.com/nft**
 
 > ✅ **Already deployed on Sepolia** — the config files below are pre-filled.
 > Just upload this folder to Hostinger and the site is live.
@@ -84,16 +84,16 @@ Then open the dApp → Settings → Network: Local (Anvil) → paste the collect
 | `api/config.php` | set `nftAddress` — takes priority when hosted on PHP |
 | Browser UI | Settings ⚙ saves the address in localStorage |
 
-## 3. Upload to Hostinger (subdomain nft.s0sta.com)
+## 3. Upload to Hostinger (path s0sta.com/nft)
 
-1. hPanel → **Domains → Subdomains**, create `nft` pointing at your domain.
-2. Upload the **contents of `frontend/`** into the subdomain's document root.
+1. hPanel → **Files → File Manager**, open your main domain's `public_html`.
+2. Create the project folder and upload the **contents of `frontend/`** into it.
 3. Edit `api/config.php` (or `js/config.js` before uploading) and paste the collection address.
-4. Open `https://nft.s0sta.com` — done. Verify PHP via `https://nft.s0sta.com/api/health.php`.
+4. Open `https://s0sta.com/nft` — done. Verify PHP via `https://s0sta.com/nft/api/health.php`.
 
 ## 4. Reference the live site from GitHub
 
-> Live demo: https://nft.s0sta.com · Sepolia testnet · ERC-721 in `src/`
+> Live demo: https://s0sta.com/nft · Sepolia testnet · ERC-721 in `src/`
 
 ## Rebranding
 

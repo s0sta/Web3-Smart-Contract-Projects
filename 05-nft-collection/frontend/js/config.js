@@ -45,5 +45,5 @@ window.APP_CONFIG = {
 
   // Links shown in the footer.
   github: "https://github.com/s0sta/Web3-Smart-Contract-Projects/tree/main/05-nft-collection",
-  site: "https://nft.s0sta.com",
+  site: "https://s0sta.com/nft",
 };

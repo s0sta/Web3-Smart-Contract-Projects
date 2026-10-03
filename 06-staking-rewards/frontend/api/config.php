@@ -17,5 +17,5 @@ echo json_encode([
     "vaultAddress"  => "0xacc9353CecE7344064b20060A712C7B6A8f8450e",
     "defaultChainId"=> 11155111, // 1 = mainnet, 11155111 = Sepolia, 31337 = anvil
     "github"        => "https://github.com/s0sta/Web3-Smart-Contract-Projects/tree/main/06-staking-rewards",
-    "liveUrl"       => "https://stake.s0sta.com",
+    "liveUrl"       => "https://s0sta.com/stake",
 ]);

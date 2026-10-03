@@ -17,5 +17,5 @@ echo json_encode([
     "walletAddress" => "0x07212677caE6aa93331d6E18205EB5898c3079f4",
     "defaultChainId"=> 11155111, // 1 = mainnet, 11155111 = Sepolia, 31337 = anvil
     "github"        => "https://github.com/s0sta/Web3-Smart-Contract-Projects/tree/main/03-multisig-wallet",
-    "liveUrl"       => "https://multisig.s0sta.com",
+    "liveUrl"       => "https://s0sta.com/multisig",
 ]);

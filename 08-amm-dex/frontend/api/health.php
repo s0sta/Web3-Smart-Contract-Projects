@@ -1,7 +1,7 @@
 <?php
 /**
  * AMM DEX dApp — health check endpoint.
- *   https://dex.s0sta.com/api/health.php
+ *   https://s0sta.com/dex/api/health.php
  */
 
 header("Content-Type: application/json; charset=utf-8");

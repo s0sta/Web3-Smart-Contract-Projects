@@ -20,5 +20,5 @@ echo json_encode([
     "tokenB"        => "0x2Ea88C2c86c835551a00A605A4966Ba0d755De9e", // USD
     "defaultChainId"=> 11155111, // 1 = mainnet, 11155111 = Sepolia, 31337 = anvil
     "github"        => "https://github.com/s0sta/Web3-Smart-Contract-Projects/tree/main/08-amm-dex",
-    "liveUrl"       => "https://dex.s0sta.com",
+    "liveUrl"       => "https://s0sta.com/dex",
 ]);

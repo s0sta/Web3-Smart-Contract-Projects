@@ -1,7 +1,7 @@
 <?php
 /**
  * TokenVesting dApp — health check endpoint.
- *   https://vesting.s0sta.com/api/health.php
+ *   https://s0sta.com/vesting/api/health.php
  */
 
 header("Content-Type: application/json; charset=utf-8");

@@ -1,7 +1,7 @@
 <?php
 /**
  * Senate DAO dApp — health check endpoint.
- *   https://dao.s0sta.com/api/health.php
+ *   https://s0sta.com/dao/api/health.php
  */
 
 header("Content-Type: application/json; charset=utf-8");

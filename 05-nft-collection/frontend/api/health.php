@@ -1,7 +1,7 @@
 <?php
 /**
  * Genesis Collection dApp — health check endpoint.
- *   https://nft.s0sta.com/api/health.php
+ *   https://s0sta.com/nft/api/health.php
  */
 
 header("Content-Type: application/json; charset=utf-8");

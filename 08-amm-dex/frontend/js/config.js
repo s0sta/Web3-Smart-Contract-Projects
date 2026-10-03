@@ -48,5 +48,5 @@ window.APP_CONFIG = {
 
   // Links shown in the footer.
   github: "https://github.com/s0sta/Web3-Smart-Contract-Projects/tree/main/08-amm-dex",
-  site: "https://dex.s0sta.com",
+  site: "https://s0sta.com/dex",
 };

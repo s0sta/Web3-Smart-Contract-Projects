@@ -3,7 +3,7 @@
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.26-363636?logo=solidity&logoColor=white)
 ![Foundry](https://img.shields.io/badge/Foundry-1.5.1-8b5cf6)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Live](https://img.shields.io/badge/Live-escrow.s0sta.com-d946ef)
+![Live](https://img.shields.io/badge/Live-s0sta.com/escrow-d946ef)
 
 <p align="center">
   <img src="../assets/escrow.svg" alt="TrustEscrow — buyer/seller escrow with arbitration" width="100%" />
@@ -11,7 +11,7 @@
 
 > **Difficulty: ★★★☆☆** · Project 4 of the [Web3 Smart Contract Projects](../README.md) portfolio.
 >
-> 🌐 **Live demo: [https://escrow.s0sta.com](https://escrow.s0sta.com)** — a full dApp dashboard for this platform (see [`frontend/`](frontend/README.md)).
+> 🌐 **Live demo: [https://s0sta.com/escrow](https://s0sta.com/escrow)** — a full dApp dashboard for this platform (see [`frontend/`](frontend/README.md)).
 >
 > 📍 **Deployed on Sepolia: [`TrustEscrow 0xC1b5B1dcd8985c9965C2E7Ac8E4A1a3b85394564`](https://sepolia.etherscan.io/address/0xC1b5B1dcd8985c9965C2E7Ac8E4A1a3b85394564)** · owner `0x319899FaAAD730519B8a2Bd72d2Eba2370a9B853` · live deals: #0 released · #1 disputed & resolved
 
@@ -40,7 +40,7 @@ disputes with an arbitrary split. The platform earns a configurable fee on every
 | `ReentrancyGuard` | [`src/ReentrancyGuard.sol`](src/ReentrancyGuard.sol) | Payout reentrancy protection |
 | `TrustEscrow` | [`src/TrustEscrow.sol`](src/TrustEscrow.sol) | Deals, releases, refunds, disputes, fees |
 | `DeployTrustEscrow` | [`script/Deploy.s.sol`](script/Deploy.s.sol) | Deployment + example deal |
-| `frontend/` | [`frontend/README.md`](frontend/README.md) | The hosted dApp (escrow.s0sta.com) |
+| `frontend/` | [`frontend/README.md`](frontend/README.md) | The hosted dApp (s0sta.com/escrow) |
 
 ## Flow
 

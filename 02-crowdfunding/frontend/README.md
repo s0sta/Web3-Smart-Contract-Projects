@@ -1,10 +1,10 @@
-# CrowdFund dApp — Frontend for crowdfund.s0sta.com
+# CrowdFund dApp — Frontend for s0sta.com/crowdfund
 
 A modern, self-contained web3 dashboard for the CrowdFund protocol (Project 02).
 **No build step, no Node server** — pure HTML/CSS/JS with ethers.js v6 from a CDN,
 plus an optional tiny PHP config layer. Uploads directly to any PHP/static hosting.
 
-Live: **https://crowdfund.s0sta.com**
+Live: **https://s0sta.com/crowdfund**
 
 > ✅ **Already deployed on Sepolia** (factory + example campaign) — the config files
 > below are pre-filled. Just upload this folder to Hostinger and the site is live.
@@ -82,18 +82,18 @@ Then open the dApp → Settings → Network: Local (Anvil) → paste the factory
 | `api/config.php` | set `factoryAddress` — takes priority when hosted on PHP |
 | Browser UI | Settings ⚙ saves the address in localStorage |
 
-## 3. Upload to Hostinger (subdomain crowdfund.s0sta.com)
+## 3. Upload to Hostinger (path s0sta.com/crowdfund)
 
-1. hPanel → **Domains → Subdomains**, create `crowdfund` pointing at your domain.
-2. Upload the **contents of `frontend/`** into the subdomain's document root.
+1. hPanel → **Files → File Manager**, open your main domain's `public_html`.
+2. Create the project folder and upload the **contents of `frontend/`** into it.
 3. Edit `api/config.php` (or `js/config.js` before uploading) and paste the factory address.
-4. Open `https://crowdfund.s0sta.com` — done. Verify PHP via `https://crowdfund.s0sta.com/api/health.php`.
+4. Open `https://s0sta.com/crowdfund` — done. Verify PHP via `https://s0sta.com/crowdfund/api/health.php`.
 
 ## 4. Reference the live site from GitHub
 
 The project README (`../README.md`) links the live demo. On GitHub:
 
-> Live demo: https://crowdfund.s0sta.com · Sepolia testnet · factory + campaign in `src/`
+> Live demo: https://s0sta.com/crowdfund · Sepolia testnet · factory + campaign in `src/`
 
 ## Rebranding
 

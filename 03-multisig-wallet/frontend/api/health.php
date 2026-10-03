@@ -1,7 +1,7 @@
 <?php
 /**
  * MultiSig Vault dApp — health check endpoint.
- *   https://multisig.s0sta.com/api/health.php
+ *   https://s0sta.com/multisig/api/health.php
  */
 
 header("Content-Type: application/json; charset=utf-8");

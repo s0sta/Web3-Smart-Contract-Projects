@@ -1,11 +1,11 @@
-# NovaToken dApp — Frontend for erc-20Token.s0sta.com
+# NovaToken dApp — Frontend for s0sta.com/erc20-token
 
 A modern, self-contained web3 dashboard for the NovaToken ERC-20 contract
 (Project 01). **No build step, no Node server** — pure HTML/CSS/JS with
 ethers.js v6 loaded from a CDN, plus an optional tiny PHP config layer.
 Uploads directly to any PHP/static hosting (Hostinger).
 
-Live: **https://erc-20Token.s0sta.com**
+Live: **https://s0sta.com/erc20-token**
 
 > ✅ **Already deployed on Sepolia**: `0x26b420683E6F6Df39CFceBd7C5bB78B7459b8B62`
 > (owner `0x319899FaAAD730519B8a2Bd72d2Eba2370a9B853`) — the config files below are
@@ -101,12 +101,11 @@ Pick one:
 | `api/config.php` | set `tokenAddress` — takes priority when the site is hosted on PHP |
 | Browser UI | Settings ⚙ on the site saves the address in localStorage |
 
-## 3. Upload to Hostinger (subdomain erc-20Token.s0sta.com)
+## 3. Upload to Hostinger (path s0sta.com/erc20-token)
 
-1. In hPanel → **Domains → Subdomains**, create `erc-20Token` pointing at your domain.
-2. In **Files → File Manager** (or any FTP client), upload the **contents of `frontend/`**
-   into the subdomain's document root (`public_html/erc-20Token/` or the folder the
-   subdomain points to). Keep the folder structure exactly:
+1. In hPanel → **Files → File Manager**, open your main domain's `public_html`.
+2. Create the folder `erc20-token` and upload the **contents of `frontend/`** into it.
+   Keep the folder structure exactly:
    ```
    index.html
    css/style.css
@@ -115,9 +114,9 @@ Pick one:
    ```
 3. Edit `api/config.php` on the server (or `js/config.js` before uploading) and paste your
    deployed token address.
-4. Open `https://erc-20Token.s0sta.com` — the page works immediately; PHP is only used for
+4. Open `https://s0sta.com/erc20-token` — the page works immediately; PHP is only used for
    the config/health endpoints.
-5. Verify PHP: `https://erc-20Token.s0sta.com/api/health.php` should return `{"status":"ok",…}`.
+5. Verify PHP: `https://s0sta.com/erc20-token/api/health.php` should return `{"status":"ok",…}`.
 
 ## 4. Reference the live site from GitHub
 
@@ -125,7 +124,7 @@ The project README (`../README.md`) already links the live demo. The contract + 
 live in **[github.com/s0sta/Web3-Smart-Contract-Projects](https://github.com/s0sta/Web3-Smart-Contract-Projects/tree/main/01-erc20-token)**.
 On your GitHub profile, pin the repo and mention:
 
-> Live demo: https://erc-20Token.s0sta.com · Sepolia testnet · contracts + tests in `src/`, `test/`
+> Live demo: https://s0sta.com/erc20-token · Sepolia testnet · contracts + tests in `src/`, `test/`
 
 ## Rebranding
 

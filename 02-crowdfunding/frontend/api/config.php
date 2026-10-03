@@ -18,5 +18,5 @@ echo json_encode([
     "factoryAddress"=> "0x49Ed445AB73b0397B8946c6BCDCa4bFcF04C9FdB",
     "defaultChainId"=> 11155111, // 1 = mainnet, 11155111 = Sepolia, 31337 = anvil
     "github"        => "https://github.com/s0sta/Web3-Smart-Contract-Projects/tree/main/02-crowdfunding",
-    "liveUrl"       => "https://crowdfund.s0sta.com",
+    "liveUrl"       => "https://s0sta.com/crowdfund",
 ]);

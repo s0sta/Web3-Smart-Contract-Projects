@@ -42,5 +42,5 @@ window.APP_CONFIG = {
 
   // Links shown in the footer.
   github: "https://github.com/s0sta/Web3-Smart-Contract-Projects/tree/main/04-escrow-service",
-  site: "https://escrow.s0sta.com",
+  site: "https://s0sta.com/escrow",
 };

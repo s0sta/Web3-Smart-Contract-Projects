@@ -2,7 +2,7 @@
 /**
  * NovaToken dApp — health check endpoint.
  * Useful to verify the subdomain and PHP are serving correctly:
- *   https://erc-20Token.s0sta.com/api/health.php
+ *   https://s0sta.com/erc20-token/api/health.php
  */
 
 header("Content-Type: application/json; charset=utf-8");

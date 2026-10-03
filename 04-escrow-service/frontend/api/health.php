@@ -1,7 +1,7 @@
 <?php
 /**
  * TrustEscrow dApp — health check endpoint.
- *   https://escrow.s0sta.com/api/health.php
+ *   https://s0sta.com/escrow/api/health.php
  */
 
 header("Content-Type: application/json; charset=utf-8");

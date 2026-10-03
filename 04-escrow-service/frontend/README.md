@@ -1,10 +1,10 @@
-# TrustEscrow dApp — Frontend for escrow.s0sta.com
+# TrustEscrow dApp — Frontend for s0sta.com/escrow
 
 A modern, self-contained web3 dashboard for the TrustEscrow protocol (Project 04).
 **No build step, no Node server** — pure HTML/CSS/JS with ethers.js v6 from a CDN,
 plus an optional tiny PHP config layer. Uploads directly to any PHP/static hosting.
 
-Live: **https://escrow.s0sta.com**
+Live: **https://s0sta.com/escrow**
 
 > ✅ **Already deployed on Sepolia** — the config files below are pre-filled.
 > Just upload this folder to Hostinger and the site is live.
@@ -85,16 +85,16 @@ Then open the dApp → Settings → Network: Local (Anvil) → paste the escrow 
 | `api/config.php` | set `escrowAddress` — takes priority when hosted on PHP |
 | Browser UI | Settings ⚙ saves the address in localStorage |
 
-## 3. Upload to Hostinger (subdomain escrow.s0sta.com)
+## 3. Upload to Hostinger (path s0sta.com/escrow)
 
-1. hPanel → **Domains → Subdomains**, create `escrow` pointing at your domain.
-2. Upload the **contents of `frontend/`** into the subdomain's document root.
+1. hPanel → **Files → File Manager**, open your main domain's `public_html`.
+2. Create the project folder and upload the **contents of `frontend/`** into it.
 3. Edit `api/config.php` (or `js/config.js` before uploading) and paste the escrow address.
-4. Open `https://escrow.s0sta.com` — done. Verify PHP via `https://escrow.s0sta.com/api/health.php`.
+4. Open `https://s0sta.com/escrow` — done. Verify PHP via `https://s0sta.com/escrow/api/health.php`.
 
 ## 4. Reference the live site from GitHub
 
-> Live demo: https://escrow.s0sta.com · Sepolia testnet · escrow in `src/`
+> Live demo: https://s0sta.com/escrow · Sepolia testnet · escrow in `src/`
 
 ## Rebranding
 

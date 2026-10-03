@@ -1,10 +1,10 @@
-# StakeVault dApp — Frontend for stake.s0sta.com
+# StakeVault dApp — Frontend for s0sta.com/stake
 
 A modern, self-contained web3 dashboard for the StakeVault protocol (Project 06).
 **No build step, no Node server** — pure HTML/CSS/JS with ethers.js v6 from a CDN,
 plus an optional tiny PHP config layer. Uploads directly to any PHP/static hosting.
 
-Live: **https://stake.s0sta.com**
+Live: **https://s0sta.com/stake**
 
 > ✅ **Already deployed on Sepolia** — the config files below are pre-filled.
 > Just upload this folder to Hostinger and the site is live.
@@ -83,16 +83,16 @@ Then open the dApp → Settings → Network: Local (Anvil) → paste the vault a
 | `api/config.php` | set `vaultAddress` — takes priority when hosted on PHP |
 | Browser UI | Settings ⚙ saves the address in localStorage |
 
-## 3. Upload to Hostinger (subdomain stake.s0sta.com)
+## 3. Upload to Hostinger (path s0sta.com/stake)
 
-1. hPanel → **Domains → Subdomains**, create `stake` pointing at your domain.
-2. Upload the **contents of `frontend/`** into the subdomain's document root.
+1. hPanel → **Files → File Manager**, open your main domain's `public_html`.
+2. Create the project folder and upload the **contents of `frontend/`** into it.
 3. Edit `api/config.php` (or `js/config.js` before uploading) and paste the vault address.
-4. Open `https://stake.s0sta.com` — done. Verify PHP via `https://stake.s0sta.com/api/health.php`.
+4. Open `https://s0sta.com/stake` — done. Verify PHP via `https://s0sta.com/stake/api/health.php`.
 
 ## 4. Reference the live site from GitHub
 
-> Live demo: https://stake.s0sta.com · Sepolia testnet · vault in `src/`
+> Live demo: https://s0sta.com/stake · Sepolia testnet · vault in `src/`
 
 ## Rebranding
 
