@@ -22,6 +22,7 @@ jobs:
           - 08-amm-dex
           - 09-dao-governance
           - 10-lending-protocol
+          - 11-owners-association
     steps:
       - uses: actions/checkout@v4
 
