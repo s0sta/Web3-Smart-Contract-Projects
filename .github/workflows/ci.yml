@@ -30,6 +30,7 @@ jobs:
           - 16-takaful-insurance
           - 17-murabaha-finance
           - 18-zakat-engine
+          - 19-mawarid-rwa
     steps:
       - uses: actions/checkout@v4
 

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mawarid — RWA Investment Platform | s0sta.com/mawarid</title>
+  <meta name="description" content="The end-to-end tokenized real-estate platform: registration, KYC, primary issuance, OTC secondary market, rental epochs, governance, treasury and insurance." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">🏛</span>
+      <div>
+        <span class="brand-name">Mawarid <span class="brand-tag">RWA</span></span>
+        <span class="brand-sub">End-to-end real-estate investment platform · s0sta.com/mawarid</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙</button>
+      <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+    </div>
+  </header>
+
+  <main class="mawarid">
+
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Registry not configured yet</h3>
+          <p>Paste your deployed <strong>MawaridAssetRegistry</strong> address below, or deploy locally:
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… registry address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this registry</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Registry address <input type="text" id="set-registry-address" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+        <label>Network <select id="set-chain"></select></label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- ASSET TICKER -->
+    <section class="ticker-strip">
+      <div class="strip-cell">
+        <span class="strip-label">Asset</span>
+        <span class="strip-value" id="ticker-name">—</span>
+      </div>
+      <div class="strip-cell">
+        <span class="strip-label">Appraisal</span>
+        <span class="strip-value" id="ticker-appraisal">—</span>
+      </div>
+      <div class="strip-cell">
+        <span class="strip-label">Shares issued</span>
+        <span class="strip-value" id="ticker-issued">—</span>
+      </div>
+      <div class="strip-cell">
+        <span class="strip-label">Rent distributed</span>
+        <span class="strip-value" id="ticker-distributed">—</span>
+      </div>
+      <div class="strip-cell">
+        <span class="strip-label">Status</span>
+        <span class="strip-value" id="ticker-status">—</span>
+      </div>
+    </section>
+
+    <div class="mawarid-grid">
+
+      <!-- MY PORTFOLIO & PRIMARY -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">💼</span><h2>Invest</h2></div>
+        <table class="kpi-table">
+          <tr><td>Your shares</td><td class="mono" id="inv-shares">—</td></tr>
+          <tr><td>Claimable rent</td><td class="mono accent" id="inv-claimable">—</td></tr>
+          <tr><td>Your KYC</td><td id="inv-kyc">—</td></tr>
+        </table>
+        <div class="act-form">
+          <label>Subscribe to phase #0 (100 AED-S/share) <input type="number" id="sub-amount" placeholder="shares" min="0" step="1" /></label>
+          <button class="btn btn-primary" id="btn-subscribe">Subscribe</button>
+        </div>
+        <div class="act-form">
+          <label>Claim allocation after finalize</label>
+          <button class="btn btn-accent" id="btn-claim-alloc">Claim shares</button>
+        </div>
+        <div class="act-form">
+          <label>Claim rental income</label>
+          <button class="btn btn-ghost" id="btn-claim-rent">Claim rent</button>
+        </div>
+      </section>
+
+      <!-- SECONDARY MARKET -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">📊</span><h2>The Exchange</h2><span class="muted small" id="exchange-note">loading…</span></div>
+        <table class="kpi-table">
+          <tr><td>Volume</td><td class="mono" id="ex-volume">—</td></tr>
+          <tr><td>Fees collected</td><td class="mono" id="ex-fees">—</td></tr>
+          <tr><td>Fee rate</td><td class="mono" id="ex-feeBps">—</td></tr>
+        </table>
+        <div class="order-list" id="order-list">
+          <p class="muted">no open orders</p>
+        </div>
+        <div class="act-form">
+          <label>Sell — shares <input type="number" id="sell-amount" placeholder="0" min="0" step="1" /></label>
+          <label>Price per share <input type="number" id="sell-price" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-sell">Place order</button>
+        </div>
+      </section>
+
+      <!-- GOVERNANCE -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">⚖</span><h2>Governance</h2><span class="muted small" id="gov-note">loading…</span></div>
+        <div class="prop-list" id="prop-list">
+          <p class="muted">no proposals yet</p>
+        </div>
+        <div class="act-form">
+          <label>Propose an appraisal <input type="number" id="appraise-value" placeholder="USD valuation" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-appraise-propose">Propose</button>
+        </div>
+        <div class="act-form">
+          <label>Record rental income (manager) <input type="number" id="income-amount" placeholder="0.0" min="0" step="any" /></label>
+          <div class="row">
+            <button class="btn btn-ghost" id="btn-record-income">Record</button>
+            <button class="btn btn-ghost" id="btn-distribute">Distribute pool</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <footer class="site-footer">
+      <span>Mawarid · RWA platform from scratch — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/mawarid</span>
+      </span>
+    </footer>
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
