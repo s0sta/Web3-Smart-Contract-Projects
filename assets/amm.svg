@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f59e0b"/>
+      <stop offset="1" stop-color="#2563eb"/>
+    </linearGradient>
+  </defs>
+
+  <!-- static backdrop: no background animation by design -->
+  <rect width="1200" height="300" fill="#0d1117"/>
+  <circle cx="150" cy="90" r="130" fill="#f59e0b" opacity="0.05"/>
+  <circle cx="1050" cy="210" r="150" fill="#2563eb" opacity="0.06"/>
+
+  <!-- identity (entrance only) -->
+  <text x="60" y="112" font-size="42" font-weight="700" fill="url(#g1)" opacity="0">
+    GLD / USD AMM
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.3s"/>
+  </text>
+  <text x="62" y="150" font-size="20" font-weight="600" fill="#edf2f9" opacity="0">
+    Constant-product DEX, from scratch — factory · pair · router
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.7s"/>
+  </text>
+  <text x="62" y="178" font-size="13.5" fill="#8b98ad" opacity="0">
+    x · y = k pricing · 0.3% swap fee · sync-on-event reserves · flash-swap ready
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1s"/>
+  </text>
+
+  <!-- swap terminal element -->
+  <g transform="translate(760 36)">
+    <rect width="400" height="228" rx="16" fill="#141b28" stroke="#26324a" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.4s"/>
+    </rect>
+    <text x="20" y="30" font-size="13" fill="#edf2f9" font-weight="700" opacity="0">
+      Swap
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.5s"/>
+    </text>
+    <text x="360" y="30" font-size="11" fill="#f59e0b" text-anchor="end" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      GLD/USD · 0.3%
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.6s"/>
+    </text>
+
+    <!-- pay field -->
+    <rect x="20" y="46" width="360" height="52" rx="10" fill="#0f1622" stroke="#26324a" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.8s"/>
+    </rect>
+    <text x="34" y="76" font-size="17" font-weight="600" fill="#edf2f9" opacity="0">
+      100
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.9s"/>
+    </text>
+    <rect x="308" y="56" width="62" height="32" rx="999" fill="#1d3a75" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2s"/>
+    </rect>
+    <text x="339" y="77" font-size="12.5" font-weight="700" fill="#93c5fd" text-anchor="middle" opacity="0">
+      GLD
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.1s"/>
+    </text>
+
+    <!-- rotating direction arrow (element animation) -->
+    <g transform="translate(200 98)">
+      <circle r="16" fill="#121824" stroke="#26324a"/>
+      <g>
+        <animateTransform attributeName="transform" type="rotate" values="0 0 0;180 0 0" dur="0.9s" repeatCount="indefinite" keyTimes="0;1" calcMode="spline" keySplines="0.3 0.9 0.4 1"/>
+        <text y="5" font-size="14" fill="#f59e0b" text-anchor="middle">⇅</text>
+      </g>
+    </g>
+
+    <!-- receive field -->
+    <rect x="20" y="130" width="360" height="52" rx="10" fill="#0f1622" stroke="#26324a" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.3s"/>
+    </rect>
+    <text x="34" y="160" font-size="17" font-weight="600" fill="#edf2f9" opacity="0">
+      199.40
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.4s"/>
+    </text>
+    <rect x="308" y="140" width="62" height="32" rx="999" fill="#3a2a08" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.5s"/>
+    </rect>
+    <text x="339" y="161" font-size="12.5" font-weight="700" fill="#fcd34d" text-anchor="middle" opacity="0">
+      USD
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.6s"/>
+    </text>
+
+    <!-- swap CTA with glow pulse (element animation) -->
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.8s"/>
+      <rect x="20" y="192" width="360" height="26" rx="13" fill="url(#g1)">
+        <animate attributeName="opacity" values="1;0.85;1" dur="2.4s" repeatCount="indefinite"/>
+      </rect>
+      <text x="200" y="209" font-size="12.5" font-weight="700" fill="#ffffff" text-anchor="middle">Swap</text>
+    </g>
+  </g>
+
+  <!-- gauge element (width transition) -->
+  <g transform="translate(60 216)">
+    <rect width="560" height="14" rx="7" fill="#1d3a75" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="3.2s"/>
+    </rect>
+    <rect y="0" height="14" rx="7" fill="#f59e0b" width="0" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.2s" fill="freeze" begin="3.3s"/>
+      <animate attributeName="width" from="0" to="187" dur="2s" fill="freeze" begin="3.3s" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+    </rect>
+    <text x="0" y="44" font-size="11" fill="#8b98ad" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      GLD 33.3%
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="3.4s"/>
+    </text>
+    <text x="560" y="44" font-size="11" fill="#8b98ad" text-anchor="end" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      USD 66.7%
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="3.4s"/>
+    </text>
+  </g>
+</svg>

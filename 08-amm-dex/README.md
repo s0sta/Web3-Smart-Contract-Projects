@@ -3,8 +3,17 @@
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.26-363636?logo=solidity&logoColor=white)
 ![Foundry](https://img.shields.io/badge/Foundry-1.5.1-8b5cf6)
 ![License](https://img.shields.io/badge/License-MIT-green)
+![Live](https://img.shields.io/badge/Live-dex.s0sta.com-f59e0b)
+
+<p align="center">
+  <img src="../assets/amm.svg" alt="GLD/USD AMM — constant-product DEX" width="100%" />
+</p>
 
 > **Difficulty: ★★★★★** · Project 8 of the [Web3 Smart Contract Projects](../README.md) portfolio.
+>
+> 🌐 **Live demo: [https://dex.s0sta.com](https://dex.s0sta.com)** — a full dApp dashboard for this AMM (see [`frontend/`](frontend/README.md)).
+>
+> 📍 **Deployed on Sepolia: [`AMMRouter 0xD7C530a1025A70e1932A1554932B35317496F819`](https://sepolia.etherscan.io/address/0xD7C530a1025A70e1932A1554932B35317496F819)** · factory `0xcF5B…2DB62` · GLD `0xeEaA…37D3C` · USD `0x2Ea8…De9e` · pool `0xc6C4…4555B` seeded 1.1M/2.2M
 
 A complete automated market maker written **from scratch**, following Uniswap V2's architecture:
 a factory that creates pools for any token pair, LP tokens, a 0.3% swap fee that accrues to
@@ -33,6 +42,7 @@ liquidity providers, multi-hop routing with slippage protection and flash swaps.
 | `AMMLibrary` | [`src/AMMLibrary.sol`](src/AMMLibrary.sol) | Pure pricing math (`getAmountOut`, `quote`, paths) |
 | `ERC20` | [`src/ERC20.sol`](src/ERC20.sol) | The LP token implementation |
 | `DeployAMM` | [`script/Deploy.s.sol`](script/Deploy.s.sol) | Deploys + seeds a GLD/USD pool |
+| `frontend/` | [`frontend/README.md`](frontend/README.md) | The hosted dApp (dex.s0sta.com) |
 
 ## The core math
 

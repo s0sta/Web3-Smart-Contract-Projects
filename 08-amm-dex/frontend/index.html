@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GLD/USD AMM — Constant-Product DEX | dex.s0sta.com</title>
+  <meta name="description" content="A modern dApp for the from-scratch AMM: swap GLD/USD on a constant-product curve, add and remove liquidity, and follow pool activity — Uniswap-V2 style, no OpenZeppelin." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===================== TOP BAR ===================== -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">⇄</span>
+      <span class="brand-name">GLD<span class="slash">/</span>USD <span class="brand-tag">AMM</span></span>
+    </div>
+    <div class="topbar-right">
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙</button>
+      <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+    </div>
+  </header>
+
+  <main class="workbench">
+
+    <!-- ===================== SETUP BANNER ===================== -->
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Router not configured yet</h3>
+          <p>Paste your deployed <strong>AMMRouter</strong> address below, or deploy locally with
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.
+             See <code>frontend/README.md</code> for the full guide.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… router address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this router</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SETTINGS ===================== -->
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Router contract address
+          <input type="text" id="set-router-address" placeholder="0x…" autocomplete="off" spellcheck="false" />
+        </label>
+        <label>Network
+          <select id="set-chain"></select>
+        </label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- ===================== KPI ROW ===================== -->
+    <section class="kpi-row">
+      <div class="kpi"><span class="kpi-label">Pool GLD</span><span class="kpi-value" id="kpi-gld">—</span></div>
+      <div class="kpi"><span class="kpi-label">Pool USD</span><span class="kpi-value" id="kpi-usd">—</span></div>
+      <div class="kpi"><span class="kpi-label">Price</span><span class="kpi-value" id="kpi-price">—</span></div>
+      <div class="kpi"><span class="kpi-label">LP supply</span><span class="kpi-value" id="kpi-lp">—</span></div>
+    </section>
+
+    <!-- ===================== WORKBENCH ===================== -->
+    <section class="workbench-grid">
+
+      <!-- SWAP TERMINAL -->
+      <div class="card swap-card">
+        <div class="card-head">
+          <h2>Swap</h2>
+          <span class="pool-chip mono" id="pool-chip">GLD/USD · 0.3%</span>
+        </div>
+
+        <div class="swap-box">
+          <div class="swap-row">
+            <div class="swap-field">
+              <span class="swap-label">You pay</span>
+              <input type="number" id="swap-in" placeholder="0.0" min="0" step="any" />
+            </div>
+            <div class="token-pill" id="token-in">GLD</div>
+          </div>
+          <div class="swap-mid">
+            <button class="dir-btn" id="btn-direction" title="Switch direction">⇅</button>
+            <span class="balance-hint muted">balance: <span id="bal-in" class="mono">—</span> <button class="link-btn" id="btn-max">MAX</button></span>
+          </div>
+          <div class="swap-row">
+            <div class="swap-field">
+              <span class="swap-label">You receive</span>
+              <input type="number" id="swap-out" placeholder="0.0" readonly />
+            </div>
+            <div class="token-pill" id="token-out">USD</div>
+          </div>
+        </div>
+
+        <div class="swap-meta">
+          <div class="meta-line"><span>Rate</span><span class="mono" id="meta-rate">—</span></div>
+          <div class="meta-line"><span>Price impact</span><span class="mono" id="meta-impact">—</span></div>
+          <div class="meta-line"><span>Min received</span><span class="mono" id="meta-min">—</span></div>
+        </div>
+
+        <button class="btn btn-primary swap-btn" id="btn-swap">Swap</button>
+      </div>
+
+      <!-- RIGHT RAIL -->
+      <div class="rail">
+
+        <!-- LIQUIDITY -->
+        <div class="card">
+          <div class="card-head">
+            <h3>Liquidity</h3>
+            <div class="seg" id="liq-seg">
+              <button class="seg-btn active" data-mode="add">Add</button>
+              <button class="seg-btn" data-mode="remove">Remove</button>
+            </div>
+          </div>
+
+          <div id="panel-add">
+            <label>GLD <input type="number" id="liq-gld" placeholder="0.0" min="0" step="any" /></label>
+            <label>USD <input type="number" id="liq-usd" placeholder="0.0" min="0" step="any" /></label>
+            <p class="hint muted" id="liq-preview">share preview: —</p>
+            <button class="btn btn-primary" id="btn-add-liq">Add liquidity</button>
+          </div>
+
+          <div id="panel-remove" hidden>
+            <label>LP tokens <input type="number" id="liq-lp" placeholder="0.0" min="0" step="any" /></label>
+            <p class="hint muted">balance: <span id="liq-lp-bal" class="mono">—</span> <button class="link-btn" id="btn-lp-max">MAX</button></p>
+            <p class="hint muted" id="rm-preview">you receive: —</p>
+            <button class="btn btn-ghost" id="btn-remove-liq">Remove liquidity</button>
+          </div>
+        </div>
+
+        <!-- MY POSITION -->
+        <div class="card">
+          <div class="card-head"><h3>My position</h3></div>
+          <p class="hint muted">LP balance: <span id="pos-lp" class="mono">—</span></p>
+          <p class="hint muted">Pool share: <span id="pos-share" class="mono">—</span></p>
+          <p class="hint muted">Underlying: <span id="pos-under" class="mono">—</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== GAUGE + EVENTS ===================== -->
+    <section class="bottom-grid">
+      <div class="card">
+        <div class="card-head"><h3>Pool composition</h3></div>
+        <div class="gauge"><span class="gauge-gld" id="gauge-gld"></span></div>
+        <div class="gauge-labels">
+          <span class="mono" id="gauge-gld-label">—</span>
+          <span class="mono" id="gauge-usd-label">—</span>
+        </div>
+        <p class="hint muted" id="pair-addr">pair: —</p>
+      </div>
+
+      <div class="card events-card">
+        <div class="card-head">
+          <h3>Pool activity</h3>
+          <button class="btn btn-ghost btn-sm" id="btn-refresh-events" style="margin-left:auto">↻</button>
+        </div>
+        <div class="ev-list" id="ev-list">
+          <p class="muted center" style="padding:20px 0">Loading…</p>
+        </div>
+        <p class="hint muted" id="events-note">showing the latest events</p>
+      </div>
+    </section>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="site-footer">
+      <span>AMM DEX · constant-product from scratch — router <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">dex.s0sta.com</span>
+      </span>
+    </footer>
+  </main>
+
+  <!-- ===================== TOASTS ===================== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
