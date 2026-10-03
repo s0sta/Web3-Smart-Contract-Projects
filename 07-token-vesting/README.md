@@ -3,8 +3,17 @@
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.26-363636?logo=solidity&logoColor=white)
 ![Foundry](https://img.shields.io/badge/Foundry-1.5.1-8b5cf6)
 ![License](https://img.shields.io/badge/License-MIT-green)
+![Live](https://img.shields.io/badge/Live-vesting.s0sta.com-fb7185)
+
+<p align="center">
+  <img src="../assets/vesting.svg" alt="TokenVesting — cliff + linear vesting" width="100%" />
+</p>
 
 > **Difficulty: ★★★☆☆** · Project 7 of the [Web3 Smart Contract Projects](../README.md) portfolio.
+>
+> 🌐 **Live demo: [https://vesting.s0sta.com](https://vesting.s0sta.com)** — a full dApp dashboard for this contract (see [`frontend/`](frontend/README.md)).
+>
+> 📍 **Deployed on Sepolia: [`TokenVesting 0xCf406a9b6EF721B38421eFd9860Af921E765B935`](https://sepolia.etherscan.io/address/0xCf406a9b6EF721B38421eFd9860Af921E765B935)** · VEST `0xcC820FE5B039D9e816C097222EE73471bcB6B344` · owner `0x319899FaAAD730519B8a2Bd72d2Eba2370a9B853` · two live schedules (yours ≈33% vested)
 
 A token vesting contract written **from scratch**: the owner creates funded, revocable schedules
 for beneficiaries — nothing vests before a cliff, then the grant unlocks linearly until the end.
@@ -29,6 +38,7 @@ The standard tool for team allocations, investor unlocks and advisor grants.
 | `TokenVesting` | [`src/TokenVesting.sol`](src/TokenVesting.sol) | Schedules, vesting math, claims, revocation |
 | `Ownable` / `ReentrancyGuard` | [`src/`](src) | Shared primitives |
 | `DeployTokenVesting` | [`script/Deploy.s.sol`](script/Deploy.s.sol) | 1M VEST, 1-year cliff, 3-year linear example |
+| `frontend/` | [`frontend/README.md`](frontend/README.md) | The hosted dApp (vesting.s0sta.com) |
 
 ## The vesting curve
 

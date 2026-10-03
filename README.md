@@ -59,7 +59,7 @@ Every audit and every build in this repo follows the same discipline:
 | 04 | [Escrow Service](04-escrow-service) 🖥️ [live dApp](https://escrow.s0sta.com) | Buyer/seller escrow with arbitration & fees | State machines, dispute resolution, fee accounting | ★★★☆☆ | 30 ✅ |
 | 05 | [NFT Collection](05-nft-collection) 🖥️ [live dApp](https://nft.s0sta.com) | ERC-721 *from scratch*: Merkle whitelist, royalties, reveal | ERC-721 internals, Merkle proofs, ERC-2981 | ★★★☆☆ | 33 ✅ |
 | 06 | [Staking Rewards](06-staking-rewards) 🖥️ [live dApp](https://stake.s0sta.com) | Synthetix-style time-weighted emissions | Accumulator math, checkpoints, O(1) rewards | ★★★★☆ | 26 ✅ |
-| 07 | [Token Vesting](07-token-vesting) | Cliff + linear vesting, revocable schedules | Time-based unlock curves, revocation accounting | ★★★☆☆ | 20 ✅ |
+| 07 | [Token Vesting](07-token-vesting) 🖥️ [live dApp](https://vesting.s0sta.com) | Cliff + linear vesting, revocable schedules | Time-based unlock curves, revocation accounting | ★★★☆☆ | 20 ✅ |
 | 08 | [AMM DEX](08-amm-dex) | Uniswap-V2-style factory/pair/router, flash swaps | `x·y=k` math, LP accounting, multi-hop routing | ★★★★★ | 21 ✅ |
 | 09 | [DAO Governance](09-dao-governance) | Snapshot voting power, quorum, on-chain execution | Checkpoint data structures, flash-loan defense | ★★★★★ | 16 ✅ |
 | 10 | [Lending Protocol](10-lending-protocol) | Collateralized lending with interest & liquidations | Health factors, compounding interest, liquidation economics | ★★★★★ | 20 ✅ |
