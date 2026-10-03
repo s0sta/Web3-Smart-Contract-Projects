@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ef4444"/>
+      <stop offset="1" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <linearGradient id="hfGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ef4444"/>
+      <stop offset="0.5" stop-color="#f59e0b"/>
+      <stop offset="1" stop-color="#22c55e"/>
+    </linearGradient>
+  </defs>
+
+  <!-- charcoal (static) -->
+  <rect width="1200" height="300" fill="#0f0d0e"/>
+  <circle cx="130" cy="70" r="140" fill="#ef4444" opacity="0.06"/>
+  <circle cx="1060" cy="240" r="150" fill="#e2e8f0" opacity="0.04"/>
+
+  <!-- identity -->
+  <text x="230" y="112" font-size="42" font-weight="700" fill="#ef4444" opacity="0">
+    LendVault
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.3s"/>
+  </text>
+  <text x="232" y="150" font-size="20" font-weight="600" fill="#f4edef" opacity="0">
+    Collateralized lending, from scratch
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.7s"/>
+  </text>
+  <text x="232" y="178" font-size="13.5" fill="#9a8d92" opacity="0">
+    Deposit ETH · borrow stable at 66% LTV · 10% APR · liquidations at 80% · emergency brake
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1s"/>
+  </text>
+
+  <!-- health arc panel -->
+  <g transform="translate(700 40)">
+    <rect width="460" height="220" rx="14" fill="#171214" stroke="#2b2326" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.4s"/>
+    </rect>
+    <text x="24" y="34" font-size="12.5" fill="#9a8d92" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      your position
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.5s"/>
+    </text>
+
+    <!-- arc -->
+    <path d="M 70 150 A 85 85 0 0 1 240 150" fill="none" stroke="#2b2326" stroke-width="18" stroke-linecap="round" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.6s"/>
+    </path>
+    <path d="M 70 150 A 85 85 0 0 1 240 150" fill="none" stroke="url(#hfGrad)" stroke-width="18" stroke-linecap="round"
+          pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.2s" fill="freeze" begin="1.7s"/>
+      <animate attributeName="stroke-dashoffset" from="100" to="27.5" dur="2.2s" fill="freeze" begin="1.7s" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+    </path>
+    <text x="155" y="118" font-size="10.5" fill="#9a8d92" text-anchor="middle" letter-spacing="1.5" opacity="0">
+      HEALTH FACTOR
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.8s"/>
+    </text>
+    <text x="155" y="148" font-size="26" font-weight="700" fill="#22c55e" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      1.45
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.9s"/>
+      <animate attributeName="opacity" values="1;0.6;1" dur="1.6s" repeatCount="indefinite" begin="2.4s"/>
+    </text>
+
+    <!-- position rows -->
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.2s"/>
+      <text x="268" y="74" font-size="12" fill="#9a8d92">Supplied</text>
+      <text x="436" y="74" font-size="12" fill="#f4edef" text-anchor="end" font-family="ui-monospace, Menlo, monospace">$2,000 (1 ETH)</text>
+      <text x="268" y="102" font-size="12" fill="#9a8d92">Debt <tspan fill="#ef4444" font-size="10">(live interest)</tspan></text>
+      <text x="436" y="102" font-size="12" fill="#ef4444" text-anchor="end" font-family="ui-monospace, Menlo, monospace">$1,103.02</text>
+      <text x="268" y="130" font-size="12" fill="#9a8d92">Available to borrow</text>
+      <text x="436" y="130" font-size="12" fill="#f4edef" text-anchor="end" font-family="ui-monospace, Menlo, monospace">$216.98</text>
+      <text x="268" y="158" font-size="12" fill="#9a8d92">Net value</text>
+      <text x="436" y="158" font-size="12" fill="#f4edef" text-anchor="end" font-family="ui-monospace, Menlo, monospace">$896.98</text>
+    </g>
+
+    <!-- borrow-limit meter -->
+    <rect x="268" y="176" width="168" height="10" rx="5" fill="#2b2326" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.6s"/>
+    </rect>
+    <rect x="268" y="176" width="0" height="10" rx="5" fill="url(#g1)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.2s" fill="freeze" begin="2.7s"/>
+      <animate attributeName="width" from="0" to="140" dur="1.8s" fill="freeze" begin="2.7s" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+    </rect>
+    <rect x="379" y="173" width="2" height="16" fill="#f59e0b" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.8s"/>
+    </rect>
+    <text x="436" y="202" font-size="10.5" fill="#9a8d92" text-anchor="end" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      83.5% of LTV 66%
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.9s"/>
+    </text>
+  </g>
+</svg>

@@ -62,7 +62,7 @@ Every audit and every build in this repo follows the same discipline:
 | 07 | [Token Vesting](07-token-vesting) 🖥️ [live dApp](https://s0sta.com/vesting) | Cliff + linear vesting, revocable schedules | Time-based unlock curves, revocation accounting | ★★★☆☆ | 20 ✅ |
 | 08 | [AMM DEX](08-amm-dex) 🖥️ [live dApp](https://s0sta.com/dex) | Uniswap-V2-style factory/pair/router, flash swaps | `x·y=k` math, LP accounting, multi-hop routing | ★★★★★ | 21 ✅ |
 | 09 | [DAO Governance](09-dao-governance) 🖥️ [live dApp](https://s0sta.com/dao) | Snapshot voting power, quorum, on-chain execution | Checkpoint data structures, flash-loan defense | ★★★★★ | 16 ✅ |
-| 10 | [Lending Protocol](10-lending-protocol) | Collateralized lending with interest & liquidations | Health factors, compounding interest, liquidation economics | ★★★★★ | 20 ✅ |
+| 10 | [Lending Protocol](10-lending-protocol) 🖥️ [live dApp](https://s0sta.com/lend) | Collateralized lending with interest & liquidations | Health factors, compounding interest, liquidation economics | ★★★★★ | 23 ✅ |
 
 **Live deployment:** NovaToken on [Sepolia](https://sepolia.etherscan.io/address/0x26b420683E6F6Df39CFceBd7C5bB78B7459b8B62) · owner `0x3198…9B853` · frontend dApp at [s0sta.com/erc20-token](https://s0sta.com/erc20-token)
 

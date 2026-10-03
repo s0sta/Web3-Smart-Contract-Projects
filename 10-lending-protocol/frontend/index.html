@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LendVault — Collateralized Lending | s0sta.com/lend</title>
+  <meta name="description" content="A modern dApp for the from-scratch lending protocol: deposit ETH, borrow a stablecoin against it, track your live health factor, repay or liquidate — with an emergency brake." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===================== TOP BAR ===================== -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">🏦</span>
+      <div>
+        <span class="brand-name">Lend<span class="brand-tag">Vault</span></span>
+        <span class="brand-sub">collateralized lending from scratch · s0sta.com/lend</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙</button>
+      <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+    </div>
+  </header>
+
+  <main class="vault">
+
+    <!-- ===================== SETUP BANNER ===================== -->
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Vault not configured yet</h3>
+          <p>Paste your deployed <strong>LendVault</strong> address below, or deploy locally with
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.
+             See <code>frontend/README.md</code> for the full guide.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… vault address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this vault</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PAUSE BANNER ===================== -->
+    <section class="pause-banner" id="pause-banner" hidden>
+      <span class="pause-ico">🚨</span>
+      <div>
+        <h3>Emergency brake engaged</h3>
+        <p>The owner has paused the vault: <strong>new deposits and borrows are blocked</strong>.
+           Withdrawals, repayments and liquidations always stay open.</p>
+      </div>
+    </section>
+
+    <!-- ===================== SETTINGS ===================== -->
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Vault contract address
+          <input type="text" id="set-vault-address" placeholder="0x…" autocomplete="off" spellcheck="false" />
+        </label>
+        <label>Network
+          <select id="set-chain"></select>
+        </label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- ===================== UTILIZATION BAND ===================== -->
+    <section class="util-band">
+      <div class="util-stat"><span class="util-label">Supplied</span><span class="util-value" id="util-supplied">—</span></div>
+      <div class="util-stat"><span class="util-label">Borrowed</span><span class="util-value danger" id="util-borrowed">—</span></div>
+      <div class="util-stat"><span class="util-label">Utilization</span><span class="util-value" id="util-pct">—</span></div>
+      <div class="util-stat"><span class="util-label">Borrow APR</span><span class="util-value" id="util-apr">10%</span></div>
+      <div class="util-stat"><span class="util-label">Collateral price</span><span class="util-value" id="util-price">$2,000 / ETH</span></div>
+      <div class="util-bar-wrap">
+        <div class="util-bar"><span class="util-fill" id="util-fill"></span></div>
+      </div>
+    </section>
+
+    <!-- ===================== VAULT COUNTER (3 panels) ===================== -->
+    <section class="counter">
+
+      <!-- SUPPLY -->
+      <div class="card counter-panel">
+        <div class="panel-head"><span class="panel-ico">⬇️</span><h2>Supply</h2></div>
+        <p class="muted small">Deposit ETH as collateral · withdraw as long as your position stays healthy.</p>
+        <div class="field-row">
+          <input type="number" id="deposit-amount" placeholder="0.0" min="0" step="any" />
+          <span class="unit">ETH</span>
+        </div>
+        <p class="muted small">wallet: <span id="wallet-eth" class="mono">—</span></p>
+        <button class="btn btn-primary full" id="btn-deposit">Deposit</button>
+        <div class="divider"></div>
+        <div class="field-row">
+          <input type="number" id="withdraw-amount" placeholder="0.0" min="0" step="any" />
+          <span class="unit">ETH</span>
+        </div>
+        <p class="muted small">your collateral: <span id="my-collateral" class="mono">—</span></p>
+        <button class="btn btn-ghost full" id="btn-withdraw">Withdraw</button>
+      </div>
+
+      <!-- POSITION -->
+      <div class="card counter-panel center-panel">
+        <div class="panel-head"><span class="panel-ico">📊</span><h2>Your position</h2></div>
+
+        <div class="hf-wrap">
+          <svg viewBox="0 0 120 70" class="hf-svg">
+            <defs>
+              <linearGradient id="hfGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#ef4444"/>
+                <stop offset="0.5" stop-color="#f59e0b"/>
+                <stop offset="1" stop-color="#22c55e"/>
+              </linearGradient>
+            </defs>
+            <path d="M 10 62 A 50 50 0 0 1 110 62" fill="none" stroke="rgba(148,163,184,0.15)" stroke-width="12" stroke-linecap="round"/>
+            <path d="M 10 62 A 50 50 0 0 1 110 62" id="hf-arc" fill="none" stroke="url(#hfGrad)" stroke-width="12" stroke-linecap="round"
+                  pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" style="transition: stroke-dashoffset 1s cubic-bezier(.3,.8,.4,1)"/>
+          </svg>
+          <div class="hf-center">
+            <span class="hf-label">health factor</span>
+            <span class="hf-value" id="hf-value">—</span>
+          </div>
+        </div>
+
+        <div class="pos-rows">
+          <div class="pos-row"><span>Supplied</span><span class="mono" id="pos-supplied">—</span></div>
+          <div class="pos-row"><span>Debt <i class="tick-note">(live interest)</i></span><span class="mono danger" id="pos-debt">—</span></div>
+          <div class="pos-row"><span>Borrow limit</span><span class="mono" id="pos-limit">—</span></div>
+          <div class="pos-row"><span>Available to borrow</span><span class="mono" id="pos-available">—</span></div>
+          <div class="pos-row"><span>Net value</span><span class="mono" id="pos-net">—</span></div>
+        </div>
+
+        <div class="limit-meter">
+          <div class="limit-track"><span class="limit-fill" id="limit-fill"></span><span class="limit-ltv" id="limit-ltv"></span></div>
+          <div class="limit-labels"><span class="mono">0</span><span class="mono">LTV 66%</span></div>
+        </div>
+      </div>
+
+      <!-- BORROW -->
+      <div class="card counter-panel">
+        <div class="panel-head"><span class="panel-ico">⬆️</span><h2>Borrow / Repay</h2></div>
+        <p class="muted small">Borrow stable against your collateral · repay to lower your health factor.</p>
+        <div class="field-row">
+          <input type="number" id="borrow-amount" placeholder="0.0" min="0" step="any" />
+          <span class="unit">USDx</span>
+        </div>
+        <button class="btn btn-primary full" id="btn-borrow">Borrow</button>
+        <div class="divider"></div>
+        <div class="field-row">
+          <input type="number" id="repay-amount" placeholder="0.0" min="0" step="any" />
+          <span class="unit">USDx</span>
+        </div>
+        <p class="muted small">balance: <span id="stable-bal" class="mono">—</span></p>
+        <button class="btn btn-ghost full" id="btn-repay">Repay</button>
+        <div class="divider"></div>
+        <button class="btn btn-danger full" id="btn-liquidate-open" title="Liquidate an unhealthy position">Liquidate a position</button>
+        <div id="liq-box" hidden>
+          <div class="field-row">
+            <input type="text" id="liq-user" placeholder="borrower 0x…" autocomplete="off" spellcheck="false" />
+          </div>
+          <div class="field-row">
+            <input type="number" id="liq-amount" placeholder="repay amount" min="0" step="any" />
+            <span class="unit">USDx</span>
+          </div>
+          <button class="btn btn-danger full" id="btn-liquidate">Seize collateral</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PARAMS + ACTIVITY ===================== -->
+    <section class="bottom-grid">
+      <div class="card">
+        <div class="panel-head"><span class="panel-ico">⚙️</span><h2>Market parameters</h2></div>
+        <table class="param-table">
+          <tr><td>LTV</td><td class="mono">66%</td></tr>
+          <tr><td>Liquidation threshold</td><td class="mono">80%</td></tr>
+          <tr><td>Liquidation bonus</td><td class="mono">10%</td></tr>
+          <tr><td>Close factor</td><td class="mono">50%</td></tr>
+          <tr><td>Borrow APR</td><td class="mono">10% fixed</td></tr>
+          <tr><td>Collateral price</td><td class="mono">$2,000 / ETH (fixed)</td></tr>
+          <tr><td>Interest rate / s</td><td class="mono" id="param-rate">—</td></tr>
+        </table>
+        <div id="owner-controls" hidden style="margin-top:14px">
+          <p class="muted small">Emergency brake (owner only):</p>
+          <button class="btn btn-danger full" id="btn-toggle-pause">Pause vault</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="panel-head">
+          <span class="panel-ico">📜</span><h2>Activity</h2>
+          <button class="btn btn-ghost btn-sm" id="btn-refresh-events" style="margin-left:auto">↻</button>
+        </div>
+        <div class="ev-list" id="ev-list">
+          <p class="muted center" style="padding:20px 0">Loading…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="site-footer">
+      <span>LendVault · collateralized lending from scratch — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/lend</span>
+      </span>
+    </footer>
+  </main>
+
+  <!-- ===================== TOASTS ===================== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

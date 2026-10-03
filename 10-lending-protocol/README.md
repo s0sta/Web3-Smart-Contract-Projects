@@ -3,9 +3,18 @@
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.26-363636?logo=solidity&logoColor=white)
 ![Foundry](https://img.shields.io/badge/Foundry-1.5.1-8b5cf6)
 ![License](https://img.shields.io/badge/License-MIT-green)
+![Live](https://img.shields.io/badge/Live-s0sta.com%2Flend-ef4444)
+
+<p align="center">
+  <img src="../assets/lending.svg" alt="LendVault — collateralized lending with liquidations" width="100%" />
+</p>
 
 > **Difficulty: ★★★★★** · Project 10 of the [Web3 Smart Contract Projects](../README.md) portfolio —
 > the capstone.
+>
+> 🌐 **Live demo: [https://s0sta.com/lend](https://s0sta.com/lend)** — a full dApp dashboard for this protocol (see [`frontend/`](frontend/README.md)).
+>
+> 📍 **Deployed on Sepolia: [`LendVault 0x330FE254EbB65fFf03CA4E0814B288DffaA79e34`](https://sepolia.etherscan.io/address/0x330FE254EbB65fFf03CA4E0814B288DffaA79e34)** · USDx `0x37B0…Ac2FC` · owner `0x319899FaAAD730519B8a2Bd72d2Eba2370a9B853` · live market: 1 ETH supplied / 900 USDx borrowed
 
 A collateralized lending protocol written **from scratch**: users deposit ETH and borrow a
 stablecoin against it (66% LTV), debt compounds at 10% APR per second, and positions that
@@ -34,6 +43,7 @@ collateral at a 10% discount.
 | `LendVault` | [`src/LendVault.sol`](src/LendVault.sol) | Collateral, debt, interest, liquidations |
 | `ReentrancyGuard` | [`src/ReentrancyGuard.sol`](src/ReentrancyGuard.sol) | Shared primitive |
 | `DeployLendVault` | [`script/Deploy.s.sol`](script/Deploy.s.sol) | Deployment + vault/stable wiring |
+| `frontend/` | [`frontend/README.md`](frontend/README.md) | The hosted dApp (s0sta.com/lend) |
 
 ## The risk math
 
