@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#b91c1c"/>
+      <stop offset="1" stop-color="#b45309"/>
+    </linearGradient>
+  </defs>
+
+  <!-- parchment (static) -->
+  <rect width="1200" height="300" fill="#f6f1e7"/>
+  <circle cx="120" cy="80" r="140" fill="#b45309" opacity="0.05"/>
+  <circle cx="1080" cy="230" r="160" fill="#b91c1c" opacity="0.04"/>
+
+  <!-- identity -->
+  <text x="230" y="112" font-size="42" font-weight="700" fill="#b91c1c" font-family="Georgia, 'Times New Roman', serif" opacity="0">
+    Senate DAO
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.3s"/>
+  </text>
+  <text x="232" y="150" font-size="20" font-weight="600" fill="#1f2937" opacity="0">
+    On-chain governance, from scratch
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.7s"/>
+  </text>
+  <text x="232" y="178" font-size="13.5" fill="#7a7263" opacity="0">
+    Propose · vote with snapshot power · quorum decides · execute on-chain — one GOV, one vote
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1s"/>
+  </text>
+
+  <!-- ballot panel -->
+  <g transform="translate(700 44)">
+    <rect width="460" height="212" rx="12" fill="#fffdf8" stroke="#e3d9c3" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.4s"/>
+    </rect>
+    <!-- seal -->
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.5s"/>
+      <text x="420" y="30" font-size="10" font-weight="700" fill="#b45309" text-anchor="end" letter-spacing="1" transform="rotate(-3 420 30)">
+        ACTIVE
+      </text>
+      <rect x="352" y="18" width="78" height="18" rx="999" fill="none" stroke="#b45309" stroke-width="1.5" transform="rotate(-3 391 27)">
+        <animate attributeName="opacity" values="1;0.55;1" dur="1.8s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+    <text x="20" y="42" font-size="14" font-weight="700" fill="#1f2937" opacity="0">
+      Proposal #1 — Fund the community treasury
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.7s"/>
+    </text>
+    <text x="20" y="62" font-size="11" fill="#7a7263" opacity="0">
+      by 0x3198… · snapshot #58213 · quorum 40,000 GOV ✓
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.8s"/>
+    </text>
+
+    <!-- for bar -->
+    <rect x="20" y="82" width="420" height="10" rx="5" fill="#efe7d6" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2s"/>
+    </rect>
+    <rect x="20" y="82" width="0" height="10" rx="5" fill="#047857" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.2s" fill="freeze" begin="2.1s"/>
+      <animate attributeName="width" from="0" to="265" dur="1.8s" fill="freeze" begin="2.1s" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+    </rect>
+    <text x="20" y="108" font-size="10.5" font-weight="700" fill="#7a7263" letter-spacing="1" opacity="0">
+      FOR
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.2s"/>
+    </text>
+    <text x="440" y="108" font-size="10.5" fill="#1f2937" text-anchor="end" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      63,150 · 63.1%
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.2s"/>
+    </text>
+
+    <!-- against bar -->
+    <rect x="20" y="120" width="420" height="10" rx="5" fill="#efe7d6" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.4s"/>
+    </rect>
+    <rect x="20" y="120" width="0" height="10" rx="5" fill="#b91c1c" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.2s" fill="freeze" begin="2.5s"/>
+      <animate attributeName="width" from="0" to="155" dur="1.8s" fill="freeze" begin="2.5s" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+    </rect>
+    <text x="20" y="146" font-size="10.5" font-weight="700" fill="#7a7263" letter-spacing="1" opacity="0">
+      AGAINST
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.6s"/>
+    </text>
+    <text x="440" y="146" font-size="10.5" fill="#1f2937" text-anchor="end" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      36,850 · 36.9%
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.6s"/>
+    </text>
+
+    <!-- vote buttons -->
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.9s"/>
+      <rect x="20" y="164" width="90" height="26" rx="10" fill="none" stroke="#b91c1c" stroke-width="1.5"/>
+      <text x="65" y="181" font-size="11.5" font-weight="700" fill="#b91c1c" text-anchor="middle">👍 For</text>
+      <rect x="118" y="164" width="104" height="26" rx="10" fill="none" stroke="#7a7263" stroke-width="1.5"/>
+      <text x="170" y="181" font-size="11.5" font-weight="700" fill="#7a7263" text-anchor="middle">👎 Against</text>
+      <text x="240" y="181" font-size="11" fill="#b45309" font-family="ui-monospace, Menlo, monospace">1d 12h left</text>
+    </g>
+  </g>
+</svg>

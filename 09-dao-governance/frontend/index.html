@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Senate DAO — Governance | dao.s0sta.com</title>
+  <meta name="description" content="A modern dApp for the from-scratch Governor: propose, vote and execute DAO decisions — snapshot voting power, quorum, thresholds and full on-chain transparency." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===================== TOP BAR ===================== -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-seal">⚖️</span>
+      <div>
+        <span class="brand-name">Senate <span class="brand-tag">DAO</span></span>
+        <span class="brand-sub">governance from scratch · one GOV = one vote</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙</button>
+      <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+    </div>
+  </header>
+
+  <main class="senate">
+
+    <!-- ===================== SETUP BANNER ===================== -->
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Governor not configured yet</h3>
+          <p>Paste your deployed <strong>Governor</strong> address below, or deploy locally with
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.
+             See <code>frontend/README.md</code> for the full guide.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… governor address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this governor</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SETTINGS ===================== -->
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Governor contract address
+          <input type="text" id="set-governor-address" placeholder="0x…" autocomplete="off" spellcheck="false" />
+        </label>
+        <label>Network
+          <select id="set-chain"></select>
+        </label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- ===================== SENATE GRID ===================== -->
+    <div class="senate-grid">
+
+      <!-- LEFT: PROPOSAL FEED -->
+      <section class="feed-col">
+        <div class="row between feed-head">
+          <h1 class="page-title">Proposals</h1>
+          <span class="muted" id="feed-note">loading…</span>
+        </div>
+        <div class="feed" id="proposal-feed">
+          <div class="card center muted">Loading proposals…</div>
+        </div>
+
+        <h2 class="sub-title">Recent activity</h2>
+        <div class="act-list" id="act-list">
+          <p class="muted">loading…</p>
+        </div>
+      </section>
+
+      <!-- RIGHT: GOVERNANCE PANEL -->
+      <aside class="panel-col">
+
+        <div class="card power-card">
+          <div class="card-head"><span class="card-ico">🗳</span><h3>Your voting power</h3></div>
+          <p class="power-value" id="my-power">—</p>
+          <p class="muted small">GOV balance · snapshot at proposal creation</p>
+          <p class="muted small" id="my-balance">balance: —</p>
+          <p class="muted small">proposal threshold: <span class="mono" id="threshold">—</span></p>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-ico">📜</span><h3>Create a proposal</h3></div>
+          <p class="muted small">Requires ≥ threshold voting power. The description is stored on-chain in the calldata of the propose transaction.</p>
+          <form id="form-propose" class="stack-form">
+            <label>Target address
+              <input type="text" id="p-target" placeholder="0x… contract to call" autocomplete="off" spellcheck="false" />
+            </label>
+            <label>ETH value (usually 0)
+              <input type="number" id="p-value" placeholder="0" min="0" step="any" />
+            </label>
+            <label>Calldata (hex)
+              <input type="text" id="p-calldata" placeholder="0x…" autocomplete="off" spellcheck="false" />
+            </label>
+            <label>Description
+              <textarea id="p-desc" rows="3" placeholder="What should the DAO do?"></textarea>
+            </label>
+            <button class="btn btn-primary" type="submit">Propose</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-ico">🏛</span><h3>Governance</h3></div>
+          <table class="gov-table">
+            <tr><td>Voting period</td><td class="mono" id="gov-period">—</td></tr>
+            <tr><td>Quorum</td><td class="mono" id="gov-quorum">—</td></tr>
+            <tr><td>Proposals</td><td class="mono" id="gov-count">—</td></tr>
+            <tr><td>Treasury</td><td class="mono" id="gov-treasury">—</td></tr>
+          </table>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="site-footer">
+      <span>Senate DAO · from-scratch governor — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">dao.s0sta.com</span>
+      </span>
+    </footer>
+  </main>
+
+  <!-- ===================== TOASTS ===================== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
