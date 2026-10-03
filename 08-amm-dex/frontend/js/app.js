@@ -53,6 +53,20 @@
     return chainCfg(id).rpc || "https://ethereum-rpc.publicnode.com";
   }
 
+  /* RPC resilience: keep a list of endpoints to fall back on if a read fails */
+  let rpcFailures = 0;
+  function fallbackRpc(id) {
+    const fallbacks = chainCfg(id).rpcFallbacks || [];
+    return fallbacks[rpcFailures % (fallbacks.length || 1)];
+  }
+
+  function rebuildReadProvider() {
+    const rpc = rpcFailures > 0 ? fallbackRpc(chainId ?? chainIdPref) : rpcFor(chainId ?? chainIdPref);
+    readProvider = new ethers.JsonRpcProvider(rpc);
+    routerRO = new ethers.Contract(routerAddress, ABI_R, readProvider);
+    pairRO = null; // force re-discovery on the new endpoint
+  }
+
   function shortAddr(a) {
     if (!a) return "—";
     a = String(a);
@@ -172,7 +186,13 @@
   }
 
   function applyAddressAndChain() {
-    chainIdPref = Number(localStorage.getItem(LS_CHAIN) || cfg.defaultChainId);
+    // ignore stale local network choices (e.g. a saved "Local (Anvil)" or unknown id)
+    let savedChain = Number(localStorage.getItem(LS_CHAIN) || cfg.defaultChainId);
+    if (!cfg.chains[savedChain] || savedChain === 31337) {
+      savedChain = cfg.defaultChainId;
+      localStorage.removeItem(LS_CHAIN);
+    }
+    chainIdPref = savedChain;
     routerAddress = localStorage.getItem(LS_ADDRESS) || routerAddress || "";
 
     readProvider = new ethers.JsonRpcProvider(rpcFor(chainIdPref));
@@ -361,7 +381,24 @@
       $("#gauge-usd-label").textContent = symB + " " + (100 - gldPct).toFixed(1) + "%";
     } catch (err) {
       console.warn("pool:", err);
-      if (!silent) toast("Could not read the pool — " + (err.shortMessage || err.message || ""), "error", 9000);
+      const fallbacks = chainCfg(chainId ?? chainIdPref).rpcFallbacks || [];
+      if (rpcFailures < fallbacks.length) {
+        // try the next RPC endpoint before giving up
+        rpcFailures++;
+        rebuildReadProvider();
+        toast("Retrying with a backup RPC endpoint…", "info", 4000);
+        await refreshPool(silent);
+        return;
+      }
+      rpcFailures = 0;
+      rebuildReadProvider();
+      if (!silent) {
+        toast(
+          "Could not read the pool — " + (err.shortMessage || err.message || "") +
+          '<br/><span style="opacity:.7">If this persists, open ⚙ Settings, pick a network, and clear any saved address.</span>',
+          "error", 12000
+        );
+      }
     }
   }
 
