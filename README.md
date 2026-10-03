@@ -8,22 +8,22 @@
 
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.26-363636?logo=solidity&logoColor=white)
 ![Foundry](https://img.shields.io/badge/Foundry-1.5.1-8b5cf6)
-![Tests](https://img.shields.io/badge/tests-467%20passing-brightgreen)
-![CI](https://img.shields.io/badge/CI-18%2F18%20green-2ea44f)
+![Tests](https://img.shields.io/badge/tests-520%20passing-brightgreen)
+![CI](https://img.shields.io/badge/CI-19%2F19%20green-2ea44f)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Live](https://img.shields.io/badge/Live-18%20dApps%20on%20s0sta.com-06b6d4)
+![Live](https://img.shields.io/badge/Live-19%20dApps%20on%20s0sta.com-06b6d4)
 
 ---
 
 ## The repository
 
-**18 complete protocols · 467 passing tests · 16,000+ lines of Solidity · zero external
-dependencies · CI green on all 18 projects.** Every contract in this repository is written
+**19 complete protocols · 520 passing tests · 19,000+ lines of Solidity · zero external
+dependencies · CI green on all 19 projects.** Every contract in this repository is written
 **from scratch** — no OpenZeppelin, no libraries — then exercised the way an auditor would:
 invariant tests, fuzz tests, attack PoCs, time-travel edge cases, deploy scripts, and a
 production-style dApp live on Sepolia for each project.
 
-All 18 dApps are hosted under one roof: **[s0sta.com](https://s0sta.com)** — the portal hub.
+All 19 dApps are hosted under one roof: **[s0sta.com](https://s0sta.com)** — the portal hub.
 
 ---
 
@@ -67,11 +67,17 @@ All 18 dApps are hosted under one roof: **[s0sta.com](https://s0sta.com)** — t
 | 17 | [Murabaha Finance](17-murabaha-finance) 🖥️ [live](https://s0sta.com/murabaha) | Cost-plus trade finance — disclosed markup, installments | Charity-routed late fees, early-settlement rebate, state machine | 16 ✅ |
 | 18 | [Zakat Engine](18-zakat-engine) 🖥️ [live](https://s0sta.com/zakat) | **Quran 9:60** distribution — nisab & hawl, 2.5%, eight asnaf | Ring-fenced fund, 2-of-3 committee, snapshot wealth | 22 ✅ |
 
+### 🏢 Series V · The Full Platform (19)
+
+| # | Project | What it is | Skills demonstrated | Tests |
+|---|---------|-----------|--------------------|:---:|
+| 19 | [Mawarid RWA Platform](19-mawarid-rwa) 🖥️ [live](https://s0sta.com/mawarid) | **End-to-end tokenized real estate** — registry, KYC, primary issuance, OTC exchange, rental epochs, governance, treasury, insurance (9 contracts) | Full institutional workflow: phased subscriptions, order books, snapshot epochs, token-weighted governance, reserve floors | 53 ✅ |
+
 ---
 
 ## Stats
 
-| 18 protocols | 467 tests · 0 failures | 16,000+ Solidity lines | 0 external dependencies | CI 18/18 green | 18 live dApps |
+| 19 protocols | 520 tests · 0 failures | 19,000+ Solidity lines | 0 external dependencies | CI 19/19 green | 19 live dApps |
 |---|---|---|---|---|---|
 
 Every project ships with: **from-scratch contracts + NatSpec** · **foundry.toml / remappings** ·
@@ -84,7 +90,7 @@ One portal, 18 apps — **[s0sta.com](https://s0sta.com)** (source: [`portal/`](
 
 `/erc20-token` · `/crowdfund` · `/multisig` · `/escrow` · `/nft` · `/stake` · `/vesting` ·
 `/dex` · `/dao` · `/lend` · `/hoa` · `/estate` · `/waqf` · `/vara` · `/sukuk` · `/takaful` ·
-`/murabaha` · `/zakat`
+`/murabaha` · `/zakat` · `/mawarid`
 
 ## Security methodology
 
@@ -128,7 +134,7 @@ forge build && forge test
 forge snapshot   # gas report
 ```
 
-GitHub Actions runs `forge build` + `forge test` on **all 18 projects** for every push —
+GitHub Actions runs `forge build` + `forge test` on **all 19 projects** for every push —
 check the checks tab on any commit.
 
 ## Working together
