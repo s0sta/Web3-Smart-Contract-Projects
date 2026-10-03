@@ -13,7 +13,7 @@
 >
 > 🌐 **Live demo: [https://dex.s0sta.com](https://dex.s0sta.com)** — a full dApp dashboard for this AMM (see [`frontend/`](frontend/README.md)).
 >
-> 📍 **Deployed on Sepolia: [`AMMRouter 0xD7C530a1025A70e1932A1554932B35317496F819`](https://sepolia.etherscan.io/address/0xD7C530a1025A70e1932A1554932B35317496F819)** · factory `0xcF5B…2DB62` · GLD `0xeEaA…37D3C` · USD `0x2Ea8…De9e` · pool `0xc6C4…4555B` seeded 1.1M/2.2M
+> 📍 **Deployed on Sepolia: [`AMMRouter 0xD7C530a1025A70e1932A1554932B35317496F819`](https://sepolia.etherscan.io/address/0xD7C530a1025A70e1932A1554932B35317496F819)** · factory `0xcF5B…2DB62` · GLD `0xeeAa…37d3c` · USD `0x2Ea8…De9e` · pool `0xc6C4…4555B` seeded 1.1M/2.2M
 
 A complete automated market maker written **from scratch**, following Uniswap V2's architecture:
 a factory that creates pools for any token pair, LP tokens, a 0.3% swap fee that accrues to

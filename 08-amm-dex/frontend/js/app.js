@@ -210,11 +210,15 @@
 
   /* ---------------- pool discovery ---------------- */
 
+  function normAddr(a) {
+    try { return ethers.getAddress(a); } catch { return String(a).toLowerCase(); }
+  }
+
   async function discoverPool() {
     const factory = new ethers.Contract(await routerRO.factory(), ABI_F, readProvider);
     if (cfg.tokenA && cfg.tokenB) {
-      addrA = ethers.getAddress(cfg.tokenA);
-      addrB = ethers.getAddress(cfg.tokenB);
+      addrA = normAddr(cfg.tokenA);
+      addrB = normAddr(cfg.tokenB);
       pairAddress = await factory.getPair(addrA, addrB);
       if (pairAddress && pairAddress !== ethers.ZeroAddress) {
         await attachPair();
@@ -357,7 +361,7 @@
       $("#gauge-usd-label").textContent = symB + " " + (100 - gldPct).toFixed(1) + "%";
     } catch (err) {
       console.warn("pool:", err);
-      if (!silent) toast("Could not read the pool — is the router address correct on this network?", "error", 9000);
+      if (!silent) toast("Could not read the pool — " + (err.shortMessage || err.message || ""), "error", 9000);
     }
   }
 

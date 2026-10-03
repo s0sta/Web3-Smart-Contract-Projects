@@ -11,7 +11,7 @@ window.APP_CONFIG = {
   routerAddress: "0xD7C530a1025A70e1932A1554932B35317496F819",
 
   // The two pool tokens (the app auto-discovers the pair via the factory).
-  tokenA: "0xeEaA0e19Cc0734A45F99D54EF034a3F7F2B37D3C", // GLD
+  tokenA: "0xeeAa0E19Cc0734A45f99D54Ef034a3F7F2b37d3c", // GLD
   tokenB: "0x2Ea88C2c86c835551a00A605A4966Ba0d755De9e", // USD
 
   // Chain the app opens on by default (Sepolia testnet recommended).
