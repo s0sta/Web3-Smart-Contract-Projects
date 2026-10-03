@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2e4f91"/>
+      <stop offset="1" stop-color="#d9a441"/>
+    </linearGradient>
+  </defs>
+
+  <!-- desert sand (static) -->
+  <rect width="1200" height="300" fill="#faf6ec"/>
+  <circle cx="140" cy="60" r="150" fill="#2e4f91" opacity="0.07"/>
+  <circle cx="1070" cy="250" r="160" fill="#d9a441" opacity="0.08"/>
+
+  <!-- identity -->
+  <text x="60" y="112" font-size="40" font-weight="700" fill="#26221a" opacity="0">
+    Murabaha Finance
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.3s"/>
+  </text>
+  <text x="62" y="150" font-size="19" font-weight="600" fill="#2e4f91" opacity="0">
+    Gulf Trade Finance · disclosed cost-plus, fixed markup
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.7s"/>
+  </text>
+  <text x="62" y="178" font-size="13.5" fill="#93897a" opacity="0">
+    installment schedule · late fees to charity · early-settlement rebate
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1s"/>
+  </text>
+
+  <!-- trade desk panel -->
+  <g transform="translate(700 40)">
+    <rect width="460" height="220" rx="14" fill="#fffdf7" stroke="#e2d9c3" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.4s"/>
+    </rect>
+
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.5s"/>
+      <rect x="352" y="18" width="88" height="20" rx="999" fill="none" stroke="#2c9d6b" stroke-width="1.5"/>
+      <text x="396" y="32" font-size="10" font-weight="700" fill="#2c9d6b" text-anchor="middle" letter-spacing="1">
+        DELIVERED
+      </text>
+    </g>
+
+    <text x="20" y="42" font-size="13.5" font-weight="700" fill="#26221a" opacity="0">
+      Trade #0 — warehouse racking
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.7s"/>
+    </text>
+    <text x="20" y="62" font-size="11" fill="#93897a" opacity="0">
+      cost 12,000 · markup 1,200 (disclosed) · 12 installments
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.8s"/>
+    </text>
+
+    <!-- repayment bar -->
+    <rect x="20" y="84" width="420" height="12" rx="6" fill="#e2d9c3" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2s"/>
+    </rect>
+    <rect x="20" y="84" width="0" height="12" rx="6" fill="#2e4f91" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.2s" fill="freeze" begin="2.1s"/>
+      <animate attributeName="width" from="0" to="105" dur="1.6s" fill="freeze" begin="2.1s" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+    </rect>
+    <text x="20" y="114" font-size="10.5" font-weight="700" fill="#93897a" letter-spacing="1" opacity="0">
+      REPAYMENT 3/12
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.2s"/>
+    </text>
+    <text x="440" y="114" font-size="10.5" fill="#26221a" text-anchor="end" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      25%
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.2s"/>
+    </text>
+
+    <!-- charity chip -->
+    <rect x="20" y="134" width="420" height="32" rx="8" fill="#f3ecd9" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.5s"/>
+    </rect>
+    <text x="34" y="154" font-size="11" fill="#2e4f91" opacity="0">
+      💚 late penalties → charity, never the financier
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.6s"/>
+    </text>
+
+    <rect x="20" y="174" width="420" height="32" rx="8" fill="#f3ecd9" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.8s"/>
+    </rect>
+    <text x="34" y="194" font-size="11" fill="#26221a" opacity="0">
+      ⏱ settle early · rebate on remaining markup
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.9s"/>
+    </text>
+  </g>
+</svg>

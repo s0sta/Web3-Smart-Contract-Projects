@@ -69,6 +69,7 @@ Every audit and every build in this repo follows the same discipline:
 | 14 | [VARA Treasury](14-vara-treasury) 🖥️ [live dApp](https://s0sta.com/vara) | Regulated VASP custody — segregated assets, KYC limits, capital reserve | Reserve enforcement, tier risk limits, freeze & emergency drain | ★★★★★ | 29 ✅ |
 | 15 | [Sukuk Vault](15-sukuk-vault) 🖥️ [live dApp](https://s0sta.com/sukuk) | Ijarah sukuk — certificates backed by a leased asset, Shariah-approved profit | Shariah income gate, profit epochs, face-value maturity redemption | ★★★★★ | 21 ✅ |
 | 16 | [Takaful Insurance](16-takaful-insurance) 🖥️ [live dApp](https://s0sta.com/takaful) | Mutual insurance — tabarru pools, claims committee, no-claim surplus | 2-of-3 claim approvals, qard hasan bridge, snapshot surplus | ★★★★★ | 18 ✅ |
+| 17 | [Murabaha Finance](17-murabaha-finance) 🖥️ [live dApp](https://s0sta.com/murabaha) | Cost-plus trade finance — disclosed markup, installments | Charity-routed late fees, early-settlement rebate, state machine | ★★★★★ | 16 ✅ |
 
 **Live deployment:** NovaToken on [Sepolia](https://sepolia.etherscan.io/address/0x26b420683E6F6Df39CFceBd7C5bB78B7459b8B62) · owner `0x3198…9B853` · frontend dApp at [s0sta.com/erc20-token](https://s0sta.com/erc20-token)
 

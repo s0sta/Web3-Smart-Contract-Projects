@@ -28,6 +28,7 @@ jobs:
           - 14-vara-treasury
           - 15-sukuk-vault
           - 16-takaful-insurance
+          - 17-murabaha-finance
     steps:
       - uses: actions/checkout@v4
 
