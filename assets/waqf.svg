@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#065f46"/>
+      <stop offset="1" stop-color="#c9a227"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ivory serenity (static) -->
+  <rect width="1200" height="300" fill="#f8f5ec"/>
+  <circle cx="150" cy="60" r="150" fill="#c9a227" opacity="0.08"/>
+  <circle cx="1070" cy="250" r="160" fill="#065f46" opacity="0.07"/>
+
+  <!-- identity -->
+  <text x="60" y="108" font-size="40" font-weight="700" fill="#1d2b26" opacity="0">
+    Waqf Endowment Governance
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.3s"/>
+  </text>
+  <text x="62" y="146" font-size="19" font-weight="600" fill="#065f46" opacity="0">
+    Amanah Education Fund · irrevocable corpus, income-only distributions
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.7s"/>
+  </text>
+  <text x="62" y="174" font-size="13.5" fill="#7d8a82" opacity="0">
+    donor-weighted voting · nazir board · beneficiary register · guardian freeze
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1s"/>
+  </text>
+
+  <!-- vault panel -->
+  <g transform="translate(700 40)">
+    <rect width="460" height="220" rx="14" fill="#fffdf7" stroke="#d9d2bd" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.4s"/>
+    </rect>
+
+    <text x="20" y="42" font-size="14" font-weight="700" fill="#1d2b26" opacity="0">
+      The Corpus — irrevocable endowment
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.5s"/>
+    </text>
+    <text x="20" y="66" font-size="22" font-weight="700" fill="#065f46" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      10,000 AED-S
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.7s"/>
+    </text>
+
+    <!-- beneficiary bars -->
+    <rect x="20" y="96" width="420" height="12" rx="6" fill="#e9e4d4" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2s"/>
+    </rect>
+    <rect x="20" y="96" width="0" height="12" rx="6" fill="#065f46" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.2s" fill="freeze" begin="2.1s"/>
+      <animate attributeName="width" from="0" to="252" dur="1.6s" fill="freeze" begin="2.1s" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+    </rect>
+    <text x="20" y="126" font-size="10.5" font-weight="700" fill="#7d8a82" letter-spacing="1" opacity="0">
+      EDUCATION FUND · 60%
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.2s"/>
+    </text>
+    <text x="440" y="126" font-size="10.5" fill="#1d2b26" text-anchor="end" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      HEALTH FUND · 40%
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.2s"/>
+    </text>
+
+    <!-- distribution chip -->
+    <rect x="20" y="150" width="420" height="32" rx="8" fill="#f3efdf" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.5s"/>
+    </rect>
+    <text x="34" y="170" font-size="11" fill="#1d2b26" opacity="0">
+      🤲 income distributed to date
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.6s"/>
+    </text>
+    <text x="426" y="170" font-size="12" font-weight="700" fill="#c9a227" text-anchor="end" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      1,000 AED-S
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.6s"/>
+    </text>
+  </g>
+</svg>

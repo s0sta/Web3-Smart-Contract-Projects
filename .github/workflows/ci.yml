@@ -24,6 +24,7 @@ jobs:
           - 10-lending-protocol
           - 11-owners-association
           - 12-realestate-tokenization
+          - 13-waqf-endowment
     steps:
       - uses: actions/checkout@v4
 

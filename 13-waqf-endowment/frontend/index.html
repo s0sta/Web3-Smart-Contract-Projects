@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Waqf Endowment — Amanah Education Fund | s0sta.com/waqf</title>
+  <meta name="description" content="A Sharia-compliant endowment on-chain: irrevocable corpus, income-only distributions, beneficiary register, donor-weighted governance and a nazir board." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">☪</span>
+      <div>
+        <span class="brand-name">Amanah Education <span class="brand-tag">WAQF</span></span>
+        <span class="brand-sub">Sharia-compliant endowment · s0sta.com/waqf</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙</button>
+      <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+    </div>
+  </header>
+
+  <main class="waqf">
+
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Vault not configured yet</h3>
+          <p>Paste your deployed <strong>WaqfVault</strong> address below, or deploy locally:
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… vault address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this vault</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Vault address <input type="text" id="set-vault-address" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+        <label>Network <select id="set-chain"></select></label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- VAULT STRIP -->
+    <section class="vault-strip">
+      <div class="strip-cell">
+        <span class="strip-label">Corpus (irrevocable)</span>
+        <span class="strip-value corpus" id="strip-corpus">—</span>
+      </div>
+      <div class="strip-cell">
+        <span class="strip-label">Income pool</span>
+        <span class="strip-value" id="strip-pool">—</span>
+      </div>
+      <div class="strip-cell">
+        <span class="strip-label">Distributed to date</span>
+        <span class="strip-value" id="strip-distributed">—</span>
+      </div>
+      <div class="strip-cell">
+        <span class="strip-label">Operational fund</span>
+        <span class="strip-value" id="strip-operational">—</span>
+      </div>
+      <div class="strip-cell">
+        <span class="strip-label">Status</span>
+        <span class="strip-value" id="strip-status">—</span>
+      </div>
+    </section>
+
+    <div class="waqf-grid">
+
+      <!-- BENEFICIARIES -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">🕊</span><h2>Beneficiaries</h2></div>
+        <div class="beneficiary-list" id="beneficiary-list">
+          <p class="muted">loading…</p>
+        </div>
+        <div class="inline-form">
+          <input type="text" id="beneficiary-address" placeholder="0x… beneficiary" autocomplete="off" spellcheck="false" />
+          <input type="number" id="beneficiary-weight" placeholder="bps" min="1" max="10000" style="max-width:110px" />
+          <button class="btn btn-ghost btn-sm" id="btn-add-beneficiary" style="width:auto">Add</button>
+        </div>
+        <p class="muted small" id="beneficiary-total">—</p>
+      </section>
+
+      <!-- GOVERNANCE -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">⚖</span><h2>Governance</h2><span class="muted small" id="gov-note">loading…</span></div>
+        <div class="proposal-list" id="proposal-list">
+          <p class="muted">loading…</p>
+        </div>
+        <details class="propose-box">
+          <summary>Create a proposal</summary>
+          <form id="form-propose" class="stack-form">
+            <label>Type
+              <select id="p-type">
+                <option value="0">Adjust beneficiary weight</option>
+                <option value="1">Add beneficiary</option>
+                <option value="2">Remove beneficiary</option>
+                <option value="3">Operational spending</option>
+                <option value="4">Rules change</option>
+              </select>
+            </label>
+            <label>Calldata (hex)
+              <input type="text" id="p-calldata" placeholder="0x…" autocomplete="off" spellcheck="false" />
+            </label>
+            <label>Description
+              <textarea id="p-desc" rows="2" placeholder="What should the waqf decide?"></textarea>
+            </label>
+            <button class="btn btn-primary" type="submit">Propose</button>
+          </form>
+        </details>
+      </section>
+
+      <!-- ACTIONS -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">🤲</span><h2>The Waqf</h2></div>
+        <table class="kpi-table">
+          <tr><td>Your contribution</td><td class="mono" id="kpi-contribution">—</td></tr>
+          <tr><td>Your voting power</td><td class="mono" id="kpi-power">—</td></tr>
+          <tr><td>Proposal threshold</td><td class="mono" id="kpi-threshold">—</td></tr>
+        </table>
+        <div class="act-form">
+          <label>Endow into the corpus (AED-S) <input type="number" id="endow-amount" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-primary" id="btn-endow">Endow (irrevocable)</button>
+        </div>
+        <div class="act-form">
+          <label>Record income (nazir) <input type="number" id="income-amount" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-income">Record income</button>
+        </div>
+        <div class="act-form">
+          <button class="btn btn-accent" id="btn-distribute">Distribute income to beneficiaries</button>
+        </div>
+      </section>
+    </div>
+
+    <footer class="site-footer">
+      <span>Waqf Endowment · corpus-preservation from scratch — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/waqf</span>
+      </span>
+    </footer>
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
