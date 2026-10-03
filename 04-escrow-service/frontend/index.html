@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrustEscrow — Buyer/Seller Escrow with Arbitration | escrow.s0sta.com</title>
+  <meta name="description" content="A modern dApp for the TrustEscrow protocol: open deals, release on delivery, refund, dispute with arbiter resolution — with role-based actions, lifecycle timelines and live on-chain activity." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="sparks" id="sparks" aria-hidden="true"></div>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-mark">🤝</div>
+        <div>
+          <h1>Trust<span class="accent">Escrow</span></h1>
+          <p class="brand-sub">Buyer/seller escrow with arbitration · Solidity 0.8.26 · from scratch</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙ Settings</button>
+        <span class="chain-badge" id="chain-badge">—</span>
+        <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== SETUP BANNER ===================== -->
+  <section class="container" id="setup-banner" hidden>
+    <div class="card banner">
+      <div class="banner-icon">🛠</div>
+      <div>
+        <h3>Escrow not configured yet</h3>
+        <p>Paste your deployed <strong>TrustEscrow</strong> address below, or deploy locally with
+           <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.
+           See <code>frontend/README.md</code> for the full guide.</p>
+        <form id="form-setup" class="row">
+          <input type="text" id="setup-address" placeholder="0x… escrow address" autocomplete="off" spellcheck="false" />
+          <button class="btn btn-primary" type="submit">Use this escrow</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+
+    <!-- ===================== SETTINGS ===================== -->
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Escrow contract address
+          <input type="text" id="set-escrow-address" placeholder="0x…" autocomplete="off" spellcheck="false" />
+        </label>
+        <label>Network
+          <select id="set-chain"></select>
+        </label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- ===================== HERO ===================== -->
+    <section class="hero">
+      <div class="hero-text">
+        <h2>Deals with <span>built-in trust.</span></h2>
+        <p class="muted">A buyer locks ETH for a seller. The seller releases on delivery, the buyer can
+          cancel for a full refund, and a neutral arbiter settles disputes with any split — the platform
+          earns a fee only on completed deals.</p>
+        <div class="hero-links">
+          <a id="link-contract" href="#" target="_blank" rel="noopener">Escrow ↗</a>
+          <button class="link-btn" id="btn-copy-address" title="Copy escrow address">Copy address</button>
+          <span class="muted" id="hero-address">0x…</span>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat"><span class="stat-label">Deals</span><span class="stat-value accent" id="stat-deals">—</span></div>
+        <div class="stat"><span class="stat-label">Platform fee</span><span class="stat-value" id="stat-fee">—</span></div>
+        <div class="stat"><span class="stat-label">Fees accrued</span><span class="stat-value" id="stat-fees">—</span></div>
+        <div class="stat"><span class="stat-label">Your role</span><span class="stat-value stat-small" id="stat-role">—</span></div>
+      </div>
+    </section>
+
+    <!-- ===================== OPEN DEAL ===================== -->
+    <section class="section">
+      <div class="card create-card">
+        <div class="card-head"><span class="card-icon">📜</span><h3>Open a deal</h3></div>
+        <p class="muted">Lock ETH for a seller and name a neutral arbiter. All three parties must be distinct.</p>
+        <form id="form-open" class="create-row">
+          <label>Seller
+            <input type="text" id="open-seller" placeholder="0x…" autocomplete="off" spellcheck="false" />
+          </label>
+          <label>Arbiter
+            <input type="text" id="open-arbiter" placeholder="0x…" autocomplete="off" spellcheck="false" />
+          </label>
+          <label>Deposit (ETH)
+            <input type="number" id="open-amount" placeholder="0.1" min="0" step="any" />
+          </label>
+          <button class="btn btn-primary" type="submit">Open deal</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===================== DEALS ===================== -->
+    <section class="section">
+      <h2 class="section-title">Deals <span class="muted" id="deals-note">loading…</span></h2>
+      <div class="deals-list" id="deals-list">
+        <div class="card center muted">Loading deals…</div>
+      </div>
+    </section>
+
+    <!-- ===================== OWNER PANEL ===================== -->
+    <section class="section" id="admin-section" hidden>
+      <h2 class="section-title">Platform Controls <span class="tag tag-admin">you are the escrow owner</span></h2>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-head"><span class="card-icon">💰</span><h3>Platform fee</h3></div>
+          <p class="muted">Basis points charged on completed deals. Capped at 10% — open deals keep their frozen fee.</p>
+          <form id="form-set-fee">
+            <label>Fee (bps) <input type="number" id="fee-bps" placeholder="50" min="0" max="1000" step="1" /></label>
+            <button class="btn btn-primary" type="submit">Update fee</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🏦</span><h3>Withdraw fees</h3></div>
+          <p class="muted">Pull accrued platform fees to any address.</p>
+          <form id="form-withdraw-fees">
+            <label>Recipient <input type="text" id="withdraw-to" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+            <button class="btn btn-accent" type="submit">Withdraw</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ACTIVITY ===================== -->
+    <section class="section">
+      <h2 class="section-title">Live Activity <span class="muted">(recent events from the chain)</span></h2>
+      <div class="card table-card">
+        <table class="activity-table">
+          <thead>
+            <tr><th>Event</th><th>Details</th><th>Block</th><th>Tx</th></tr>
+          </thead>
+          <tbody id="activity-body">
+            <tr><td colspan="4" class="muted center">Loading…</td></tr>
+          </tbody>
+        </table>
+        <div class="row between">
+          <button class="btn btn-ghost btn-sm" id="btn-refresh-events">↻ Refresh</button>
+          <span class="muted" id="events-note">showing the latest 15 events</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>TrustEscrow · from-scratch escrow platform — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">escrow.s0sta.com</span>
+      </span>
+    </div>
+  </footer>
+
+  <!-- ===================== TOASTS ===================== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
