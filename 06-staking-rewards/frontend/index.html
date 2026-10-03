@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StakeVault — Staking Rewards | stake.s0sta.com</title>
+  <meta name="description" content="A modern dApp for the StakeVault protocol: stake tokens, watch rewards tick up in real time, claim, exit or emergency-withdraw — with owner emissions and live activity." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="sparks" id="sparks" aria-hidden="true"></div>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-mark">🌾</div>
+        <div>
+          <h1>Stake<span class="accent">Vault</span></h1>
+          <p class="brand-sub">Time-weighted rewards · Synthetix-style · from scratch</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙ Settings</button>
+        <span class="chain-badge" id="chain-badge">—</span>
+        <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== SETUP BANNER ===================== -->
+  <section class="container" id="setup-banner" hidden>
+    <div class="card banner">
+      <div class="banner-icon">🛠</div>
+      <div>
+        <h3>Vault not configured yet</h3>
+        <p>Paste your deployed <strong>StakeVault</strong> address below, or deploy locally with
+           <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.
+           See <code>frontend/README.md</code> for the full guide.</p>
+        <form id="form-setup" class="row">
+          <input type="text" id="setup-address" placeholder="0x… vault address" autocomplete="off" spellcheck="false" />
+          <button class="btn btn-primary" type="submit">Use this vault</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+
+    <!-- ===================== SETTINGS ===================== -->
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Vault contract address
+          <input type="text" id="set-vault-address" placeholder="0x…" autocomplete="off" spellcheck="false" />
+        </label>
+        <label>Network
+          <select id="set-chain"></select>
+        </label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- ===================== HERO ===================== -->
+    <section class="hero">
+      <div class="hero-text">
+        <h2>Stake once. <span>Watch it grow.</span></h2>
+        <p class="muted">Stake STAKE, earn REWARD at a fixed global rate pro-rated by your share —
+          fair by construction with per-user checkpoints. Claim anytime, exit in one click, or
+          emergency-withdraw your principal.</p>
+        <div class="hero-links">
+          <a id="link-contract" href="#" target="_blank" rel="noopener">Vault ↗</a>
+          <button class="link-btn" id="btn-copy-address" title="Copy vault address">Copy address</button>
+          <span class="muted" id="hero-address">0x…</span>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat"><span class="stat-label">Total staked</span><span class="stat-value accent" id="stat-total">—</span></div>
+        <div class="stat"><span class="stat-label">Reward rate</span><span class="stat-value" id="stat-rate">—</span></div>
+        <div class="stat"><span class="stat-label">Period ends</span><span class="stat-value stat-small" id="stat-period">—</span></div>
+        <div class="stat"><span class="stat-label">Your stake</span><span class="stat-value" id="stat-mystake">—</span></div>
+        <div class="stat stat-wide"><span class="stat-label">Your earned (live)</span><span class="stat-value ticker" id="stat-earned">—</span></div>
+      </div>
+    </section>
+
+    <!-- ===================== ACTIONS ===================== -->
+    <section class="section">
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🌱</span><h3>Stake</h3></div>
+          <p class="muted">Deposit STAKE and start earning immediately. Approve once first.</p>
+          <div class="row" id="allowance-row" hidden>
+            <span class="muted" style="font-size:12px">Allowance: <span id="allowance-text" class="mono">—</span></span>
+            <button class="btn btn-ghost btn-sm" id="btn-approve" style="width:auto">Approve max</button>
+          </div>
+          <form id="form-stake">
+            <label>Amount (STAKE) <input type="number" id="stake-amount" placeholder="0.0" min="0" step="any" /></label>
+            <button class="btn btn-primary" type="submit">Stake</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-icon">💧</span><h3>Withdraw</h3></div>
+          <p class="muted">Pull STAKE back. Accrued rewards stay claimable.</p>
+          <form id="form-withdraw">
+            <label>Amount (STAKE) <input type="number" id="withdraw-amount" placeholder="0.0" min="0" step="any" /></label>
+            <button class="btn btn-primary" type="submit">Withdraw</button>
+          </form>
+        </div>
+
+        <div class="card claim-card">
+          <div class="card-head"><span class="card-icon">🏆</span><h3>Claim rewards</h3></div>
+          <p class="muted">Harvest your accrued REWARD to your wallet.</p>
+          <div class="claim-amount">+<span id="claim-preview">0</span> REWARD</div>
+          <button class="btn btn-accent btn-claim" id="btn-claim">Claim</button>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🚪</span><h3>Exit / Emergency</h3></div>
+          <p class="muted">Exit = withdraw everything + claim. Emergency = principal only, rewards forfeited.</p>
+          <div class="row">
+            <button class="btn btn-primary" id="btn-exit">Exit all</button>
+            <button class="btn btn-danger" id="btn-emergency">Emergency</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== OWNER PANEL ===================== -->
+    <section class="section" id="admin-section" hidden>
+      <h2 class="section-title">Owner Controls <span class="tag tag-admin">you own this vault</span></h2>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-head"><span class="card-icon">⚡</span><h3>Fund emissions</h3></div>
+          <p class="muted">Pull REWARD from your wallet and spread it over a duration. Mid-period top-ups roll over.</p>
+          <form id="form-emit">
+            <label>Amount (REWARD) <input type="number" id="emit-amount" placeholder="1000000" min="0" step="any" /></label>
+            <label>Duration (days) <input type="number" id="emit-days" placeholder="30" min="1" step="1" /></label>
+            <button class="btn btn-primary" type="submit">Start rewards</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🧹</span><h3>Recover stray tokens</h3></div>
+          <p class="muted">Escape hatch for accidentally sent ERC-20s. STAKE and REWARD are protected.</p>
+          <form id="form-recover">
+            <label>Token address <input type="text" id="recover-token" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+            <label>Amount <input type="number" id="recover-amount" placeholder="0.0" min="0" step="any" /></label>
+            <button class="btn btn-ghost" type="submit">Recover</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ACTIVITY ===================== -->
+    <section class="section">
+      <h2 class="section-title">Live Activity <span class="muted">(recent events from the chain)</span></h2>
+      <div class="card table-card">
+        <table class="activity-table">
+          <thead>
+            <tr><th>Event</th><th>Details</th><th>Block</th><th>Tx</th></tr>
+          </thead>
+          <tbody id="activity-body">
+            <tr><td colspan="4" class="muted center">Loading…</td></tr>
+          </tbody>
+        </table>
+        <div class="row between">
+          <button class="btn btn-ghost btn-sm" id="btn-refresh-events">↻ Refresh</button>
+          <span class="muted" id="events-note">showing the latest 15 events</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>StakeVault · from-scratch staking rewards — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">stake.s0sta.com</span>
+      </span>
+    </div>
+  </footer>
+
+  <!-- ===================== TOASTS ===================== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

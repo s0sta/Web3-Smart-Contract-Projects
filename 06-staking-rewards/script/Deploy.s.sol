@@ -10,8 +10,11 @@ import {MockToken} from "../src/MockToken.sol";
 contract DeployStakeVault is Script {
     function run() external returns (StakeVault vault, MockToken staking, MockToken reward) {
         uint256 deployerKey = vm.envOr(
-            "PRIVATE_KEY",
-            uint256(0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80)
+            "DEPLOYER_PRIVATE_KEY",
+            vm.envOr(
+                "PRIVATE_KEY",
+                uint256(0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80)
+            )
         );
         address deployer = vm.addr(deployerKey);
 
