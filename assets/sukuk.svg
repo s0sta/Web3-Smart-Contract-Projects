@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7fd8b0"/>
+      <stop offset="1" stop-color="#c86dd9"/>
+    </linearGradient>
+  </defs>
+
+  <!-- plum night (static) -->
+  <rect width="1200" height="300" fill="#171226"/>
+  <circle cx="130" cy="70" r="150" fill="#c86dd9" opacity="0.08"/>
+  <circle cx="1060" cy="240" r="160" fill="#7fd8b0" opacity="0.07"/>
+
+  <!-- identity -->
+  <text x="60" y="112" font-size="40" font-weight="700" fill="#7fd8b0" opacity="0">
+    Sukuk Vault
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.3s"/>
+  </text>
+  <text x="62" y="150" font-size="19" font-weight="600" fill="#f3f0fa" opacity="0">
+    Green Ijarah Sukuk · Series 1 · AAOIFI-style yield certificates
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.7s"/>
+  </text>
+  <text x="62" y="178" font-size="13.5" fill="#9d93b8" opacity="0">
+    Shariah-approved ijarah income · profit epochs · face-value redemption at maturity
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1s"/>
+  </text>
+
+  <!-- certificate panel -->
+  <g transform="translate(700 44)">
+    <rect width="460" height="212" rx="14" fill="#1f1833" stroke="#3a2f55" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.4s"/>
+    </rect>
+
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.5s"/>
+      <rect x="352" y="18" width="88" height="20" rx="999" fill="none" stroke="#7fd8b0" stroke-width="1.5" transform="rotate(-3 396 28)"/>
+      <text x="396" y="32" font-size="10" font-weight="700" fill="#7fd8b0" text-anchor="middle" letter-spacing="1" transform="rotate(-3 396 28)">
+        OPEN
+      </text>
+    </g>
+
+    <text x="20" y="42" font-size="13.5" font-weight="700" fill="#f3f0fa" opacity="0">
+      Series 1 — face value 100 AED-S
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.7s"/>
+    </text>
+    <text x="20" y="62" font-size="11" fill="#9d93b8" opacity="0">
+      Solar rooftop array, Al Quoz · 8% p.a. indicative
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.8s"/>
+    </text>
+
+    <!-- profit bar -->
+    <rect x="20" y="84" width="420" height="12" rx="6" fill="#3a2f55" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2s"/>
+    </rect>
+    <rect x="20" y="84" width="0" height="12" rx="6" fill="#7fd8b0" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.2s" fill="freeze" begin="2.1s"/>
+      <animate attributeName="width" from="0" to="210" dur="1.6s" fill="freeze" begin="2.1s" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+    </rect>
+    <text x="20" y="114" font-size="10.5" font-weight="700" fill="#9d93b8" letter-spacing="1" opacity="0">
+      Q1 POOL DISTRIBUTED
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.2s"/>
+    </text>
+    <text x="440" y="114" font-size="10.5" fill="#f3f0fa" text-anchor="end" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      2,700 AED-S
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.2s"/>
+    </text>
+
+    <!-- chips -->
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.5s"/>
+      <rect x="20" y="134" width="200" height="32" rx="8" fill="#3a2f55"/>
+      <text x="34" y="154" font-size="10.5" fill="#7fd8b0" font-family="ui-monospace, Menlo, monospace">your 250 certs · 675 claimable</text>
+      <rect x="228" y="134" width="212" height="32" rx="8" fill="#3a2f55"/>
+      <text x="242" y="154" font-size="10.5" fill="#c86dd9" font-family="ui-monospace, Menlo, monospace">Shariah-approved ✓ riba-free</text>
+    </g>
+  </g>
+</svg>

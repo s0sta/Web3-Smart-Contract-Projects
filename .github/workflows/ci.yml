@@ -26,6 +26,7 @@ jobs:
           - 12-realestate-tokenization
           - 13-waqf-endowment
           - 14-vara-treasury
+          - 15-sukuk-vault
     steps:
       - uses: actions/checkout@v4
 

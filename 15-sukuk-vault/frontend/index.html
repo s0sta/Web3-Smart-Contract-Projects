@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sukuk Vault — Green Ijarah Series 1 | s0sta.com/sukuk</title>
+  <meta name="description" content="A Sharia-compliant sukuk (ijarah structure): certificates backed by a leased asset, Shariah-approved profit distributions, maturity redemption at face value." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">🏷</span>
+      <div>
+        <span class="brand-name">Green Ijarah <span class="brand-tag">SUKUK</span></span>
+        <span class="brand-sub">AAOIFI-style yield certificates · s0sta.com/sukuk</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙</button>
+      <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+    </div>
+  </header>
+
+  <main class="sukuk">
+
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Vault not configured yet</h3>
+          <p>Paste your deployed <strong>SukukVault</strong> address below, or deploy locally:
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… vault address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this vault</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Vault address <input type="text" id="set-vault-address" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+        <label>Network <select id="set-chain"></select></label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- THE CERTIFICATE -->
+    <section class="certificate">
+      <div class="cert-head">
+        <span class="cert-serial">SERIES № 1</span>
+        <span class="cert-status" id="cert-status">—</span>
+      </div>
+      <h1 class="cert-title" id="cert-name">—</h1>
+      <p class="cert-asset" id="cert-asset">—</p>
+      <div class="cert-grid">
+        <div class="cert-kpi"><span class="ck-label">Face value</span><span class="ck-value" id="cert-face">—</span></div>
+        <div class="cert-kpi"><span class="ck-label">Certificates</span><span class="ck-value" id="cert-total">—</span></div>
+        <div class="cert-kpi"><span class="ck-label">Indicative profit</span><span class="ck-value" id="cert-profit">—</span></div>
+        <div class="cert-kpi"><span class="ck-label">Maturity</span><span class="ck-value" id="cert-maturity">—</span></div>
+      </div>
+      <p class="cert-note">Profit is ijarah lease income, approved by the Shariah board — never riba.</p>
+    </section>
+
+    <div class="sukuk-grid">
+
+      <!-- PROFIT DISTRIBUTIONS -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">💚</span><h2>Profit Distributions</h2></div>
+        <table class="kpi-table">
+          <tr><td>Pending Shariah approval</td><td class="mono" id="dist-pending">—</td></tr>
+          <tr><td>Distributable pool</td><td class="mono" id="dist-pool">—</td></tr>
+          <tr><td>Profit reserve</td><td class="mono" id="dist-reserve">—</td></tr>
+          <tr><td>Epochs</td><td class="mono" id="dist-epochs">—</td></tr>
+          <tr><td>Your claimable</td><td class="mono accent" id="dist-claimable">—</td></tr>
+        </table>
+        <div class="row">
+          <button class="btn btn-primary" id="btn-distribute">Distribute pool</button>
+          <button class="btn btn-accent" id="btn-claim">Claim profit</button>
+        </div>
+      </section>
+
+      <!-- INVEST -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">📜</span><h2>Invest &amp; Redeem</h2></div>
+        <table class="kpi-table">
+          <tr><td>Your certificates</td><td class="mono" id="inv-certs">—</td></tr>
+          <tr><td>Redeemed so far</td><td class="mono" id="inv-redeemed">—</td></tr>
+        </table>
+        <div class="act-form">
+          <label>Purchase certificates <input type="number" id="purchase-amount" placeholder="0" min="0" step="1" /></label>
+          <button class="btn btn-primary" id="btn-purchase">Purchase</button>
+        </div>
+        <div class="act-form">
+          <label>Redeem at maturity <input type="number" id="redeem-amount" placeholder="0" min="0" step="1" /></label>
+          <button class="btn btn-accent" id="btn-redeem">Redeem</button>
+        </div>
+      </section>
+
+      <!-- ISSUER & SHARIAH -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">🕌</span><h2>Issuer &amp; Shariah</h2></div>
+        <div class="act-form">
+          <label>Record ijarah income <input type="number" id="income-amount" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-income">Record income</button>
+        </div>
+        <div class="act-form">
+          <button class="btn btn-accent" id="btn-approve">Approve income (Shariah)</button>
+        </div>
+        <div class="act-form">
+          <label>Sell underlying asset (at maturity) <input type="number" id="sale-proceeds" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-sell">Sell asset</button>
+        </div>
+      </section>
+    </div>
+
+    <footer class="site-footer">
+      <span>Sukuk Vault · ijarah certificates from scratch — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/sukuk</span>
+      </span>
+    </footer>
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
