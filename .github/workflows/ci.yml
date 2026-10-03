@@ -23,6 +23,7 @@ jobs:
           - 09-dao-governance
           - 10-lending-protocol
           - 11-owners-association
+          - 12-realestate-tokenization
     steps:
       - uses: actions/checkout@v4
 

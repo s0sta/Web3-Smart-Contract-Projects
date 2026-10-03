@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#e2714b"/>
+      <stop offset="1" stop-color="#0f9c8f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- warm sand (static) -->
+  <rect width="1200" height="300" fill="#faf5ee"/>
+  <circle cx="140" cy="60" r="150" fill="#e2714b" opacity="0.07"/>
+  <circle cx="1070" cy="250" r="160" fill="#0f9c8f" opacity="0.07"/>
+
+  <!-- identity -->
+  <text x="60" y="110" font-size="40" font-weight="700" fill="#2b2420" opacity="0">
+    Estate Tokenization
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.3s"/>
+  </text>
+  <text x="62" y="148" font-size="19" font-weight="600" fill="#e2714b" opacity="0">
+    Marina Gate Tower · DLD/RERA fractional ownership
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.7s"/>
+  </text>
+  <text x="62" y="176" font-size="13.5" fill="#8a7a6d" opacity="0">
+    KYC-gated shares · rental distributions · maintenance reserve · snapshot epochs
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1s"/>
+  </text>
+
+  <!-- tower panel -->
+  <g transform="translate(700 40)">
+    <rect width="460" height="220" rx="14" fill="#fffdf9" stroke="#d8c9b4" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.4s"/>
+    </rect>
+
+    <text x="20" y="42" font-size="14" font-weight="700" fill="#2b2420" opacity="0">
+      The Property — Appraisal $5,000,000
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.5s"/>
+    </text>
+    <text x="20" y="64" font-size="11" fill="#8a7a6d" opacity="0">
+      1,000 shares · 400 yours · KYC passed
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.6s"/>
+    </text>
+
+    <!-- share pie -->
+    <g transform="translate(70 150)" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2s"/>
+      <circle r="42" fill="#0f9c8f" opacity="0.15"/>
+      <path d="M0 0 L0 -42 A42 42 0 0 1 39.6 -14 Z" fill="#0f9c8f" opacity="0.85"/>
+      <path d="M0 0 L39.6 -14 A42 42 0 0 1 -25.2 33.6 Z" fill="#e2714b" opacity="0.8"/>
+      <path d="M0 0 L-25.2 33.6 A42 42 0 0 1 0 -42 Z" fill="#d8c9b4"/>
+      <text x="0" y="-50" font-size="10" fill="#8a7a6d" text-anchor="middle">40%</text>
+      <text x="48" y="10" font-size="10" fill="#0f9c8f" text-anchor="middle">30%</text>
+      <text x="-36" y="36" font-size="10" fill="#e2714b" text-anchor="middle">30%</text>
+    </g>
+
+    <!-- yield bar -->
+    <rect x="230" y="118" width="210" height="10" rx="5" fill="#efe6d8" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.2s"/>
+    </rect>
+    <rect x="230" y="118" width="0" height="10" rx="5" fill="#0f9c8f" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.2s" fill="freeze" begin="2.3s"/>
+      <animate attributeName="width" from="0" to="168" dur="1.6s" fill="freeze" begin="2.3s" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+    </rect>
+    <text x="230" y="146" font-size="10.5" font-weight="700" fill="#2b2420" opacity="0">
+      Your claimable yield
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.4s"/>
+    </text>
+    <text x="440" y="146" font-size="12" font-weight="700" fill="#0f9c8f" text-anchor="end" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      3,600 AED-S
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.4s"/>
+    </text>
+
+    <!-- rent chip -->
+    <rect x="230" y="166" width="210" height="30" rx="8" fill="#f3ebdf" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.7s"/>
+    </rect>
+    <text x="244" y="185" font-size="11" fill="#2b2420" opacity="0">
+      🏢 Q3 rent 10,000 · epoch #0 distributed
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.8s"/>
+    </text>
+  </g>
+</svg>
