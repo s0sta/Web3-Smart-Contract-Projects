@@ -66,6 +66,7 @@ Every audit and every build in this repo follows the same discipline:
 | 11 | [Owners Association Governance](11-owners-association) 🖥️ [live dApp](https://s0sta.com/hoa) | Dubai Law No. 6 of 2019 JOP protocol — unit registry, service charges, board & veto | Snapshot area voting, statutory quorums, reserve treasury | ★★★★★ | 48 ✅ |
 | 12 | [Estate Tokenization](12-realestate-tokenization) 🖥️ [live dApp](https://s0sta.com/estate) | DLD/RERA fractional ownership — property ledger, KYC shares, rental yields | Snapshot distribution epochs, maintenance reserve, compliance freezes | ★★★★★ | 20 ✅ |
 | 13 | [Waqf Endowment](13-waqf-endowment) 🖥️ [live dApp](https://s0sta.com/waqf) | Sharia-compliant endowment — irrevocable corpus, income-only distributions | Corpus-preservation invariant, donor-weighted governance, nazir board | ★★★★★ | 31 ✅ |
+| 14 | [VARA Treasury](14-vara-treasury) 🖥️ [live dApp](https://s0sta.com/vara) | Regulated VASP custody — segregated assets, KYC limits, capital reserve | Reserve enforcement, tier risk limits, freeze & emergency drain | ★★★★★ | 29 ✅ |
 
 **Live deployment:** NovaToken on [Sepolia](https://sepolia.etherscan.io/address/0x26b420683E6F6Df39CFceBd7C5bB78B7459b8B62) · owner `0x3198…9B853` · frontend dApp at [s0sta.com/erc20-token](https://s0sta.com/erc20-token)
 

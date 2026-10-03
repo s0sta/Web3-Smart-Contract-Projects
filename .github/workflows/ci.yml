@@ -25,6 +25,7 @@ jobs:
           - 11-owners-association
           - 12-realestate-tokenization
           - 13-waqf-endowment
+          - 14-vara-treasury
     steps:
       - uses: actions/checkout@v4
 
