@@ -4,10 +4,19 @@
 ![Foundry](https://img.shields.io/badge/Foundry-1.5.1-8b5cf6)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Tests](https://img.shields.io/badge/tests-48%20green-22c55e)
+![Live](https://img.shields.io/badge/Live-s0sta.com%2Fhoa-d4a373)
+
+<p align="center">
+  <img src="../assets/hoa.svg" alt="JOP Owners Association — on-chain governance" width="100%" />
+</p>
 
 > **Difficulty: ★★★★★** · Flagship project — a real-world governance protocol inspired by the
 > **United Arab Emirates' jointly owned property regime**, engineered to be portable to
 > condominium/HOA frameworks in any jurisdiction.
+>
+> 🌐 **Live demo: [https://s0sta.com/hoa](https://s0sta.com/hoa)** — see [`frontend/README.md`](frontend/README.md).
+>
+> 📍 **Deployed on Sepolia: [`OwnersAssociationGovernor 0xFeD940A0435816f3f190f99737676F6A62Ba4228`](https://sepolia.etherscan.io/address/0xFeD940A0435816f3f190f99737676F6A62Ba4228)** · registry `0xb7Ab…0003F` · treasury `0xa339…100Da` · AED-S `0x6f79…7Dbe` · "Marina Heights Residences" (8 units / 610 sqm) · proposal #0 active with 180 sqm for
 
 ## The real-world scenario
 

@@ -176,7 +176,10 @@ contract OwnersAssociationGovernor is AccessControl {
         TreasuryVault treasury_,
         address complianceOfficer,
         address guardian,
-        address[] memory initialBoard
+        address[] memory initialBoard,
+        uint256 reviewPeriod_,
+        uint256 votingPeriod_,
+        uint256 timelock_
     ) {
         if (address(registry_) == address(0) || address(treasury_) == address(0)) {
             revert ZeroAddress();
@@ -184,11 +187,12 @@ contract OwnersAssociationGovernor is AccessControl {
         registry = registry_;
         treasury = treasury_;
 
-        // Statutory defaults (overridable via Rules proposals).
+        // Statutory defaults (periods are deployment-configurable; quorums
+        // and the threshold are governance-settable via Rules proposals).
         proposalThresholdSqm = 50; // a 50-sqm unit can propose
-        reviewPeriod = 2 days;
-        votingPeriod = 5 days;
-        timelock = 2 days;
+        reviewPeriod = reviewPeriod_;
+        votingPeriod = votingPeriod_;
+        timelock = timelock_;
 
         quorumBps[ProposalType.Budget] = 2000; // 20% of area
         quorumBps[ProposalType.ChargeRate] = 3000; // 30%

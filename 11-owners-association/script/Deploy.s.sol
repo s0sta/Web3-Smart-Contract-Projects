@@ -67,7 +67,7 @@ contract DeployOwnersAssociation is Script {
         boardList[0] = demo.board[0];
         boardList[1] = demo.board[1];
         boardList[2] = demo.board[2];
-        governor = new OwnersAssociationGovernor(registry, treasury, demo.compliance, demo.guardian, boardList);
+        governor = new OwnersAssociationGovernor(registry, treasury, demo.compliance, demo.guardian, boardList, 2 days, 5 days, 2 days);
 
         // 3) wire authorities and hand full admin to the governor
         registry.setTreasury(address(treasury));

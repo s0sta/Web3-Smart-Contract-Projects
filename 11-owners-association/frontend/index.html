@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JOP Governance — Owners Association | s0sta.com/hoa</title>
+  <meta name="description" content="The on-chain owners association: Dubai Law No. 6 of 2019-inspired governance — unit registry, service charges, board, compliance veto, proposals and treasury." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===================== TOP BAR ===================== -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">🏛</span>
+      <div>
+        <span class="brand-name">Marina Heights <span class="brand-tag">OA</span></span>
+        <span class="brand-sub">Owners Association · Dubai Law No. 6 of 2019 · s0sta.com/hoa</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙</button>
+      <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+    </div>
+  </header>
+
+  <main class="chamber">
+
+    <!-- ===================== SETUP BANNER ===================== -->
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Governor not configured yet</h3>
+          <p>Paste your deployed <strong>OwnersAssociationGovernor</strong> address below, or deploy locally with
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… governor address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this governor</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SETTINGS ===================== -->
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Governor contract address
+          <input type="text" id="set-governor-address" placeholder="0x…" autocomplete="off" spellcheck="false" />
+        </label>
+        <label>Network
+          <select id="set-chain"></select>
+        </label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- ===================== CHAMBER GRID ===================== -->
+    <div class="chamber-grid">
+
+      <!-- LEFT: PROPOSAL FEED -->
+      <section class="feed-col">
+        <div class="row between feed-head">
+          <h1 class="page-title">The Chamber</h1>
+          <span class="muted" id="feed-note">loading…</span>
+        </div>
+        <div class="feed" id="proposal-feed">
+          <div class="card center muted">Loading proposals…</div>
+        </div>
+
+        <h2 class="sub-title">Building register</h2>
+        <div class="units-card" id="units-card">
+          <p class="muted">loading…</p>
+        </div>
+      </section>
+
+      <!-- RIGHT: GOVERNANCE RAIL -->
+      <aside class="panel-col">
+
+        <div class="card">
+          <div class="card-head"><span class="card-ico">⚖️</span><h3>Your voting power</h3></div>
+          <p class="power-value" id="my-power">—</p>
+          <p class="muted small">owned area (sqm) + proxy power · threshold <span class="mono" id="threshold">—</span></p>
+          <div class="delegate-box" id="delegate-box">
+            <form id="form-delegate" class="inline-form">
+              <input type="text" id="delegate-to" placeholder="delegate to 0x…" autocomplete="off" spellcheck="false" />
+              <input type="number" id="delegate-days" placeholder="days" min="1" style="max-width:80px" />
+              <button class="btn btn-ghost btn-sm" type="submit" style="width:auto">Delegate</button>
+            </form>
+            <p class="muted small" id="my-delegation">no active proxy</p>
+            <button class="link-btn" id="btn-revoke-delegation">revoke proxy</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-ico">📜</span><h3>Create a proposal</h3></div>
+          <form id="form-propose" class="stack-form">
+            <label>Type
+              <select id="p-type">
+                <option value="0">Budget</option>
+                <option value="1">Service charge rate</option>
+                <option value="2">Contract award</option>
+                <option value="3">Rules change</option>
+                <option value="4">Board election</option>
+                <option value="5">Payment</option>
+                <option value="6">Emergency (board only)</option>
+              </select>
+            </label>
+            <label>Target
+              <input type="text" id="p-target" placeholder="0x… registry / treasury / governor" autocomplete="off" spellcheck="false" />
+            </label>
+            <label>ETH value
+              <input type="number" id="p-value" placeholder="0" min="0" step="any" />
+            </label>
+            <label>Calldata (hex)
+              <input type="text" id="p-calldata" placeholder="0x…" autocomplete="off" spellcheck="false" />
+            </label>
+            <label>Description
+              <textarea id="p-desc" rows="2" placeholder="What should the association decide?"></textarea>
+            </label>
+            <button class="btn btn-primary" type="submit">Propose</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-ico">🏦</span><h3>Treasury & association</h3></div>
+          <table class="gov-table">
+            <tr><td>Treasury (AED-S)</td><td class="mono" id="gov-treasury">—</td></tr>
+            <tr><td>Reserve ratio</td><td class="mono" id="gov-reserve">—</td></tr>
+            <tr><td>Total paid out</td><td class="mono" id="gov-paid">—</td></tr>
+            <tr><td>Charge rate / sqm / yr</td><td class="mono" id="gov-charge">—</td></tr>
+            <tr><td>Units · total area</td><td class="mono" id="gov-units">—</td></tr>
+            <tr><td>My charge debt</td><td class="mono" id="gov-myledger">—</td></tr>
+          </table>
+          <form id="form-pay" class="inline-form" style="margin-top:12px">
+            <input type="number" id="pay-amount" placeholder="pay AED-S" min="0" step="any" />
+            <button class="btn btn-primary btn-sm" type="submit" style="width:auto">Pay charges</button>
+          </form>
+        </div>
+
+        <div class="card" id="roles-card">
+          <div class="card-head"><span class="card-ico">🎩</span><h3>Association roles</h3></div>
+          <p class="muted small" id="board-list">board: —</p>
+          <p class="muted small" id="my-roles">your roles: —</p>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="site-footer">
+      <span>JOP Owners Association · from-scratch governance — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/hoa</span>
+      </span>
+    </footer>
+  </main>
+
+  <!-- ===================== TOASTS ===================== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

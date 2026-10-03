@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#d4a373"/>
+      <stop offset="1" stop-color="#4f7cff"/>
+    </linearGradient>
+  </defs>
+
+  <!-- navy chamber (static) -->
+  <rect width="1200" height="300" fill="#0c1526"/>
+  <circle cx="130" cy="70" r="140" fill="#4f7cff" opacity="0.08"/>
+  <circle cx="1060" cy="240" r="150" fill="#d4a373" opacity="0.06"/>
+
+  <!-- identity -->
+  <text x="60" y="112" font-size="40" font-weight="700" fill="#d4a373" opacity="0">
+    JOP Owners Association
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.3s"/>
+  </text>
+  <text x="62" y="150" font-size="19" font-weight="600" fill="#eef2fa" opacity="0">
+    Governance on-chain · Dubai Law No. 6 of 2019 · portable to any HOA framework
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.7s"/>
+  </text>
+  <text x="62" y="178" font-size="13.5" fill="#8fa0bb" opacity="0">
+    Unit registry · area-weighted voting · board · compliance veto · service charges · reserve treasury
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1s"/>
+  </text>
+
+  <!-- ballot panel -->
+  <g transform="translate(700 44)">
+    <rect width="460" height="212" rx="14" fill="#111d33" stroke="#243354" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.4s"/>
+    </rect>
+
+    <!-- lifecycle seal -->
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.5s"/>
+      <rect x="352" y="18" width="88" height="20" rx="999" fill="none" stroke="#4f7cff" stroke-width="1.5" transform="rotate(-3 396 28)">
+        <animate attributeName="opacity" values="1;0.5;1" dur="1.8s" repeatCount="indefinite"/>
+      </rect>
+      <text x="396" y="32" font-size="10" font-weight="700" fill="#4f7cff" text-anchor="middle" letter-spacing="1" transform="rotate(-3 396 28)">
+        ACTIVE
+      </text>
+    </g>
+
+    <text x="20" y="42" font-size="13.5" font-weight="700" fill="#eef2fa" opacity="0">
+      Proposal #3 — Annual service-charge budget
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.7s"/>
+    </text>
+    <text x="20" y="62" font-size="11" fill="#8fa0bb" opacity="0">
+      by 0x3198… · vote Jan 12 → Jan 17 · quorum 122 sqm ✓
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.8s"/>
+    </text>
+
+    <!-- for bar -->
+    <rect x="20" y="82" width="420" height="10" rx="5" fill="#1c2a4a" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2s"/>
+    </rect>
+    <rect x="20" y="82" width="0" height="10" rx="5" fill="#4ade80" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.2s" fill="freeze" begin="2.1s"/>
+      <animate attributeName="width" from="0" to="278" dur="1.8s" fill="freeze" begin="2.1s" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+    </rect>
+    <text x="20" y="108" font-size="10" font-weight="700" fill="#8fa0bb" letter-spacing="1" opacity="0">
+      FOR
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.2s"/>
+    </text>
+    <text x="440" y="108" font-size="10" fill="#eef2fa" text-anchor="end" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      340 sqm · 66.2%
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.2s"/>
+    </text>
+
+    <!-- against bar -->
+    <rect x="20" y="120" width="420" height="10" rx="5" fill="#1c2a4a" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.4s"/>
+    </rect>
+    <rect x="20" y="120" width="0" height="10" rx="5" fill="#e25c5c" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.2s" fill="freeze" begin="2.5s"/>
+      <animate attributeName="width" from="0" to="142" dur="1.8s" fill="freeze" begin="2.5s" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+    </rect>
+    <text x="20" y="146" font-size="10" font-weight="700" fill="#8fa0bb" letter-spacing="1" opacity="0">
+      AGAINST
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.6s"/>
+    </text>
+    <text x="440" y="146" font-size="10" fill="#eef2fa" text-anchor="end" font-family="ui-monospace, Menlo, monospace" opacity="0">
+      160 sqm · 31.1%
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.6s"/>
+    </text>
+
+    <!-- unit chips -->
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.9s"/>
+      <rect x="20" y="164" width="130" height="30" rx="8" fill="#1c2a4a"/>
+      <text x="30" y="183" font-size="10.5" fill="#d4a373" font-family="ui-monospace, Menlo, monospace">#0 · 120 sqm · you</text>
+      <rect x="158" y="164" width="130" height="30" rx="8" fill="#1c2a4a"/>
+      <text x="168" y="183" font-size="10.5" fill="#8fa0bb" font-family="ui-monospace, Menlo, monospace">#2 · 85 sqm · 0x3c44…</text>
+      <rect x="296" y="164" width="144" height="30" rx="8" fill="#1c2a4a"/>
+      <text x="306" y="183" font-size="10.5" fill="#8fa0bb" font-family="ui-monospace, Menlo, monospace">debt 720 AED-S · pay</text>
+    </g>
+  </g>
+</svg>

@@ -36,7 +36,7 @@ abstract contract AssociationFixture is Test {
         board[0] = owner2;
         board[1] = owner3;
         board[2] = owner4;
-        governor = new OwnersAssociationGovernor(registry, treasury, owner5, guardian, board);
+        governor = new OwnersAssociationGovernor(registry, treasury, owner5, guardian, board, 2 days, 5 days, 2 days);
 
         registry.setTreasury(address(treasury));
 
