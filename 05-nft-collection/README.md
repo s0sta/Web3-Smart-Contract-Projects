@@ -3,8 +3,17 @@
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.26-363636?logo=solidity&logoColor=white)
 ![Foundry](https://img.shields.io/badge/Foundry-1.5.1-8b5cf6)
 ![License](https://img.shields.io/badge/License-MIT-green)
+![Live](https://img.shields.io/badge/Live-nft.s0sta.com-ec4899)
+
+<p align="center">
+  <img src="../assets/nft.svg" alt="Genesis Collection — ERC-721 from scratch" width="100%" />
+</p>
 
 > **Difficulty: ★★★☆☆** · Project 5 of the [Web3 Smart Contract Projects](../README.md) portfolio.
+>
+> 🌐 **Live demo: [https://nft.s0sta.com](https://nft.s0sta.com)** — a full dApp dashboard for this collection (see [`frontend/`](frontend/README.md)).
+>
+> 📍 **Deployed on Sepolia: [`GenesisNFT 0x57446cB7B0E8ac94892A5cB2b61C8cb377BC7Fea`](https://sepolia.etherscan.io/address/0x57446cB7B0E8ac94892A5cB2b61C8cb377BC7Fea)** · owner `0x319899FaAAD730519B8a2Bd72d2Eba2370a9B853` · 5 minted · public phase live
 
 A complete NFT drop written **from scratch — including the ERC-721 implementation itself**:
 Merkle-tree whitelist phase, public phase, per-wallet caps, owner reserve, ERC-2981 royalties
@@ -33,6 +42,7 @@ and a pre/post-reveal metadata flow.
 | `GenesisNFT` | [`src/GenesisNFT.sol`](src/GenesisNFT.sol) | Collection: phases, caps, royalties, reveal |
 | `Ownable` / `ReentrancyGuard` | [`src/`](src) | Shared primitives |
 | `DeployGenesisNFT` | [`script/Deploy.s.sol`](script/Deploy.s.sol) | Deployment (root/URI wiring commented inline) |
+| `frontend/` | [`frontend/README.md`](frontend/README.md) | The hosted dApp (nft.s0sta.com) |
 
 ## Flow
 
