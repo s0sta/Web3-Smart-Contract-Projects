@@ -29,6 +29,7 @@ jobs:
           - 15-sukuk-vault
           - 16-takaful-insurance
           - 17-murabaha-finance
+          - 18-zakat-engine
     steps:
       - uses: actions/checkout@v4
 
