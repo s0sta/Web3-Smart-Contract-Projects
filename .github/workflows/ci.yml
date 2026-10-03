@@ -27,6 +27,7 @@ jobs:
           - 13-waqf-endowment
           - 14-vara-treasury
           - 15-sukuk-vault
+          - 16-takaful-insurance
     steps:
       - uses: actions/checkout@v4
 

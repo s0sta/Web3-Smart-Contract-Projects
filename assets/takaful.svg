@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff7f66"/>
+      <stop offset="1" stop-color="#6ecbf5"/>
+    </linearGradient>
+  </defs>
+
+  <!-- warm cream (static) -->
+  <rect width="1200" height="300" fill="#fdf6f1"/>
+  <circle cx="140" cy="60" r="150" fill="#ff7f66" opacity="0.08"/>
+  <circle cx="1070" cy="250" r="160" fill="#6ecbf5" opacity="0.08"/>
+
+  <!-- identity -->
+  <text x="60" y="112" font-size="40" font-weight="700" fill="#33241f" opacity="0">
+    Takaful — Amanah Mutual
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.3s"/>
+  </text>
+  <text x="62" y="150" font-size="19" font-weight="600" fill="#ff7f66" opacity="0">
+    Sharia-compliant mutual insurance on the wakalah model
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.7s"/>
+  </text>
+  <text x="62" y="178" font-size="13.5" fill="#9a8277" opacity="0">
+    tabarru pool · 2-of-3 claims committee · no-claim surplus · qard hasan bridge
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1s"/>
+  </text>
+
+  <!-- mutual circle panel -->
+  <g transform="translate(700 40)">
+    <rect width="460" height="220" rx="14" fill="#fffdfa" stroke="#e8d5c9" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.4s"/>
+    </rect>
+
+    <!-- the circle -->
+    <circle cx="105" cy="110" r="58" fill="none" stroke="#e8d5c9" stroke-width="10" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1.7s"/>
+    </circle>
+    <circle cx="105" cy="110" r="58" fill="none" stroke="#6ecbf5" stroke-width="10" stroke-dasharray="0 364.4" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.8s"/>
+      <animate attributeName="stroke-dasharray" from="0 364.4" to="273.3 364.4" dur="1.6s" fill="freeze" begin="1.8s" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
+    </circle>
+    <text x="105" y="105" font-size="15" font-weight="700" fill="#33241f" text-anchor="middle" opacity="0">
+      75%
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.2s"/>
+    </text>
+    <text x="105" y="124" font-size="9.5" fill="#9a8277" text-anchor="middle" opacity="0">
+      claims paid / pool
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="2.2s"/>
+    </text>
+
+    <!-- policy chip -->
+    <rect x="190" y="66" width="246" height="34" rx="8" fill="#f7ede5" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.5s"/>
+    </rect>
+    <text x="204" y="87" font-size="11" fill="#33241f" opacity="0">
+      🛡 Motor policy #0 · 450 AED-S pooled
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.6s"/>
+    </text>
+
+    <rect x="190" y="110" width="246" height="34" rx="8" fill="#f7ede5" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.8s"/>
+    </rect>
+    <text x="204" y="131" font-size="11" fill="#33241f" opacity="0">
+      ⚖ committee 2/3 · qard hasan armed
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.9s"/>
+    </text>
+
+    <rect x="190" y="154" width="246" height="34" rx="8" fill="#f7ede5" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="3.1s"/>
+    </rect>
+    <text x="204" y="175" font-size="11" fill="#ff7f66" opacity="0">
+      💚 no-claim surplus at period end
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="3.2s"/>
+    </text>
+  </g>
+</svg>
