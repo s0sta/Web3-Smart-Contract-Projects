@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Waqf Endowment — Amanah Education Fund | s0sta.com/waqf</title>
+  <meta name="description" content="A Sharia-compliant endowment on-chain: irrevocable corpus, income-only distributions, beneficiary register, donor-weighted governance and a nazir board." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">☪</span>
+      <div>
+        <span class="brand-name">Amanah Education <span class="brand-tag">WAQF</span></span>
+        <span class="brand-sub">Sharia-compliant endowment · s0sta.com/waqf</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙</button>
+      <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+    </div>
+  </header>
+
+  <main class="waqf">
+
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Vault not configured yet</h3>
+          <p>Paste your deployed <strong>WaqfVault</strong> address below, or deploy locally:
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… vault address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this vault</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Vault address <input type="text" id="set-vault-address" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+        <label>Network <select id="set-chain"></select></label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- VAULT STRIP -->
+    <section class="vault-strip">
+      <div class="strip-cell">
+        <span class="strip-label">Corpus (irrevocable)</span>
+        <span class="strip-value corpus" id="strip-corpus">—</span>
+      </div>
+      <div class="strip-cell">
+        <span class="strip-label">Income pool</span>
+        <span class="strip-value" id="strip-pool">—</span>
+      </div>
+      <div class="strip-cell">
+        <span class="strip-label">Distributed to date</span>
+        <span class="strip-value" id="strip-distributed">—</span>
+      </div>
+      <div class="strip-cell">
+        <span class="strip-label">Operational fund</span>
+        <span class="strip-value" id="strip-operational">—</span>
+      </div>
+      <div class="strip-cell">
+        <span class="strip-label">Status</span>
+        <span class="strip-value" id="strip-status">—</span>
+      </div>
+    </section>
+
+    <div class="waqf-grid">
+
+      <!-- BENEFICIARIES -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">🕊</span><h2>Beneficiaries</h2></div>
+        <div class="beneficiary-list" id="beneficiary-list">
+          <p class="muted">loading…</p>
+        </div>
+        <div class="inline-form">
+          <input type="text" id="beneficiary-address" placeholder="0x… beneficiary" autocomplete="off" spellcheck="false" />
+          <input type="number" id="beneficiary-weight" placeholder="bps" min="1" max="10000" style="max-width:110px" />
+          <button class="btn btn-ghost btn-sm" id="btn-add-beneficiary" style="width:auto">Add</button>
+        </div>
+        <p class="muted small" id="beneficiary-total">—</p>
+      </section>
+
+      <!-- GOVERNANCE -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">⚖</span><h2>Governance</h2><span class="muted small" id="gov-note">loading…</span></div>
+        <div class="proposal-list" id="proposal-list">
+          <p class="muted">loading…</p>
+        </div>
+        <details class="propose-box">
+          <summary>Create a proposal</summary>
+          <form id="form-propose" class="stack-form">
+            <label>Type
+              <select id="p-type">
+                <option value="0">Adjust beneficiary weight</option>
+                <option value="1">Add beneficiary</option>
+                <option value="2">Remove beneficiary</option>
+                <option value="3">Operational spending</option>
+                <option value="4">Rules change</option>
+              </select>
+            </label>
+            <label>Calldata (hex)
+              <input type="text" id="p-calldata" placeholder="0x…" autocomplete="off" spellcheck="false" />
+            </label>
+            <label>Description
+              <textarea id="p-desc" rows="2" placeholder="What should the waqf decide?"></textarea>
+            </label>
+            <button class="btn btn-primary" type="submit">Propose</button>
+          </form>
+        </details>
+      </section>
+
+      <!-- ACTIONS -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">🤲</span><h2>The Waqf</h2></div>
+        <table class="kpi-table">
+          <tr><td>Your contribution</td><td class="mono" id="kpi-contribution">—</td></tr>
+          <tr><td>Your voting power</td><td class="mono" id="kpi-power">—</td></tr>
+          <tr><td>Proposal threshold</td><td class="mono" id="kpi-threshold">—</td></tr>
+        </table>
+        <div class="act-form">
+          <label>Endow into the corpus (AED-S) <input type="number" id="endow-amount" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-primary" id="btn-endow">Endow (irrevocable)</button>
+        </div>
+        <div class="act-form">
+          <label>Record income (nazir) <input type="number" id="income-amount" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-income">Record income</button>
+        </div>
+        <div class="act-form">
+          <button class="btn btn-accent" id="btn-distribute">Distribute income to beneficiaries</button>
+        </div>
+      </section>
+    </div>
+
+    <section class="card" style="margin-bottom:20px;">
+      <div class="card-head"><span class="card-ico">📖</span><h2>How this dApp works</h2><span class="muted" style="font-size:12.5px;">user guide · on-chain process · flow graph</span></div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:20px; margin-top:6px;">
+        <!-- A · HOW TO USE -->
+        <div>
+          <h3 style="font-family:var(--font-display); font-size:15px; color:var(--accent-1);">🖐 How to use</h3>
+          <ol style="margin:8px 0 0; padding-left:22px; display:flex; flex-direction:column; gap:9px;">
+            <li style="font-size:13.5px;"><strong>Connect your wallet</strong> — press the <strong>Connect Wallet</strong> button (top-right) and switch your wallet to <strong>Sepolia</strong>, the network this dApp is configured for (chain 11155111).</li>
+            <li style="font-size:13.5px;"><strong>Endow into the corpus</strong> — in the <strong>The Waqf</strong> card, enter an amount in AED-S and press <strong>Endow (irrevocable)</strong>; approve the token spend in your wallet and confirm. The endowment can never be taken back.</li>
+            <li style="font-size:13.5px;"><strong>Record income (nazir)</strong> — board members enter the yield the corpus earned and press <strong>Record income</strong>; it lands in the income pool, kept separate from the corpus.</li>
+            <li style="font-size:13.5px;"><strong>Register beneficiaries</strong> — in the <strong>Beneficiaries</strong> card, paste a wallet address and a weight in bps (all weights must total 10,000), then press <strong>Add</strong>.</li>
+            <li style="font-size:13.5px;"><strong>Govern</strong> — under <strong>Governance</strong> open <strong>Create a proposal</strong>, pick a type, paste the calldata, describe it and press <strong>Propose</strong>; donors vote For / Against, nazirs press Confirm, and once the timelock passes anyone can press <strong>Execute</strong>.</li>
+            <li style="font-size:13.5px;"><strong>Distribute</strong> — press <strong>Distribute income to beneficiaries</strong> (gold button) to pay the income pool out pro-rata to the registered causes.</li>
+          </ol>
+        </div>
+
+        <!-- B · ON-CHAIN PROCESS -->
+        <div>
+          <h3 style="font-family:var(--font-display); font-size:15px; color:var(--accent-1);">⛓ The process — what happens on-chain</h3>
+          <ol style="margin:8px 0 0; padding-left:22px; display:flex; flex-direction:column; gap:9px;">
+            <li style="font-size:13.5px;"><strong>WaqfVault.endow()</strong> locks your AED-S into the irrevocable corpus — <span class="mono">totalCorpus</span> only ever grows, and no code path can spend or withdraw it.</li>
+            <li style="font-size:13.5px;"><strong>WaqfVault.recordIncome()</strong> lets the nazir board deposit permissible yield into a separate income pool, tracked strictly apart from the corpus.</li>
+            <li style="font-size:13.5px;"><strong>BeneficiaryRegistry</strong> stores the named causes — <span class="mono">addBeneficiary()</span> and <span class="mono">setBeneficiaryWeight()</span> keep weights in bps that must sum to 10,000, read by the vault at distribution time.</li>
+            <li style="font-size:13.5px;"><strong>WaqfGovernor</strong> turns contributions into votes: donors <span class="mono">propose()</span>/<span class="mono">vote()</span> with their endowed amount snapshotted at proposal creation, 2-of-3 nazirs <span class="mono">confirm()</span>, and execution waits out a <span class="mono">timelock</span> — targets are allowlisted to the registry and the operational fund only.</li>
+            <li style="font-size:13.5px;"><strong>WaqfVault.distribute()</strong> pays the income pool to beneficiaries pro-rata to their weights — the corpus is untouched, and only governor-approved <span class="mono">spendOperational()</span> may use the operational fund.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- C · FLOW GRAPH -->
+      <div class="act-form">
+        <h3 style="font-family:var(--font-display); font-size:15px; color:var(--accent-1); margin-bottom:12px;">🗺 Flow graph</h3>
+        <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="Endowment flow: endow corpus, record income, register causes, govern and vote, distribute income" style="font-family:var(--font-ui); display:block;">
+          <defs>
+            <marker id="waqf-arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="var(--accent-2)"></path>
+            </marker>
+          </defs>
+          <rect x="0" y="6" width="920" height="228" rx="14" fill="var(--bg)" stroke="var(--card-border)"></rect>
+
+          <!-- arrows -->
+          <line x1="152" y1="107" x2="188" y2="107" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#waqf-arrow)"></line>
+          <line x1="344" y1="107" x2="380" y2="107" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#waqf-arrow)"></line>
+          <line x1="536" y1="107" x2="572" y2="107" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#waqf-arrow)"></line>
+          <line x1="728" y1="107" x2="764" y2="107" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#waqf-arrow)"></line>
+
+          <!-- stage 1 -->
+          <rect x="0" y="64" width="152" height="86" rx="12" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5"></rect>
+          <circle cx="16" cy="64" r="12" fill="var(--accent-2)"></circle>
+          <text x="16" y="68.5" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">1</text>
+          <text x="76" y="104" text-anchor="middle" font-size="13" font-weight="600" fill="var(--text)">Endow corpus</text>
+          <text x="76" y="127" text-anchor="middle" font-size="10" fill="var(--muted)" style="font-family:var(--font-mono)">WaqfVault.endow()</text>
+
+          <!-- stage 2 -->
+          <rect x="192" y="64" width="152" height="86" rx="12" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5"></rect>
+          <circle cx="208" cy="64" r="12" fill="var(--accent-2)"></circle>
+          <text x="208" y="68.5" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">2</text>
+          <text x="268" y="104" text-anchor="middle" font-size="13" font-weight="600" fill="var(--text)">Record income</text>
+          <text x="268" y="127" text-anchor="middle" font-size="10" fill="var(--muted)" style="font-family:var(--font-mono)">WaqfVault.recordIncome()</text>
+
+          <!-- stage 3 -->
+          <rect x="384" y="64" width="152" height="86" rx="12" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5"></rect>
+          <circle cx="400" cy="64" r="12" fill="var(--accent-2)"></circle>
+          <text x="400" y="68.5" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">3</text>
+          <text x="460" y="104" text-anchor="middle" font-size="13" font-weight="600" fill="var(--text)">Register causes</text>
+          <text x="460" y="127" text-anchor="middle" font-size="10" fill="var(--muted)" style="font-family:var(--font-mono)">BeneficiaryRegistry</text>
+
+          <!-- stage 4 -->
+          <rect x="576" y="64" width="152" height="86" rx="12" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5"></rect>
+          <circle cx="592" cy="64" r="12" fill="var(--accent-2)"></circle>
+          <text x="592" y="68.5" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">4</text>
+          <text x="652" y="104" text-anchor="middle" font-size="13" font-weight="600" fill="var(--text)">Govern &amp; vote</text>
+          <text x="652" y="127" text-anchor="middle" font-size="10" fill="var(--muted)" style="font-family:var(--font-mono)">WaqfGovernor</text>
+
+          <!-- stage 5 -->
+          <rect x="768" y="64" width="152" height="86" rx="12" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5"></rect>
+          <circle cx="784" cy="64" r="12" fill="var(--accent-2)"></circle>
+          <text x="784" y="68.5" text-anchor="middle" font-size="12" font-weight="700" fill="#ffffff">5</text>
+          <text x="844" y="104" text-anchor="middle" font-size="13" font-weight="600" fill="var(--text)">Distribute</text>
+          <text x="844" y="127" text-anchor="middle" font-size="10" fill="var(--muted)" style="font-family:var(--font-mono)">WaqfVault.distribute()</text>
+
+          <!-- caption -->
+          <text x="460" y="196" text-anchor="middle" font-size="10.5" fill="var(--muted)">The corpus is irrevocable — endow() can never be withdrawn or spent.</text>
+          <text x="460" y="214" text-anchor="middle" font-size="10.5" fill="var(--muted)">Only recorded income flows onward, through the governor, to the beneficiaries.</text>
+        </svg>
+      </div>
+
+      <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+        <a class="btn btn-ghost btn-sm" style="text-decoration:none;" href="https://s0sta.com/waqf" target="_blank" rel="noopener">Live demo ↗</a>
+        <a class="btn btn-ghost btn-sm" style="text-decoration:none;" href="https://sepolia.etherscan.io/address/0x3dc6d47de5f14f562b4bee02417d2fa51cab1c19" target="_blank" rel="noopener">WaqfVault on Sepolia ↗</a>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <span>Waqf Endowment · corpus-preservation from scratch — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/waqf</span>
+      </span>
+    </footer>
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

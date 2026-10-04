@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Silsila — Supply Chain | s0sta.com/silsila</title>
+  <meta name="description" content="A real-world-usable trade rail: purchase orders, shipment tracking, quality inspections, milestone payments and cargo insurance." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">🚚</span>
+      <div>
+        <span class="brand-name">Silsila <span class="brand-tag">TRADE</span></span>
+        <span class="brand-sub">Supply chain &amp; logistics platform · s0sta.com/silsila</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙</button>
+      <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+    </div>
+  </header>
+
+  <main class="silsila">
+
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Registry not configured yet</h3>
+          <p>Paste your deployed <strong>SilsilaRegistry</strong> address below, or deploy locally:
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… registry address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this registry</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Registry address <input type="text" id="set-registry-address" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+        <label>Network <select id="set-chain"></select></label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- CONTROL STRIP -->
+    <section class="strip">
+      <div class="strip-cell"><span class="strip-label">My role</span><span class="strip-value" id="strip-role">—</span></div>
+      <div class="strip-cell"><span class="strip-label">Open orders</span><span class="strip-value" id="strip-orders">—</span></div>
+      <div class="strip-cell"><span class="strip-label">In escrow</span><span class="strip-value" id="strip-escrow">—</span></div>
+      <div class="strip-cell"><span class="strip-label">Premiums</span><span class="strip-value" id="strip-premiums">—</span></div>
+      <div class="strip-cell"><span class="strip-label">Reputation</span><span class="strip-value" id="strip-score">—</span></div>
+    </section>
+
+    <div class="silsila-grid">
+
+      <!-- ORDERS -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">📦</span><h2>Purchase Orders</h2></div>
+        <div class="prop-list" id="order-list">
+          <p class="muted">no orders yet</p>
+        </div>
+        <div class="act-form">
+          <label>Register as a business — role <select id="reg-role">
+            <option value="1">Buyer</option><option value="2">Supplier</option>
+            <option value="3">Carrier</option><option value="4">Auditor</option>
+            <option value="5">Financier</option>
+          </select></label>
+          <button class="btn btn-ghost" id="btn-register">Register</button>
+        </div>
+        <div class="act-form">
+          <label>Create order — supplier <input type="text" id="ord-supplier" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+          <label>Quantity × price <input type="number" id="ord-qty" placeholder="qty" min="1" step="1" /> <input type="number" id="ord-price" placeholder="unit price" min="0" step="any" /></label>
+          <button class="btn btn-primary" id="btn-order">Create order</button>
+        </div>
+      </section>
+
+      <!-- SHIPMENTS -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">🛰</span><h2>Shipments</h2></div>
+        <div class="prop-list" id="ship-list">
+          <p class="muted">no shipments yet</p>
+        </div>
+        <div class="act-form">
+          <label>Ship order # <input type="number" id="ship-order" placeholder="0" min="0" step="1" /> via carrier <input type="text" id="ship-carrier" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+          <button class="btn btn-ghost" id="btn-ship">Create shipment</button>
+        </div>
+        <div class="act-form">
+          <label>Advance milestone — shipment # <input type="number" id="adv-ship" placeholder="0" min="0" step="1" /></label>
+          <button class="btn btn-accent" id="btn-advance">Advance +1</button>
+        </div>
+        <div class="act-form">
+          <label>Deliver — shipment # <input type="number" id="del-ship" placeholder="0" min="0" step="1" /></label>
+          <button class="btn btn-ghost" id="btn-deliver">Deliver (POD)</button>
+        </div>
+      </section>
+
+      <!-- PAYMENTS & GOV -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">💵</span><h2>Payments &amp; Governance</h2></div>
+        <div class="act-form">
+          <label>Fund order # <input type="number" id="fund-order" placeholder="0" min="0" step="1" /></label>
+          <button class="btn btn-ghost" id="btn-fund">Fund escrow</button>
+        </div>
+        <div class="act-form">
+          <label>Insure shipment # <input type="number" id="ins-ship" placeholder="0" min="0" step="1" /> cover <input type="number" id="ins-cover" placeholder="value" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-insure">Insure cargo</button>
+        </div>
+        <div class="prop-list" id="gov-list">
+          <p class="muted">no proposals yet</p>
+        </div>
+        <div class="act-form">
+          <label>Propose platform fee (bps) <input type="number" id="gov-fee" placeholder="50" min="0" max="1000" step="1" /></label>
+          <button class="btn btn-ghost" id="btn-propose">Propose</button>
+        </div>
+      </section>
+    </div>
+
+    <footer class="site-footer">
+      <span>Silsila · trade network from scratch — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/silsila</span>
+      </span>
+    </footer>
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

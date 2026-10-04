@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Murabaha Finance — Gulf Trade Finance | s0sta.com/murabaha</title>
+  <meta name="description" content="Sharia-compliant cost-plus trade finance: disclosed markup, installment schedule, late penalties to charity, early-settlement rebate." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">🚚</span>
+      <div>
+        <span class="brand-name">Gulf Trade Finance <span class="brand-tag">MURABAHA</span></span>
+        <span class="brand-sub">Cost-plus trade finance · s0sta.com/murabaha</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙</button>
+      <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+    </div>
+  </header>
+
+  <main class="murabaha">
+
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Book not configured yet</h3>
+          <p>Paste your deployed <strong>MurabahaFinancing</strong> address below, or deploy locally:
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… book address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this book</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Book address <input type="text" id="set-book-address" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+        <label>Network <select id="set-chain"></select></label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <div class="murabaha-grid">
+
+      <!-- REQUEST -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">📝</span><h2>Request Financing</h2></div>
+        <form id="form-request" class="stack-form">
+          <label>Supplier <input type="text" id="rq-supplier" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+          <label>Guarantor <input type="text" id="rq-guarantor" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+          <label>Cost price (AED-S) <input type="number" id="rq-cost" placeholder="0.0" min="0" step="any" /></label>
+          <label>Markup (AED-S, ≤ 50% of cost) <input type="number" id="rq-markup" placeholder="0.0" min="0" step="any" /></label>
+          <label>Installments <input type="number" id="rq-installments" placeholder="10" min="1" step="1" /></label>
+          <label>Asset <input type="text" id="rq-asset" placeholder="what is being financed?" /></label>
+          <button class="btn btn-primary" type="submit">Request trade</button>
+        </form>
+      </section>
+
+      <!-- TRADE BOOK -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">📒</span><h2>The Trade Book</h2><span class="muted small" id="book-note">loading…</span></div>
+        <div class="trade-list" id="trade-list">
+          <p class="muted">no trades yet</p>
+        </div>
+      </section>
+
+      <!-- ACTIONS -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">⚙</span><h2>Actions</h2></div>
+        <div class="act-form">
+          <label>Trade id <input type="number" id="act-trade" placeholder="0" min="0" step="1" /></label>
+          <div class="row">
+            <button class="btn btn-ghost" id="btn-approve">Shariah approve</button>
+            <button class="btn btn-ghost" id="btn-purchase">Pay supplier</button>
+            <button class="btn btn-ghost" id="btn-deliver">Confirm delivery</button>
+          </div>
+          <div class="row">
+            <button class="btn btn-primary" id="btn-installment">Pay installment</button>
+            <button class="btn btn-accent" id="btn-settle">Settle early (rebate)</button>
+          </div>
+          <div class="row">
+            <button class="btn btn-danger" id="btn-default">Mark default</button>
+            <button class="btn btn-ghost" id="btn-recover">Recover to me</button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="card">
+      <div class="card-head"><span class="card-ico">🎓</span><h2>How this dApp works</h2></div>
+
+      <div class="card-head"><span class="card-ico">👣</span><h3>How to use</h3></div>
+      <ol>
+        <li><strong>Connect your wallet</strong> with the top-right <strong>Connect Wallet</strong> button — the dApp runs on the <strong>Sepolia</strong> testnet (chain id <span class="mono">11155111</span>), so switch your wallet to Sepolia first.</li>
+        <li><strong>(First run)</strong> If the setup banner appears, paste the deployed <span class="mono">MurabahaFinancing</span> book address and press <strong>Use this book</strong>; you can also change address/network in <strong>⚙ Settings</strong> and press <strong>Save &amp; reload</strong>.</li>
+        <li><strong>Request financing</strong> in the <strong>Request Financing</strong> card: fill supplier, guarantor, cost price (AED-S), markup (≤ 50% of cost), number of installments and the asset, then press <strong>Request trade</strong>.</li>
+        <li><strong>Approve &amp; fund</strong> — in the <strong>Actions</strong> card, type the trade id shown in <strong>The Trade Book</strong>. The Shariah board presses <strong>Shariah approve</strong>, then the financier presses <strong>Pay supplier</strong>.</li>
+        <li><strong>Confirm delivery</strong> — the buyer presses <strong>Confirm delivery</strong> once the goods arrive; repayment starts only after delivery.</li>
+        <li><strong>Repay</strong> — the buyer (or guarantor) presses <strong>Pay installment</strong> each period. Prepay the remainder at a discount with <strong>Settle early (rebate)</strong>; if payments lapse, anyone can <strong>Mark default</strong> and the financier can <strong>Recover to me</strong>.</li>
+      </ol>
+
+      <div class="card-head"><span class="card-ico">⛓</span><h3>The process - what happens on-chain</h3></div>
+      <ol>
+        <li><span class="mono">MurabahaFinancing.requestTrade()</span> stores the supplier, guarantor, cost price, fixed markup, installment schedule, invoice hash and asset description, and sets the trade to <span class="mono">Requested</span> (markup capped at 50% of cost).</li>
+        <li><span class="mono">MurabahaFinancing.approveTrade()</span> — only a <span class="mono">SHARIAH_ROLE</span> holder (enforced by <span class="mono">AccessControl</span>) may move the trade to <span class="mono">Approved</span>.</li>
+        <li><span class="mono">MurabahaFinancing.purchaseAsset()</span> — the <span class="mono">FINANCIER_ROLE</span> pays the supplier directly in AED-S (<span class="mono">MockStable</span>), so title passes to the financier first (status <span class="mono">Purchased</span>).</li>
+        <li><span class="mono">MurabahaFinancing.confirmDelivery()</span> — the buyer confirms receipt, the trade becomes <span class="mono">Delivered</span> and the repayment clock starts.</li>
+        <li><span class="mono">MurabahaFinancing.payInstallment()</span> — the buyer or guarantor pays each due installment; missed payments add a late fee (<span class="mono">latePenaltyBps</span>) routed to the <strong>charity</strong> address, never to the financier. The last installment sets the trade to <span class="mono">Settled</span>.</li>
+        <li><span class="mono">MurabahaFinancing.settleEarly()</span> prepays the remaining installments with a rebate on the remaining markup; if <span class="mono">missedInstallments</span> exceed <span class="mono">maxMissedInstallments</span>, anyone may <span class="mono">markDefault()</span> and the financier may <span class="mono">recover()</span> the collected funds.</li>
+      </ol>
+
+      <div class="card-head"><span class="card-ico">🗺</span><h3>Flow graph</h3></div>
+      <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="Murabaha trade lifecycle flow diagram" style="font-family:var(--font-ui)">
+        <defs>
+          <marker id="mg-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 Z" fill="var(--accent-2)" />
+          </marker>
+        </defs>
+
+        <line x1="122" y1="94" x2="155" y2="94" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#mg-arrow)" />
+        <line x1="282" y1="94" x2="315" y2="94" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#mg-arrow)" />
+        <line x1="442" y1="94" x2="475" y2="94" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#mg-arrow)" />
+        <line x1="602" y1="94" x2="635" y2="94" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#mg-arrow)" />
+        <line x1="762" y1="94" x2="795" y2="94" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#mg-arrow)" />
+
+        <g>
+          <rect x="0" y="58" width="120" height="72" rx="12" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5" />
+          <circle cx="60" cy="75" r="10" fill="var(--accent-2)" />
+          <text x="60" y="78.5" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">1</text>
+          <text x="60" y="101" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--text)">Request trade</text>
+          <text x="60" y="117" text-anchor="middle" font-size="9.5" fill="var(--muted)" style="font-family:var(--font-mono)">MurabahaFinancing</text>
+        </g>
+        <g>
+          <rect x="160" y="58" width="120" height="72" rx="12" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5" />
+          <circle cx="220" cy="75" r="10" fill="var(--accent-2)" />
+          <text x="220" y="78.5" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">2</text>
+          <text x="220" y="101" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--text)">Shariah approve</text>
+          <text x="220" y="117" text-anchor="middle" font-size="9.5" fill="var(--muted)" style="font-family:var(--font-mono)">MurabahaFinancing</text>
+        </g>
+        <g>
+          <rect x="320" y="58" width="120" height="72" rx="12" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5" />
+          <circle cx="380" cy="75" r="10" fill="var(--accent-2)" />
+          <text x="380" y="78.5" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">3</text>
+          <text x="380" y="101" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--text)">Pay supplier</text>
+          <text x="380" y="117" text-anchor="middle" font-size="9.5" fill="var(--muted)" style="font-family:var(--font-mono)">MurabahaFinancing</text>
+        </g>
+        <g>
+          <rect x="480" y="58" width="120" height="72" rx="12" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5" />
+          <circle cx="540" cy="75" r="10" fill="var(--accent-2)" />
+          <text x="540" y="78.5" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">4</text>
+          <text x="540" y="101" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--text)">Confirm delivery</text>
+          <text x="540" y="117" text-anchor="middle" font-size="9.5" fill="var(--muted)" style="font-family:var(--font-mono)">MurabahaFinancing</text>
+        </g>
+        <g>
+          <rect x="640" y="58" width="120" height="72" rx="12" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5" />
+          <circle cx="700" cy="75" r="10" fill="var(--accent-2)" />
+          <text x="700" y="78.5" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">5</text>
+          <text x="700" y="101" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--text)">Pay installments</text>
+          <text x="700" y="117" text-anchor="middle" font-size="9.5" fill="var(--muted)" style="font-family:var(--font-mono)">MurabahaFinancing</text>
+        </g>
+        <g>
+          <rect x="800" y="58" width="120" height="72" rx="12" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5" />
+          <circle cx="860" cy="75" r="10" fill="var(--accent-2)" />
+          <text x="860" y="78.5" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">6</text>
+          <text x="860" y="101" text-anchor="middle" font-size="12.5" font-weight="600" fill="var(--text)">Settled / defaulted</text>
+          <text x="860" y="117" text-anchor="middle" font-size="9.5" fill="var(--muted)" style="font-family:var(--font-mono)">MurabahaFinancing</text>
+        </g>
+      </svg>
+      <p class="muted small">Lifecycle: <span class="mono">Requested → Approved → Purchased → Delivered → Repaying → Settled / Defaulted</span>. Every transition is validated by the <span class="mono">MurabahaFinancing</span> state machine; role checks come from <span class="mono">AccessControl</span>.</p>
+    </section>
+
+    <footer class="site-footer">
+      <span>Murabaha · trade finance from scratch — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/murabaha</span>
+      </span>
+    </footer>
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

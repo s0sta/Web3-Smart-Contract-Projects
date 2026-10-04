@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zakat Engine — Bayt al-Mal | s0sta.com/zakat</title>
+  <meta name="description" content="The zakat obligation on-chain: nisab & hawl, 2.5% computation, the eight asnaf of Quran 9:60, ring-fenced distributions by a 2-of-3 committee." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">🌙</span>
+      <div>
+        <span class="brand-name">Bayt al-Mal <span class="brand-tag">ZAKAT</span></span>
+        <span class="brand-sub">Quran 9:60 distribution engine · s0sta.com/zakat</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙</button>
+      <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+    </div>
+  </header>
+
+  <main class="zakat">
+
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Engine not configured yet</h3>
+          <p>Paste your deployed <strong>ZakatEngine</strong> address below, or deploy locally:
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… engine address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this engine</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Engine address <input type="text" id="set-engine-address" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+        <label>Network <select id="set-chain"></select></label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- THE FUND STRIP -->
+    <section class="fund-strip">
+      <div class="strip-cell">
+        <span class="strip-label">Ring-fenced zakat fund</span>
+        <span class="strip-value" id="strip-fund">—</span>
+      </div>
+      <div class="strip-cell">
+        <span class="strip-label">Collected</span>
+        <span class="strip-value" id="strip-collected">—</span>
+      </div>
+      <div class="strip-cell">
+        <span class="strip-label">Distributed</span>
+        <span class="strip-value" id="strip-distributed">—</span>
+      </div>
+      <div class="strip-cell">
+        <span class="strip-label">Nisab</span>
+        <span class="strip-value" id="strip-nisab">—</span>
+      </div>
+      <div class="strip-cell">
+        <span class="strip-label">Status</span>
+        <span class="strip-value" id="strip-status">—</span>
+      </div>
+    </section>
+
+    <!-- THE EIGHT GATES -->
+    <section class="card" style="margin-bottom:18px">
+      <div class="card-head"><span class="card-ico">🕋</span><h2>The Eight Asnaf — Quran 9:60</h2></div>
+      <div class="asnaf-grid" id="asnaf-grid">
+        <p class="muted">loading…</p>
+      </div>
+    </section>
+
+    <div class="zakat-grid">
+
+      <!-- PAYER -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">🧮</span><h2>Your Zakat</h2></div>
+        <table class="kpi-table">
+          <tr><td>Declared wealth</td><td class="mono" id="pay-wealth">—</td></tr>
+          <tr><td>Hawl started</td><td class="mono" id="pay-hawl">—</td></tr>
+          <tr><td>Zakat due (2.5%)</td><td class="mono accent" id="pay-due">—</td></tr>
+          <tr><td>Lifetime paid</td><td class="mono" id="pay-paid">—</td></tr>
+        </table>
+        <div class="act-form">
+          <label>Declare wealth (AED-S) <input type="number" id="wealth-amount" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-primary" id="btn-declare">Declare wealth</button>
+        </div>
+        <div class="act-form">
+          <button class="btn btn-accent" id="btn-pay">Pay my zakat</button>
+        </div>
+      </section>
+
+      <!-- DISBURSEMENTS -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">🤲</span><h2>Disbursements</h2><span class="muted small" id="disb-note">loading…</span></div>
+        <div class="disb-list" id="disb-list">
+          <p class="muted">no proposals yet</p>
+        </div>
+      </section>
+
+      <!-- COMMITTEE -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">⚖</span><h2>Zakat Committee</h2></div>
+        <div class="act-form">
+          <label>Register recipient <input type="text" id="rcpt-account" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+          <label>Asnaf <select id="rcpt-asnaf">
+            <option value="0">Fuqara (the poor)</option>
+            <option value="1">Masakin (the needy)</option>
+            <option value="2">Amil (administrators)</option>
+            <option value="3">Muallaf (converts)</option>
+            <option value="4">Riqab (freeing captives)</option>
+            <option value="5">Gharimin (in debt)</option>
+            <option value="6">Fi Sabilillah</option>
+            <option value="7">Ibn Sabil (travelers)</option>
+          </select></label>
+          <button class="btn btn-ghost" id="btn-register">Register recipient</button>
+        </div>
+        <div class="act-form">
+          <label>Propose disbursement — recipient id <input type="number" id="prop-recipient" placeholder="0" min="0" step="1" /></label>
+          <label>Amount <input type="number" id="prop-amount" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-propose">Propose</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- HOW IT WORKS — educational section -->
+    <section class="card" id="how-it-works" style="margin-bottom:18px">
+      <div class="card-head"><span class="card-ico">🧭</span><h2>How it works — from wallet to asnaf</h2></div>
+
+      <h3 style="margin:16px 0 10px; font-family:var(--font-display); font-size:15px; color:var(--accent-2)">📖 How to use</h3>
+      <ol style="margin:0; padding-left:20px; display:grid; gap:8px; font-size:13.5px; line-height:1.6">
+        <li>Press <strong>Connect Wallet</strong> (top-right) and switch to the <strong>Sepolia</strong> testnet — the dApp is pre-configured for Sepolia (chain id <span class="mono">11155111</span>) and the chain badge shows your current network.</li>
+        <li>In <strong>Your Zakat</strong>, enter your zakatable wealth in AED-S and press <strong>Declare wealth</strong> — this self-assessment starts your hawl (lunar-year) clock.</li>
+        <li>Once the hawl is complete, the card shows your <strong>Zakat due (2.5%)</strong> — press <strong>Pay my zakat</strong> and confirm the AED-S approval + transfer into the ring-fenced fund.</li>
+        <li>Committee members: fill in the recipient address + asnaf and press <strong>Register recipient</strong>, then <strong>Propose</strong> a disbursement in <strong>Zakat Committee</strong> and <strong>Approve</strong> it in <strong>Disbursements</strong> — at 2-of-3 approvals the recipient is paid.</li>
+      </ol>
+
+      <h3 style="margin:18px 0 10px; font-family:var(--font-display); font-size:15px; color:var(--accent-2)">⛓ The process — what happens on-chain</h3>
+      <ol style="margin:0; padding-left:20px; display:grid; gap:8px; font-size:13.5px; line-height:1.6">
+        <li><code class="mono">ZakatEngine.declareWealth</code> records your declared wealth and starts — or resets — the hawl clock whenever the wealth crosses the nisab.</li>
+        <li><code class="mono">ZakatEngine.zakatDue</code> computes the exact 2.5% (250 bps) due once wealth has stayed above the nisab for a full lunar year (354 days).</li>
+        <li><code class="mono">ZakatEngine.payZakat</code> pulls AED-S from your wallet into the ring-fenced <code class="mono">zakatFund</code> — funds can only ever leave through an executed disbursement.</li>
+        <li><code class="mono">AsnafRegistry.registerRecipient</code> stores KYC'd recipients with a proof-of-eligibility hash; every disbursement must name one of these registered recipients.</li>
+        <li><code class="mono">ZakatEngine.voteDisbursement</code> collects committee votes and, at 2-of-3 approvals, <code class="mono">_executeDisbursement</code> transfers AED-S straight to the registered asnaf recipient.</li>
+      </ol>
+
+      <h3 style="margin:18px 0 10px; font-family:var(--font-display); font-size:15px; color:var(--accent-2)">🕸 Flow graph</h3>
+      <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="Zakat Engine on-chain flow: declare wealth, hawl completes, pay zakat, register recipient, 2-of-3 committee vote, execute payment" style="display:block;margin-top:8px">
+        <defs>
+          <marker id="zarrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4f46e5"/>
+          </marker>
+        </defs>
+        <g font-family="Inter, system-ui, sans-serif" text-anchor="middle">
+          <!-- stage 1 -->
+          <rect x="14" y="66" width="132" height="88" rx="14" fill="#fffdf8" stroke="#e8a317" stroke-width="2"/>
+          <circle cx="80" cy="82" r="10" fill="#e8a317"/><text x="80" y="86" font-size="12" font-weight="700" fill="#ffffff">1</text>
+          <text x="80" y="112" font-size="12" font-weight="600" fill="#2a2416">Declare wealth</text>
+          <text x="80" y="134" font-size="10" fill="#9a8f74" font-family="JetBrains Mono, ui-monospace, monospace">ZakatEngine</text>
+          <line x1="148" y1="110" x2="160" y2="110" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#zarrow)"/>
+          <!-- stage 2 -->
+          <rect x="166" y="66" width="132" height="88" rx="14" fill="#fffdf8" stroke="#e8a317" stroke-width="2"/>
+          <circle cx="232" cy="82" r="10" fill="#e8a317"/><text x="232" y="86" font-size="12" font-weight="700" fill="#ffffff">2</text>
+          <text x="232" y="112" font-size="12" font-weight="600" fill="#2a2416">Hawl completes</text>
+          <text x="232" y="134" font-size="10" fill="#9a8f74" font-family="JetBrains Mono, ui-monospace, monospace">ZakatEngine</text>
+          <line x1="300" y1="110" x2="312" y2="110" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#zarrow)"/>
+          <!-- stage 3 -->
+          <rect x="318" y="66" width="132" height="88" rx="14" fill="#fffdf8" stroke="#e8a317" stroke-width="2" stroke-dasharray="6 3"/>
+          <circle cx="384" cy="82" r="10" fill="#e8a317"/><text x="384" y="86" font-size="12" font-weight="700" fill="#ffffff">3</text>
+          <text x="384" y="112" font-size="12" font-weight="600" fill="#2a2416">Pay 2.5% zakat</text>
+          <text x="384" y="134" font-size="10" fill="#9a8f74" font-family="JetBrains Mono, ui-monospace, monospace">ZakatEngine</text>
+          <line x1="452" y1="110" x2="464" y2="110" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#zarrow)"/>
+          <!-- stage 4 -->
+          <rect x="470" y="66" width="132" height="88" rx="14" fill="#fffdf8" stroke="#e8a317" stroke-width="2"/>
+          <circle cx="536" cy="82" r="10" fill="#e8a317"/><text x="536" y="86" font-size="12" font-weight="700" fill="#ffffff">4</text>
+          <text x="536" y="112" font-size="12" font-weight="600" fill="#2a2416">Register recipient</text>
+          <text x="536" y="134" font-size="10" fill="#9a8f74" font-family="JetBrains Mono, ui-monospace, monospace">AsnafRegistry</text>
+          <line x1="604" y1="110" x2="616" y2="110" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#zarrow)"/>
+          <!-- stage 5 -->
+          <rect x="622" y="66" width="132" height="88" rx="14" fill="#fffdf8" stroke="#e8a317" stroke-width="2"/>
+          <circle cx="688" cy="82" r="10" fill="#e8a317"/><text x="688" y="86" font-size="12" font-weight="700" fill="#ffffff">5</text>
+          <text x="688" y="112" font-size="12" font-weight="600" fill="#2a2416">2-of-3 vote</text>
+          <text x="688" y="134" font-size="10" fill="#9a8f74" font-family="JetBrains Mono, ui-monospace, monospace">ZakatEngine</text>
+          <line x1="756" y1="110" x2="768" y2="110" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#zarrow)"/>
+          <!-- stage 6 -->
+          <rect x="774" y="66" width="132" height="88" rx="14" fill="#fffdf8" stroke="#e8a317" stroke-width="2"/>
+          <circle cx="840" cy="82" r="10" fill="#e8a317"/><text x="840" y="86" font-size="12" font-weight="700" fill="#ffffff">6</text>
+          <text x="840" y="112" font-size="12" font-weight="600" fill="#2a2416">Execute payment</text>
+          <text x="840" y="134" font-size="10" fill="#9a8f74" font-family="JetBrains Mono, ui-monospace, monospace">ZakatEngine</text>
+        </g>
+        <text x="460" y="196" font-size="12" fill="#9a8f74" text-anchor="middle" font-family="Inter, system-ui, sans-serif">AED-S: payer → ring-fenced zakatFund → registered asnaf recipient</text>
+        <text x="460" y="216" font-size="12" fill="#9a8f74" text-anchor="middle" font-family="Inter, system-ui, sans-serif">nisab &amp; hawl verified on-chain · 2-of-3 committee approves every disbursement</text>
+      </svg>
+    </section>
+
+    <footer class="site-footer">
+      <span>Zakat Engine · Quran 9:60 from scratch — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/zakat</span>
+      </span>
+    </footer>
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

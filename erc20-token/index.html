@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NovaToken — ERC-20 Dashboard | s0sta.com/erc20-token</title>
+  <meta name="description" content="A modern dApp dashboard for the NovaToken ERC-20 contract: transfer, approve, burn, gasless EIP-2612 permits, owner controls and live on-chain activity." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-mark">N</div>
+        <div>
+          <h1 id="brand-name">NovaToken</h1>
+          <p class="brand-sub">ERC-20 · Solidity 0.8.26 · from scratch</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙ Settings</button>
+        <span class="chain-badge" id="chain-badge">—</span>
+        <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== SETUP BANNER ===================== -->
+  <section class="container" id="setup-banner" hidden>
+    <div class="card banner">
+      <div class="banner-icon">🛠</div>
+      <div>
+        <h3>Token not configured yet</h3>
+        <p>Paste your deployed <strong>NovaToken</strong> contract address below, or deploy locally with
+           <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.
+           See <code>frontend/README.md</code> for the full guide.</p>
+        <form id="form-setup" class="row">
+          <input type="text" id="setup-address" placeholder="0x… contract address" autocomplete="off" spellcheck="false" />
+          <button class="btn btn-primary" type="submit">Use this address</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+
+    <!-- ===================== SETTINGS PANEL ===================== -->
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Token contract address
+          <input type="text" id="set-token-address" placeholder="0x…" autocomplete="off" spellcheck="false" />
+        </label>
+        <label>Network
+          <select id="set-chain"></select>
+        </label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- ===================== TOKEN OVERVIEW ===================== -->
+    <section class="hero">
+      <div class="hero-text">
+        <h2 id="hero-title">NovaToken <span id="hero-symbol">NOVA</span></h2>
+        <p id="hero-subtitle" class="muted">A supply-capped ERC-20 with burn, pause and gasless EIP-2612 permits — 100% written from scratch, no OpenZeppelin.</p>
+        <div class="hero-links">
+          <a id="link-contract" href="#" target="_blank" rel="noopener">Contract ↗</a>
+          <button class="link-btn" id="btn-copy-address" title="Copy contract address">Copy address</button>
+          <span class="muted" id="hero-address">0x…</span>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat"><span class="stat-label">Total Supply</span><span class="stat-value" id="stat-total-supply">—</span></div>
+        <div class="stat"><span class="stat-label">Max Supply</span><span class="stat-value" id="stat-max-supply">—</span></div>
+        <div class="stat"><span class="stat-label">Your Balance</span><span class="stat-value accent" id="stat-balance">—</span></div>
+        <div class="stat"><span class="stat-label">Status</span><span class="stat-value" id="stat-paused">—</span></div>
+        <div class="stat"><span class="stat-label">Owner</span><span class="stat-value stat-small" id="stat-owner">—</span></div>
+        <div class="stat"><span class="stat-label">Your Nonce</span><span class="stat-value stat-small" id="stat-nonce">—</span></div>
+      </div>
+    </section>
+
+    <!-- ===================== ACTIONS ===================== -->
+    <section class="section">
+      <h2 class="section-title">Token Actions</h2>
+      <div class="cards-grid">
+
+        <div class="card">
+          <div class="card-head"><span class="card-icon">↗</span><h3>Transfer</h3></div>
+          <p class="muted">Send tokens to any address.</p>
+          <form id="form-transfer">
+            <label>Recipient <input type="text" id="transfer-to" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+            <label>Amount (NOVA) <input type="number" id="transfer-amount" placeholder="0.0" min="0" step="any" /></label>
+            <button class="btn btn-primary" type="submit">Transfer</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-icon">✓</span><h3>Approve</h3></div>
+          <p class="muted">Allow a spender to move your tokens.</p>
+          <form id="form-approve">
+            <label>Spender <input type="text" id="approve-spender" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+            <label>Amount (NOVA) <input type="number" id="approve-amount" placeholder="0.0" min="0" step="any" /></label>
+            <button class="btn btn-primary" type="submit">Approve</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-icon">⇄</span><h3>Transfer From</h3></div>
+          <p class="muted">Move tokens on behalf of someone who approved you.</p>
+          <form id="form-transfer-from">
+            <label>From <input type="text" id="tf-from" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+            <label>To <input type="text" id="tf-to" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+            <label>Amount (NOVA) <input type="number" id="tf-amount" placeholder="0.0" min="0" step="any" /></label>
+            <button class="btn btn-primary" type="submit">Transfer From</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🔥</span><h3>Burn</h3></div>
+          <p class="muted">Permanently destroy tokens (reduces total supply).</p>
+          <form id="form-burn">
+            <label>Amount (NOVA) <input type="number" id="burn-amount" placeholder="0.0" min="0" step="any" /></label>
+            <button class="btn btn-primary" type="submit">Burn</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🔥</span><h3>Burn From</h3></div>
+          <p class="muted">Burn someone else's tokens using your allowance.</p>
+          <form id="form-burn-from">
+            <label>Account <input type="text" id="bf-account" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+            <label>Amount (NOVA) <input type="number" id="bf-amount" placeholder="0.0" min="0" step="any" /></label>
+            <button class="btn btn-primary" type="submit">Burn From</button>
+          </form>
+        </div>
+
+        <div class="card card-featured">
+          <div class="card-head"><span class="card-icon">✍</span><h3>Permit <span class="tag">EIP-2612</span></h3></div>
+          <p class="muted">Gasless approval: sign a typed message in your wallet — anyone can submit it. No approve transaction needed.</p>
+          <form id="form-permit">
+            <label>Spender <input type="text" id="permit-spender" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+            <label>Value (NOVA) <input type="number" id="permit-value" placeholder="0.0" min="0" step="any" /></label>
+            <label>Deadline <input type="text" id="permit-deadline" value="+1 hour" disabled /></label>
+            <button class="btn btn-accent" type="submit">Sign &amp; Submit Permit</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🔍</span><h3>Balance Checker</h3></div>
+          <p class="muted">Read anyone's balance (no wallet needed).</p>
+          <form id="form-balance-of">
+            <label>Address <input type="text" id="bo-address" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+            <button class="btn btn-ghost" type="submit">Check</button>
+            <p class="result" id="result-balance">—</p>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🔍</span><h3>Allowance Checker</h3></div>
+          <p class="muted">Read any owner → spender allowance.</p>
+          <form id="form-allowance-of">
+            <label>Owner <input type="text" id="ao-owner" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+            <label>Spender <input type="text" id="ao-spender" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+            <button class="btn btn-ghost" type="submit">Check</button>
+            <p class="result" id="result-allowance">—</p>
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================== OWNER PANEL ===================== -->
+    <section class="section" id="admin-section" hidden>
+      <h2 class="section-title">Owner Controls <span class="tag tag-admin">you are the owner</span></h2>
+      <div class="cards-grid">
+
+        <div class="card">
+          <div class="card-head"><span class="card-icon">＋</span><h3>Mint</h3></div>
+          <p class="muted">Create new tokens (hard-capped at 100M NOVA).</p>
+          <form id="form-mint">
+            <label>Recipient <input type="text" id="mint-to" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+            <label>Amount (NOVA) <input type="number" id="mint-amount" placeholder="0.0" min="0" step="any" /></label>
+            <button class="btn btn-primary" type="submit">Mint</button>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-icon">⏸</span><h3>Emergency Pause</h3></div>
+          <p class="muted">Freeze <em>all</em> token movement instantly (transfer, mint, burn, permit).</p>
+          <div class="pause-status"><span id="pause-status-dot" class="dot"></span><span id="pause-status-text">Loading…</span></div>
+          <button class="btn btn-danger" id="btn-toggle-pause">Toggle Pause</button>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🔑</span><h3>Ownership (2-step)</h3></div>
+          <p class="muted">Nominate a new owner; they must accept. Current pending: <strong id="pending-owner">none</strong></p>
+          <form id="form-transfer-ownership">
+            <label>New owner <input type="text" id="to-new-owner" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+            <button class="btn btn-primary" type="submit">Nominate</button>
+          </form>
+          <button class="btn btn-ghost" id="btn-accept-ownership">Accept Ownership (as pending owner)</button>
+          <button class="btn btn-danger btn-outline" id="btn-renounce">Renounce Ownership</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================== ACTIVITY ===================== -->
+    <section class="section">
+      <h2 class="section-title">Live Activity <span class="muted">(recent events from the chain)</span></h2>
+      <div class="card table-card">
+        <table class="activity-table">
+          <thead>
+            <tr><th>Event</th><th>Details</th><th>Block</th><th>Tx</th></tr>
+          </thead>
+          <tbody id="activity-body">
+            <tr><td colspan="4" class="muted center">Loading…</td></tr>
+          </tbody>
+        </table>
+        <div class="row between">
+          <button class="btn btn-ghost btn-sm" id="btn-refresh-events">↻ Refresh</button>
+          <span class="muted" id="events-note">showing the latest 15 events</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== HOW TO USE + ON-CHAIN PROCESS ===================== -->
+    <section class="section" id="how-to-section">
+      <h2 class="section-title">Understand this dApp <span class="muted">(how to use it + the on-chain process)</span></h2>
+
+      <div class="cards-grid">
+
+        <!-- A · HOW TO USE -->
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🧭</span><h3>How to use</h3></div>
+          <p class="muted">The dApp is configured for the <strong>Sepolia</strong> testnet. Six quick steps:</p>
+          <ol style="margin: 12px 0 0 20px; display: flex; flex-direction: column; gap: 10px;">
+            <li style="font-size: 13.5px; line-height: 1.55;">Connect your wallet — press <strong>Connect Wallet</strong> (top-right) and make sure your wallet is on <strong>Sepolia</strong>.</li>
+            <li style="font-size: 13.5px; line-height: 1.55;">Get test ETH — grab some Sepolia ETH from a faucet to pay gas, then read any balance for free with the <strong>Balance Checker</strong> card.</li>
+            <li style="font-size: 13.5px; line-height: 1.55;">Send &amp; approve — use <strong>Transfer</strong> to send NOVA, <strong>Approve</strong> to authorize a spender, or <strong>Transfer From</strong> to spend an allowance someone gave you.</li>
+            <li style="font-size: 13.5px; line-height: 1.55;">Go gasless — in the <strong>Permit</strong> card enter a spender and value, then press <strong>Sign &amp; Submit Permit</strong>: one signature lets anyone submit your approval for you.</li>
+            <li style="font-size: 13.5px; line-height: 1.55;">Burn tokens — <strong>Burn</strong> your own NOVA or <strong>Burn From</strong> an account that approved you; burning is permanent and lowers total supply.</li>
+            <li style="font-size: 13.5px; line-height: 1.55;">Watch the chain — the <strong>Live Activity</strong> table shows the latest 15 events (press ↻ Refresh). Owner-only cards (Mint, Pause, Ownership) only appear if you are the contract owner.</li>
+          </ol>
+        </div>
+
+        <!-- B · THE PROCESS -->
+        <div class="card">
+          <div class="card-head"><span class="card-icon">⛓</span><h3>The process — what happens on-chain</h3></div>
+          <p class="muted">Every button submits a signed transaction to the project's contracts:</p>
+          <ol style="margin: 12px 0 0 20px; display: flex; flex-direction: column; gap: 10px;">
+            <li style="font-size: 13.5px; line-height: 1.55;">Your wallet builds a transaction against the <strong>NovaToken</strong> contract (src/Token.sol), deployed on Sepolia at 0x26b4…8B62 — you sign it and pay gas in test ETH.</li>
+            <li style="font-size: 13.5px; line-height: 1.55;"><strong>NovaToken</strong> updates its state — transfer, approve, transferFrom, burn and burnFrom edit the internal balances and allowances mappings; checked math reverts anything invalid (no funds, over the 100M cap, or paused).</li>
+            <li style="font-size: 13.5px; line-height: 1.55;">Events are recorded on-chain — <strong>NovaToken</strong> emits Transfer, Approval, Minted and Burned events, which is what the Live Activity table reads to show history.</li>
+            <li style="font-size: 13.5px; line-height: 1.55;">Owner actions route through <strong>Ownable</strong> — mint, pause/unpause and ownership changes are guarded by the onlyOwner modifier inherited from src/Ownable.sol; only the owner can call them.</li>
+            <li style="font-size: 13.5px; line-height: 1.55;">Two-step ownership — <strong>Ownable</strong> first records a pending owner when you press Nominate; the nominee must then call acceptOwnership (Accept) for the change to take effect, and renounceOwnership locks admin forever.</li>
+            <li style="font-size: 13.5px; line-height: 1.55;">Permit skips the approve tx — your wallet signs EIP-712 typed data off-chain; <strong>NovaToken.permit</strong> verifies it with ecrecover, checks the nonce and deadline, and sets the allowance in one transaction.</li>
+          </ol>
+        </div>
+
+        <!-- C · FLOW GRAPH -->
+        <div class="card" style="grid-column: 1 / -1;">
+          <div class="card-head"><span class="card-icon">🕸</span><h3>Flow graph</h3></div>
+          <p class="muted">The happy path, left to right — from your wallet to on-chain events on Sepolia.</p>
+          <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="Flow graph: connect wallet, approve or permit, move tokens, owner controls, live events">
+            <title>NovaToken dApp flow — wallet → approve/permit → transfer → owner controls → events</title>
+            <defs>
+              <marker id="flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" style="fill: var(--accent-2);"></path>
+              </marker>
+            </defs>
+            <g>
+              <rect x="12" y="20" width="158" height="76" rx="14" style="fill: var(--card); stroke: var(--accent-1);" stroke-width="1.5"></rect>
+              <text x="91" y="52" text-anchor="middle" style="fill: var(--text); font-size: 13px; font-weight: 600;">1 · Connect wallet</text>
+              <text x="91" y="76" text-anchor="middle" style="fill: var(--muted); font-size: 10px; font-family: var(--font-mono);">your wallet · Sepolia</text>
+            </g>
+            <line x1="172" y1="58" x2="190" y2="58" style="stroke: var(--accent-2);" stroke-width="2" marker-end="url(#flow-arrow)"></line>
+            <g>
+              <rect x="194" y="20" width="158" height="76" rx="14" style="fill: var(--card); stroke: var(--accent-1);" stroke-width="1.5"></rect>
+              <text x="273" y="52" text-anchor="middle" style="fill: var(--text); font-size: 13px; font-weight: 600;">2 · Approve / Permit</text>
+              <text x="273" y="76" text-anchor="middle" style="fill: var(--muted); font-size: 10px; font-family: var(--font-mono);">NovaToken · permit</text>
+            </g>
+            <line x1="354" y1="58" x2="372" y2="58" style="stroke: var(--accent-2);" stroke-width="2" marker-end="url(#flow-arrow)"></line>
+            <g>
+              <rect x="376" y="20" width="158" height="76" rx="14" style="fill: var(--card); stroke: var(--accent-1);" stroke-width="1.5"></rect>
+              <text x="455" y="52" text-anchor="middle" style="fill: var(--text); font-size: 13px; font-weight: 600;">3 · Move tokens</text>
+              <text x="455" y="76" text-anchor="middle" style="fill: var(--muted); font-size: 10px; font-family: var(--font-mono);">NovaToken.transfer</text>
+            </g>
+            <line x1="536" y1="58" x2="554" y2="58" style="stroke: var(--accent-2);" stroke-width="2" marker-end="url(#flow-arrow)"></line>
+            <g>
+              <rect x="558" y="20" width="158" height="76" rx="14" style="fill: var(--card); stroke: var(--accent-1);" stroke-width="1.5"></rect>
+              <text x="637" y="52" text-anchor="middle" style="fill: var(--text); font-size: 13px; font-weight: 600;">4 · Owner controls</text>
+              <text x="637" y="76" text-anchor="middle" style="fill: var(--muted); font-size: 10px; font-family: var(--font-mono);">NovaToken + Ownable</text>
+            </g>
+            <line x1="718" y1="58" x2="736" y2="58" style="stroke: var(--accent-2);" stroke-width="2" marker-end="url(#flow-arrow)"></line>
+            <g>
+              <rect x="740" y="20" width="158" height="76" rx="14" style="fill: var(--card); stroke: var(--accent-1);" stroke-width="1.5"></rect>
+              <text x="819" y="52" text-anchor="middle" style="fill: var(--text); font-size: 13px; font-weight: 600;">5 · Live events</text>
+              <text x="819" y="76" text-anchor="middle" style="fill: var(--muted); font-size: 10px; font-family: var(--font-mono);">NovaToken events</text>
+            </g>
+          </svg>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>NovaToken · ERC-20 from scratch — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/erc20-token</span>
+      </span>
+    </div>
+  </footer>
+
+  <!-- ===================== TOASTS ===================== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StakeVault — Staking Rewards | s0sta.com/stake</title>
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg" />
+  <meta name="description" content="A modern dApp for the StakeVault protocol: stake tokens, watch rewards tick up in real time, claim, exit or emergency-withdraw — with owner emissions and live activity." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="sparks" id="sparks" aria-hidden="true"></div>
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar">
+    <a class="side-brand" href="#overview">
+      <span class="brand-mark">🌾</span>
+      <span class="side-brand-text">Stake<span class="accent">Vault</span></span>
+    </a>
+
+    <nav class="side-nav">
+      <a href="#overview" class="nav-item active"><span class="nav-ico">📊</span>Overview</a>
+      <a href="#manage" class="nav-item"><span class="nav-ico">🎛</span>Manage</a>
+      <a href="#emissions" class="nav-item"><span class="nav-ico">⚡</span>Emissions</a>
+      <a href="#activity" class="nav-item"><span class="nav-ico">📜</span>Activity</a>
+    </nav>
+
+    <div class="side-bottom">
+      <button class="btn btn-ghost btn-sm side-settings" id="btn-settings" title="Settings">⚙ Settings</button>
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-primary btn-connect" id="btn-connect">Connect Wallet</button>
+      <p class="side-note">from-scratch Synthetix-style staking<br/>s0sta.com/stake</p>
+    </div>
+  </aside>
+
+  <!-- ===================== MAIN ===================== -->
+  <main class="main">
+
+    <!-- ===================== SETUP BANNER ===================== -->
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Vault not configured yet</h3>
+          <p>Paste your deployed <strong>StakeVault</strong> address below, or deploy locally with
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.
+             See <code>frontend/README.md</code> for the full guide.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… vault address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this vault</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SETTINGS ===================== -->
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Vault contract address
+          <input type="text" id="set-vault-address" placeholder="0x…" autocomplete="off" spellcheck="false" />
+        </label>
+        <label>Network
+          <select id="set-chain"></select>
+        </label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- ===================== OVERVIEW ===================== -->
+    <section id="overview" class="anchor">
+      <div class="vault-card">
+        <div class="vault-head">
+          <div>
+            <h1 class="vault-title">Stake once. <span class="grad">Watch it grow.</span></h1>
+            <p class="vault-desc">Stake STAKE, earn REWARD at a fixed global rate pro-rated by your share —
+              fair by construction with per-user checkpoints. Claim anytime, exit in one click, or
+              emergency-withdraw your principal.</p>
+          </div>
+          <div class="vault-meta">
+            <span class="meta-pill" id="hero-address">0x…</span>
+            <div class="meta-links">
+              <a id="link-contract" href="#" target="_blank" rel="noopener">Vault ↗</a>
+              <button class="link-btn" id="btn-copy-address">Copy address</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-strip">
+          <div class="stat"><span class="stat-label">Total staked</span><span class="stat-value accent" id="stat-total">—</span></div>
+          <div class="stat"><span class="stat-label">Reward rate</span><span class="stat-value" id="stat-rate">—</span></div>
+          <div class="stat"><span class="stat-label">Period ends in</span><span class="stat-value stat-small" id="stat-period">—</span></div>
+          <div class="stat"><span class="stat-label">Your stake</span><span class="stat-value" id="stat-mystake">—</span></div>
+          <div class="stat"><span class="stat-label">Your share</span><span class="stat-value" id="stat-share">—</span></div>
+        </div>
+      </div>
+
+      <!-- live earnings band -->
+      <div class="earn-band">
+        <div class="earn-left">
+          <span class="earn-label">your earned · live</span>
+          <span class="earn-value ticker" id="stat-earned">—</span>
+        </div>
+        <div class="earn-right">
+          <span class="claim-big">+<span id="claim-preview">0</span> REWARD</span>
+          <button class="btn btn-accent btn-claim" id="btn-claim">Claim now</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== MANAGE (TABS) ===================== -->
+    <section id="manage" class="anchor">
+      <h2 class="section-title">Manage your position</h2>
+      <div class="tabs-card">
+        <div class="tab-row" role="tablist">
+          <button class="tab-btn active" data-tab="stake" role="tab">🌱 Stake</button>
+          <button class="tab-btn" data-tab="withdraw" role="tab">💧 Withdraw</button>
+          <button class="tab-btn" data-tab="claim" role="tab">🏆 Claim</button>
+          <button class="tab-btn" data-tab="exit" role="tab">🚪 Exit</button>
+        </div>
+
+        <div class="tab-panel" id="panel-stake">
+          <p class="panel-hint">Deposit STAKE and start earning immediately. Approve once first.</p>
+          <div class="row allowance-row" id="allowance-row" hidden>
+            <span class="muted" style="font-size:12px">Allowance: <span id="allowance-text" class="mono">—</span></span>
+            <button class="btn btn-ghost btn-sm" id="btn-approve" style="width:auto">Approve max</button>
+          </div>
+          <form id="form-stake" class="inline-form">
+            <input type="number" id="stake-amount" placeholder="0.0" min="0" step="any" />
+            <button class="btn btn-primary" type="submit">Stake</button>
+          </form>
+        </div>
+
+        <div class="tab-panel" id="panel-withdraw" hidden>
+          <p class="panel-hint">Pull STAKE back. Accrued rewards stay claimable.</p>
+          <form id="form-withdraw" class="inline-form">
+            <input type="number" id="withdraw-amount" placeholder="0.0" min="0" step="any" />
+            <button class="btn btn-primary" type="submit">Withdraw</button>
+          </form>
+        </div>
+
+        <div class="tab-panel" id="panel-claim" hidden>
+          <p class="panel-hint">Harvest your accrued REWARD straight to your wallet.</p>
+          <div class="claim-center">
+            <span class="claim-big">+<span id="claim-preview-2">0</span> REWARD</span>
+            <button class="btn btn-accent btn-claim" id="btn-claim-2">Claim now</button>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="panel-exit" hidden>
+          <p class="panel-hint">Exit = withdraw everything + claim. Emergency = principal only, rewards forfeited.</p>
+          <div class="row">
+            <button class="btn btn-primary" id="btn-exit">Exit all</button>
+            <button class="btn btn-danger" id="btn-emergency">Emergency withdraw</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== EMISSIONS ===================== -->
+    <section id="emissions" class="anchor">
+      <h2 class="section-title">Emissions</h2>
+      <div class="emission-card">
+        <div class="emission-top">
+          <div>
+            <span class="earn-label">current period</span>
+            <div class="period-row">
+              <span class="mono">start</span>
+              <span class="period-track"><span class="period-fill" id="period-fill"></span></span>
+              <span class="mono">finish</span>
+            </div>
+            <p class="panel-hint" id="period-pct">—</p>
+          </div>
+          <div class="emission-rate">
+            <span class="earn-label">reward rate</span>
+            <span class="stat-value" id="stat-rate-2">—</span>
+          </div>
+        </div>
+
+        <div id="admin-controls" hidden>
+          <div class="admin-grid">
+            <div class="admin-box">
+              <h4>⚡ Fund emissions</h4>
+              <p class="panel-hint">Pull REWARD from your wallet and spread it over a duration. Mid-period top-ups roll over.</p>
+              <form id="form-emit" class="stack-form">
+                <input type="number" id="emit-amount" placeholder="Amount (REWARD)" min="0" step="any" />
+                <input type="number" id="emit-days" placeholder="Duration (days)" min="1" step="1" />
+                <button class="btn btn-primary" type="submit">Start rewards</button>
+              </form>
+            </div>
+            <div class="admin-box">
+              <h4>🧹 Recover stray tokens</h4>
+              <p class="panel-hint">Escape hatch for accidentally sent ERC-20s. STAKE and REWARD are protected.</p>
+              <form id="form-recover" class="stack-form">
+                <input type="text" id="recover-token" placeholder="Token address 0x…" autocomplete="off" spellcheck="false" />
+                <input type="number" id="recover-amount" placeholder="Amount" min="0" step="any" />
+                <button class="btn btn-ghost" type="submit">Recover</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ACTIVITY (TIMELINE) ===================== -->
+    <section id="activity" class="anchor">
+      <div class="row between">
+        <h2 class="section-title" style="margin:0">Live Activity</h2>
+        <div class="row">
+          <span class="muted" id="events-note" style="font-size:12.5px">loading…</span>
+          <button class="btn btn-ghost btn-sm" id="btn-refresh-events">↻ Refresh</button>
+        </div>
+      </div>
+      <div class="timeline" id="activity-timeline">
+        <p class="muted center" style="padding:24px 0">Loading…</p>
+      </div>
+    </section>
+
+    <!-- ===================== EDUCATIONAL · HOW TO USE & ON-CHAIN PROCESS ===================== -->
+    <section id="howto" class="anchor" style="margin-top:44px">
+      <h2 class="section-title">How to use this dApp</h2>
+
+      <!-- A) HOW TO USE -->
+      <div class="card" style="margin-bottom:16px">
+        <h3 style="font-family:var(--font-display);font-size:17px;margin-bottom:12px">🧭 How to use</h3>
+        <ol style="list-style:decimal;padding-left:24px;font-size:14px;line-height:1.6">
+          <li style="margin-bottom:8px"><strong>Connect your wallet.</strong> Press <span class="mono">Connect Wallet</span> in the sidebar. This dApp is configured for <strong>Sepolia</strong> — switch your wallet to Sepolia and hold some STAKE (the chain badge shows the active network).</li>
+          <li style="margin-bottom:8px"><strong>Approve the vault — once.</strong> Open <em>Manage → 🌱 Stake</em> and press <span class="mono">Approve max</span> so the StakeVault contract is allowed to move STAKE on your behalf.</li>
+          <li style="margin-bottom:8px"><strong>Stake your STAKE.</strong> Enter an amount in the Stake form and press <span class="mono">Stake</span>. Your position appears in the Overview stat strip and rewards start accruing immediately.</li>
+          <li style="margin-bottom:8px"><strong>Watch rewards grow.</strong> The <span class="mono">your earned · live</span> counter in Overview ticks up every second: you earn at the global rate pro-rated by your share of the pool.</li>
+          <li style="margin-bottom:8px"><strong>Claim anytime.</strong> Press <span class="mono">Claim now</span> (Overview or <em>Manage → 🏆 Claim</em>) to harvest REWARD straight to your wallet.</li>
+          <li><strong>Leave whenever you want.</strong> <span class="mono">Withdraw</span> pulls principal back while rewards stay claimable, <span class="mono">Exit all</span> does withdraw + claim in one click, and <span class="mono">Emergency withdraw</span> returns principal only — pending rewards are forfeited.</li>
+        </ol>
+        <p style="margin-top:14px">
+          <a class="btn btn-ghost btn-sm" href="https://sepolia.etherscan.io/address/0xacc9353CecE7344064b20060A712C7B6A8f8450e" target="_blank" rel="noopener">Open vault on Sepolia ↗</a>
+        </p>
+      </div>
+
+      <!-- B) THE PROCESS - WHAT HAPPENS ON-CHAIN -->
+      <div class="card" style="margin-bottom:16px">
+        <h3 style="font-family:var(--font-display);font-size:17px;margin-bottom:12px">⛓ The process — what happens on-chain</h3>
+        <ol style="list-style:decimal;padding-left:24px;font-size:14px;line-height:1.6">
+          <li style="margin-bottom:8px"><strong>STAKE approval on the STAKE token (ERC-20).</strong> Your wallet calls <span class="mono">approve()</span> on the STAKE token, recording how much the StakeVault contract may pull. Every stake is checked against this allowance before tokens move.</li>
+          <li style="margin-bottom:8px"><strong>StakeVault.stake(amount).</strong> The vault first settles the global <span class="mono">rewardPerToken</span> accumulator and your personal checkpoint so accounting stays fair for everyone, then pulls STAKE in via <span class="mono">transferFrom</span> and updates <span class="mono">balanceOf</span> and <span class="mono">totalSupply</span>.</li>
+          <li style="margin-bottom:8px"><strong>StakeVault.startRewards(amount, duration).</strong> The owner funds emissions: the vault pulls REWARD and sets <span class="mono">rewardRate = amount / duration</span>. Called mid-period, leftover rewards roll over into the new rate.</li>
+          <li style="margin-bottom:8px"><strong>Reward accrual inside StakeVault.</strong> <span class="mono">rewardPerToken()</span> grows by <span class="mono">elapsed × rewardRate / totalStaked</span>; your <span class="mono">earned()</span> is your balance × the delta since your last checkpoint, plus unclaimed rewards — O(1) math with no per-user timestamps.</li>
+          <li><strong>StakeVault.getReward() / exitAll().</strong> Claiming zeroes your <span class="mono">rewards</span> entry and transfers REWARD out. <span class="mono">exitAll()</span> chains withdraw + claim in one call, while <span class="mono">emergencyWithdraw()</span> returns principal and leaves forfeited rewards in the vault as documented dust.</li>
+        </ol>
+      </div>
+
+      <!-- C) FLOW GRAPH -->
+      <div class="card">
+        <h3 style="font-family:var(--font-display);font-size:17px;margin-bottom:12px">🗺 Flow graph</h3>
+        <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="StakeVault on-chain flow: approve STAKE, stake, accrue rewards, claim, exit" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="howto-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="9" markerHeight="9" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#facc15" />
+            </marker>
+          </defs>
+
+          <!-- arrows -->
+          <line x1="174" y1="114" x2="192" y2="114" stroke="#facc15" stroke-width="2" marker-end="url(#howto-arrow)" />
+          <line x1="358" y1="114" x2="376" y2="114" stroke="#facc15" stroke-width="2" marker-end="url(#howto-arrow)" />
+          <line x1="542" y1="114" x2="560" y2="114" stroke="#facc15" stroke-width="2" marker-end="url(#howto-arrow)" />
+          <line x1="726" y1="114" x2="744" y2="114" stroke="#facc15" stroke-width="2" marker-end="url(#howto-arrow)" />
+
+          <!-- stage 1 -->
+          <rect x="12" y="64" width="160" height="100" rx="14" fill="rgba(13,29,25,0.92)" stroke="#14b8a6" stroke-width="1.5" />
+          <text x="92" y="106" text-anchor="middle" font-family="'Space Grotesk', Inter, sans-serif" font-size="13" font-weight="600" fill="#e8f5ef">1. Approve STAKE</text>
+          <text x="92" y="128" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#90a89e">STAKE token (ERC-20)</text>
+          <text x="92" y="144" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#90a89e">approve() on STAKE</text>
+
+          <!-- stage 2 -->
+          <rect x="196" y="64" width="160" height="100" rx="14" fill="rgba(13,29,25,0.92)" stroke="#14b8a6" stroke-width="1.5" />
+          <text x="276" y="106" text-anchor="middle" font-family="'Space Grotesk', Inter, sans-serif" font-size="13" font-weight="600" fill="#e8f5ef">2. Stake</text>
+          <text x="276" y="128" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#90a89e">StakeVault</text>
+          <text x="276" y="144" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#90a89e">stake()</text>
+
+          <!-- stage 3 -->
+          <rect x="380" y="64" width="160" height="100" rx="14" fill="rgba(13,29,25,0.92)" stroke="#14b8a6" stroke-width="1.5" />
+          <text x="460" y="106" text-anchor="middle" font-family="'Space Grotesk', Inter, sans-serif" font-size="13" font-weight="600" fill="#e8f5ef">3. Accrue rewards</text>
+          <text x="460" y="128" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#90a89e">StakeVault</text>
+          <text x="460" y="144" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#90a89e">rewardPerToken()</text>
+
+          <!-- stage 4 -->
+          <rect x="564" y="64" width="160" height="100" rx="14" fill="rgba(13,29,25,0.92)" stroke="#14b8a6" stroke-width="1.5" />
+          <text x="644" y="106" text-anchor="middle" font-family="'Space Grotesk', Inter, sans-serif" font-size="13" font-weight="600" fill="#e8f5ef">4. Claim</text>
+          <text x="644" y="128" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#90a89e">StakeVault</text>
+          <text x="644" y="144" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#90a89e">getReward()</text>
+
+          <!-- stage 5 -->
+          <rect x="748" y="64" width="160" height="100" rx="14" fill="rgba(13,29,25,0.92)" stroke="#14b8a6" stroke-width="1.5" />
+          <text x="828" y="106" text-anchor="middle" font-family="'Space Grotesk', Inter, sans-serif" font-size="13" font-weight="600" fill="#e8f5ef">5. Exit / emergency</text>
+          <text x="828" y="128" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#90a89e">StakeVault</text>
+          <text x="828" y="144" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#90a89e">exitAll() · emergency()</text>
+
+          <!-- caption -->
+          <text x="460" y="204" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#90a89e">Stake STAKE → earn REWARD → claim anytime · everything settles on Sepolia</text>
+        </svg>
+        <p class="panel-hint" style="margin-top:8px">Static overview of one stake → claim round trip. Rewards accrue per second via the global rewardPerToken accumulator while your STAKE sits in the vault.</p>
+      </div>
+    </section>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="site-footer">
+      <span>StakeVault · from-scratch staking rewards — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a>
+      </span>
+    </footer>
+  </main>
+
+  <!-- ===================== TOASTS ===================== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Genesis — NFT Collection | s0sta.com/nft</title>
+  <meta name="description" content="A modern dApp for the GenesisNFT collection: Merkle whitelist + public minting, reveal flow, royalties, owner controls and a live mint gallery." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="stars" id="stars" aria-hidden="true"></div>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-mark">✦</div>
+        <div>
+          <h1>Genesis <span class="accent">Collection</span></h1>
+          <p class="brand-sub">ERC-721 from scratch · Merkle whitelist · royalties · reveal</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙ Settings</button>
+        <span class="chain-badge" id="chain-badge">—</span>
+        <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== SETUP BANNER ===================== -->
+  <section class="container" id="setup-banner" hidden>
+    <div class="card banner">
+      <div class="banner-icon">🛠</div>
+      <div>
+        <h3>Collection not configured yet</h3>
+        <p>Paste your deployed <strong>GenesisNFT</strong> address below, or deploy locally with
+           <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.
+           See <code>frontend/README.md</code> for the full guide.</p>
+        <form id="form-setup" class="row">
+          <input type="text" id="setup-address" placeholder="0x… NFT address" autocomplete="off" spellcheck="false" />
+          <button class="btn btn-primary" type="submit">Use this collection</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+
+    <!-- ===================== SETTINGS ===================== -->
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Collection contract address
+          <input type="text" id="set-nft-address" placeholder="0x…" autocomplete="off" spellcheck="false" />
+        </label>
+        <label>Network
+          <select id="set-chain"></select>
+        </label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- ===================== HERO ===================== -->
+    <section class="hero">
+      <div class="hero-text">
+        <h2>A collection <span>worth owning.</span></h2>
+        <p class="muted">ERC-721 written from scratch: a Merkle-tree whitelist phase, a public phase with
+          per-wallet caps, a pre/post-reveal flow and ERC-2981 royalties — 5000 supply, no OpenZeppelin.</p>
+        <div class="hero-links">
+          <a id="link-contract" href="#" target="_blank" rel="noopener">Collection ↗</a>
+          <button class="link-btn" id="btn-copy-address" title="Copy collection address">Copy address</button>
+          <span class="muted" id="hero-address">0x…</span>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat"><span class="stat-label">Minted</span><span class="stat-value accent" id="stat-supply">—</span></div>
+        <div class="stat"><span class="stat-label">Max supply</span><span class="stat-value" id="stat-max">—</span></div>
+        <div class="stat"><span class="stat-label">Phase</span><span class="stat-value" id="stat-phase">—</span></div>
+        <div class="stat"><span class="stat-label">Revealed</span><span class="stat-value" id="stat-revealed">—</span></div>
+        <div class="stat"><span class="stat-label">Royalty</span><span class="stat-value" id="stat-royalty">—</span></div>
+        <div class="stat"><span class="stat-label">Your NFTs</span><span class="stat-value" id="stat-balance">—</span></div>
+      </div>
+    </section>
+
+    <!-- ===================== MINT ===================== -->
+    <section class="section">
+      <div class="cards-grid">
+        <div class="card mint-card">
+          <div class="card-head"><span class="card-icon">🪙</span><h3>Public mint</h3></div>
+          <p class="muted">Price <strong id="public-price">—</strong> · max <strong id="public-cap">—</strong> per wallet.</p>
+          <form id="form-mint-public">
+            <label>Quantity <input type="number" id="mint-qty" placeholder="1" min="1" step="1" /></label>
+            <button class="btn btn-primary btn-shine" type="submit">Mint</button>
+          </form>
+        </div>
+
+        <div class="card mint-card wl">
+          <div class="card-head"><span class="card-icon">🌳</span><h3>Whitelist mint <span class="tag">Merkle</span></h3></div>
+          <p class="muted">Price <strong id="wl-price">—</strong> · max <strong id="wl-cap">—</strong> per wallet. Paste your Merkle proof (32-byte hex hashes, one per line).</p>
+          <form id="form-mint-wl">
+            <label>Proof
+              <textarea id="wl-proof" rows="3" placeholder="0xabc…&#10;0xdef…" spellcheck="false"></textarea>
+            </label>
+            <label>Quantity <input type="number" id="wl-qty" placeholder="1" min="1" step="1" /></label>
+            <button class="btn btn-accent btn-shine" type="submit">Mint (whitelist)</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== GALLERY ===================== -->
+    <section class="section">
+      <h2 class="section-title">Gallery <span class="muted" id="gallery-note">(recent mints from the chain)</span></h2>
+      <div class="gallery" id="gallery">
+        <div class="card center muted" style="grid-column: 1 / -1">Loading…</div>
+      </div>
+    </section>
+
+    <!-- ===================== OWNER PANEL ===================== -->
+    <section class="section" id="admin-section" hidden>
+      <h2 class="section-title">Owner Controls <span class="tag tag-admin">you own this collection</span></h2>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🎬</span><h3>Mint phase</h3></div>
+          <form id="form-phase">
+            <label>Phase
+              <select id="phase-select">
+                <option value="0">Closed</option>
+                <option value="1">Whitelist</option>
+                <option value="2">Public</option>
+              </select>
+            </label>
+            <button class="btn btn-primary" type="submit">Set phase</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🌳</span><h3>Merkle root</h3></div>
+          <form id="form-root">
+            <label>Root (bytes32) <input type="text" id="root-input" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+            <button class="btn btn-primary" type="submit">Set root</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🎭</span><h3>Reveal</h3></div>
+          <p class="muted" id="reveal-status">—</p>
+          <button class="btn btn-accent" id="btn-reveal">Toggle reveal</button>
+          <form id="form-uri" style="margin-top:10px">
+            <label>Base URI <input type="text" id="base-uri" placeholder="ipfs://…/" autocomplete="off" spellcheck="false" /></label>
+            <label>Pre-reveal URI <input type="text" id="prereveal-uri" placeholder="ipfs://…" autocomplete="off" spellcheck="false" /></label>
+            <button class="btn btn-ghost" type="submit">Update URIs</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-icon">💎</span><h3>Royalties</h3></div>
+          <form id="form-royalty">
+            <label>Recipient <input type="text" id="royalty-recipient" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+            <label>Basis points (max 1000) <input type="number" id="royalty-bps" placeholder="500" min="0" max="1000" step="1" /></label>
+            <button class="btn btn-primary" type="submit">Set royalty</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🎁</span><h3>Reserve mint</h3></div>
+          <form id="form-owner-mint">
+            <label>Recipient <input type="text" id="om-recipient" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+            <label>Quantity <input type="number" id="om-qty" placeholder="1" min="1" step="1" /></label>
+            <button class="btn btn-primary" type="submit">Mint (reserve)</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-icon">💸</span><h3>Withdraw</h3></div>
+          <p class="muted">Send the collection's full ETH balance to the owner.</p>
+          <button class="btn btn-accent" id="btn-withdraw">Withdraw</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ACTIVITY ===================== -->
+    <section class="section">
+      <h2 class="section-title">Live Activity <span class="muted">(recent events from the chain)</span></h2>
+      <div class="card table-card">
+        <table class="activity-table">
+          <thead>
+            <tr><th>Event</th><th>Details</th><th>Block</th><th>Tx</th></tr>
+          </thead>
+          <tbody id="activity-body">
+            <tr><td colspan="4" class="muted center">Loading…</td></tr>
+          </tbody>
+        </table>
+        <div class="row between">
+          <button class="btn btn-ghost btn-sm" id="btn-refresh-events">↻ Refresh</button>
+          <span class="muted" id="events-note">showing the latest 15 events</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== HOW IT WORKS ===================== -->
+    <section class="section">
+      <h2 class="section-title">How it works <span class="muted">(learn the dApp before you mint)</span></h2>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🧭</span><h3>How to use</h3></div>
+          <ol style="margin:8px 0 0 18px;font-size:13px;color:var(--text);display:grid;gap:8px;">
+            <li>Press <strong>Connect Wallet</strong> in the top-right header. The dApp runs on the
+              <strong>Sepolia</strong> testnet (chain id 11155111) — switch networks in your wallet if prompted.</li>
+            <li>Point the app at a collection. If the setup banner shows, paste the deployed
+              <strong>GenesisNFT</strong> address and press <strong>Use this collection</strong>;
+              you can change it anytime via <strong>⚙ Settings</strong> → <strong>Save &amp; reload</strong>.</li>
+            <li>Mint an NFT. In the <strong>Public mint</strong> card, choose a quantity and press
+              <strong>Mint</strong>; in the <strong>Whitelist mint</strong> card, paste your Merkle proof
+              (one 32-byte hash per line) and press <strong>Mint (whitelist)</strong>.</li>
+            <li>Follow the result. Your token appears in the <strong>Gallery</strong> and the transaction in
+              <strong>Live Activity</strong>; press <strong>↻ Refresh</strong> to re-pull the latest 15 events.</li>
+            <li>Owner only — manage the drop. If you own the collection, <strong>Owner Controls</strong> unlocks:
+              set phase, set Merkle root, toggle reveal, update URIs, set royalties, reserve-mint and withdraw.</li>
+          </ol>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-icon">⛓️</span><h3>The process — what happens on-chain</h3></div>
+          <ol style="margin:8px 0 0 18px;font-size:13px;color:var(--text);display:grid;gap:8px;">
+            <li><strong>GenesisNFT.mintWhitelist</strong> checks the phase is WHITELIST and that you sent exactly
+              0.05 ETH per token (max 2 per wallet) before minting.</li>
+            <li><strong>MerkleProof.verify</strong> recomputes the Merkle root from your proof; the leaf is
+              <code>keccak256(address)</code>, so a proof can never be reused by another wallet.</li>
+            <li>The hand-written <strong>ERC721</strong> contract mints via <strong>_mintBatch</strong>: sequential
+              token ids, updated balances and <code>Transfer</code> events, capped at 5000 supply.</li>
+            <li><strong>tokenURI</strong> returns the shared pre-reveal placeholder until the owner calls
+              <strong>setRevealed(true)</strong>; then it becomes <code>baseURI + id + ".json"</code> served via IPFS.</li>
+            <li><strong>royaltyInfo</strong> (ERC-2981) pays 5% of every secondary sale to the owner — marketplaces
+              settle the artist automatically.</li>
+            <li><strong>withdraw()</strong> sends the contract's full ETH balance to the owner, guarded by
+              <strong>ReentrancyGuard</strong>; the owner reserve respects the 5000 cap too.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="card-head"><span class="card-icon">🔀</span><h3>Flow graph</h3></div>
+        <svg viewBox="0 0 920 240" width="100%" role="img"
+             aria-label="On-chain mint flow: whitelist mint, Merkle check, tokens minted, reveal metadata, royalty payout"
+             style="display:block;">
+          <defs>
+            <marker id="how-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#a3e635" />
+            </marker>
+          </defs>
+
+          <!-- stage 1 -->
+          <rect x="20" y="70" width="160" height="100" rx="14"
+                fill="rgba(30, 15, 38, 0.85)" stroke="#ec4899" stroke-width="1.5" />
+          <circle cx="100" cy="88" r="11" fill="rgba(236, 72, 153, 0.16)" stroke="#ec4899" stroke-width="1" />
+          <text x="100" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#f9a8d4">1</text>
+          <text x="100" y="114" text-anchor="middle" font-size="13.5" font-weight="600"
+                font-family="Space Grotesk, Inter, sans-serif" fill="#f6eef8">Whitelist mint</text>
+          <text x="100" y="138" text-anchor="middle" font-size="10"
+                font-family="JetBrains Mono, ui-monospace, monospace" fill="#a892b0">GenesisNFT.mintWhitelist</text>
+          <line x1="181" y1="120" x2="194" y2="120" stroke="#a3e635" stroke-width="2" marker-end="url(#how-arrow)" />
+
+          <!-- stage 2 -->
+          <rect x="200" y="70" width="160" height="100" rx="14"
+                fill="rgba(30, 15, 38, 0.85)" stroke="#ec4899" stroke-width="1.5" />
+          <circle cx="280" cy="88" r="11" fill="rgba(236, 72, 153, 0.16)" stroke="#ec4899" stroke-width="1" />
+          <text x="280" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#f9a8d4">2</text>
+          <text x="280" y="114" text-anchor="middle" font-size="13.5" font-weight="600"
+                font-family="Space Grotesk, Inter, sans-serif" fill="#f6eef8">Merkle check</text>
+          <text x="280" y="138" text-anchor="middle" font-size="10"
+                font-family="JetBrains Mono, ui-monospace, monospace" fill="#a892b0">MerkleProof.verify</text>
+          <line x1="361" y1="120" x2="374" y2="120" stroke="#a3e635" stroke-width="2" marker-end="url(#how-arrow)" />
+
+          <!-- stage 3 -->
+          <rect x="380" y="70" width="160" height="100" rx="14"
+                fill="rgba(30, 15, 38, 0.85)" stroke="#ec4899" stroke-width="1.5" />
+          <circle cx="460" cy="88" r="11" fill="rgba(236, 72, 153, 0.16)" stroke="#ec4899" stroke-width="1" />
+          <text x="460" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#f9a8d4">3</text>
+          <text x="460" y="114" text-anchor="middle" font-size="13.5" font-weight="600"
+                font-family="Space Grotesk, Inter, sans-serif" fill="#f6eef8">Tokens minted</text>
+          <text x="460" y="138" text-anchor="middle" font-size="10"
+                font-family="JetBrains Mono, ui-monospace, monospace" fill="#a892b0">ERC721._mintBatch</text>
+          <line x1="541" y1="120" x2="554" y2="120" stroke="#a3e635" stroke-width="2" marker-end="url(#how-arrow)" />
+
+          <!-- stage 4 -->
+          <rect x="560" y="70" width="160" height="100" rx="14"
+                fill="rgba(30, 15, 38, 0.85)" stroke="#ec4899" stroke-width="1.5" />
+          <circle cx="640" cy="88" r="11" fill="rgba(236, 72, 153, 0.16)" stroke="#ec4899" stroke-width="1" />
+          <text x="640" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#f9a8d4">4</text>
+          <text x="640" y="114" text-anchor="middle" font-size="13.5" font-weight="600"
+                font-family="Space Grotesk, Inter, sans-serif" fill="#f6eef8">Reveal metadata</text>
+          <text x="640" y="138" text-anchor="middle" font-size="10"
+                font-family="JetBrains Mono, ui-monospace, monospace" fill="#a892b0">GenesisNFT.tokenURI</text>
+          <line x1="721" y1="120" x2="734" y2="120" stroke="#a3e635" stroke-width="2" marker-end="url(#how-arrow)" />
+
+          <!-- stage 5 -->
+          <rect x="740" y="70" width="160" height="100" rx="14"
+                fill="rgba(30, 15, 38, 0.85)" stroke="#ec4899" stroke-width="1.5" />
+          <circle cx="820" cy="88" r="11" fill="rgba(236, 72, 153, 0.16)" stroke="#ec4899" stroke-width="1" />
+          <text x="820" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#f9a8d4">5</text>
+          <text x="820" y="114" text-anchor="middle" font-size="13.5" font-weight="600"
+                font-family="Space Grotesk, Inter, sans-serif" fill="#f6eef8">Royalty payout</text>
+          <text x="820" y="138" text-anchor="middle" font-size="10"
+                font-family="JetBrains Mono, ui-monospace, monospace" fill="#a892b0">GenesisNFT.royaltyInfo</text>
+
+          <!-- public-mint shortcut -->
+          <line x1="100" y1="170" x2="460" y2="210" stroke="#a3e635" stroke-width="1.5" stroke-dasharray="5 4"
+                marker-end="url(#how-arrow)" />
+          <text x="460" y="232" text-anchor="middle" font-size="10.5" font-style="italic" fill="#a892b0">public mint: same path, 0.08 ETH × qty</text>
+        </svg>
+        <p class="muted">Every token shows the same placeholder until the owner reveals the collection;
+          royalties are paid on secondary sales by marketplaces.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>Genesis · ERC-721 from scratch — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/nft</span>
+      </span>
+    </div>
+  </footer>
+
+  <!-- ===================== TOASTS ===================== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

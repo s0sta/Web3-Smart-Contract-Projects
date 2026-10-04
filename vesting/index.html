@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TokenVesting — Cliff & Linear Vesting | s0sta.com/vesting</title>
+  <meta name="description" content="A modern dApp for the TokenVesting protocol: watch your vesting ring fill in real time, claim vested tokens, and let owners fund and revoke schedules." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="sands" id="sands" aria-hidden="true"></div>
+
+  <!-- ===================== TOP BAR ===================== -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">⏳</span>
+      <span class="brand-name">Token<span class="accent">Vesting</span></span>
+      <span class="brand-sub">cliff · linear · from scratch</span>
+    </div>
+    <div class="topbar-right">
+      <button class="link-btn" id="btn-copy-address">Copy address</button>
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙</button>
+      <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+    </div>
+  </header>
+
+  <!-- ===================== MAIN (CENTERED STAGE) ===================== -->
+  <main class="stage">
+
+    <!-- ===================== SETUP BANNER ===================== -->
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Vesting contract not configured yet</h3>
+          <p>Paste your deployed <strong>TokenVesting</strong> address below, or deploy locally with
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.
+             See <code>frontend/README.md</code> for the full guide.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… vesting address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this contract</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SETTINGS ===================== -->
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Vesting contract address
+          <input type="text" id="set-vesting-address" placeholder="0x…" autocomplete="off" spellcheck="false" />
+        </label>
+        <label>Network
+          <select id="set-chain"></select>
+        </label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- ===================== HERO: VESTING RING ===================== -->
+    <section class="hero-stage">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 220 220" class="ring-svg">
+          <defs>
+            <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#fb7185"/>
+              <stop offset="1" stop-color="#e2e8f0"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-bg" cx="110" cy="110" r="92" />
+          <circle class="ring-fill" id="ring-fill" cx="110" cy="110" r="92"
+                  stroke="url(#ringGrad)" stroke-linecap="round"
+                  stroke-dasharray="578.05" stroke-dashoffset="578.05" />
+        </svg>
+        <div class="ring-center">
+          <span class="ring-label">vested</span>
+          <span class="ring-pct" id="ring-pct">0%</span>
+          <span class="ring-count" id="ring-count">connect wallet</span>
+        </div>
+      </div>
+
+      <h1 class="hero-title">Time-release your <span class="grad">tokens.</span></h1>
+      <p class="hero-sub">Funded schedules vest with a cliff, then linearly. Beneficiaries claim what's
+        vested — owners can revoke the unvested remainder at any time.</p>
+
+      <div class="chip-row" id="chip-row">
+        <span class="chip"><b>start</b><span class="mono" id="chip-start">—</span></span>
+        <span class="chip"><b>cliff</b><span class="mono" id="chip-cliff">—</span></span>
+        <span class="chip"><b>end</b><span class="mono" id="chip-end">—</span></span>
+        <span class="chip"><b>total</b><span class="mono" id="chip-total">—</span></span>
+        <span class="chip"><b>claimed</b><span class="mono" id="chip-claimed">—</span></span>
+        <span class="chip"><b>status</b><span id="chip-status">—</span></span>
+      </div>
+    </section>
+
+    <!-- ===================== STAGE ROW ===================== -->
+    <section class="stage-row">
+      <!-- releasable -->
+      <div class="card release-card">
+        <span class="card-kicker">releasable now</span>
+        <span class="release-amount ticker" id="release-amount">—</span>
+        <span class="release-sub" id="release-sub">of your vesting schedule</span>
+        <button class="btn btn-primary btn-claim" id="btn-claim">Claim vested tokens</button>
+        <a class="mono link" id="link-contract" href="#" target="_blank" rel="noopener">contract ↗</a>
+      </div>
+
+      <!-- schedule -->
+      <div class="card schedule-card">
+        <span class="card-kicker">your schedule</span>
+        <div class="sched-bar">
+          <span class="sched-marker" id="sched-marker"></span>
+          <span class="sched-cliff" id="sched-cliff-marker"></span>
+        </div>
+        <div class="sched-labels">
+          <span class="mono">start</span>
+          <span class="mono" id="sched-cliff-label">cliff</span>
+          <span class="mono">end</span>
+        </div>
+        <div class="sched-legend">
+          <span><i class="dot dot-vested"></i> vested</span>
+          <span><i class="dot dot-cliff"></i> cliff point</span>
+        </div>
+        <p class="muted sched-note" id="sched-note">connect your wallet to see your schedule</p>
+      </div>
+    </section>
+
+    <!-- ===================== OWNER STAGE ===================== -->
+    <section class="card owner-card" id="owner-card" hidden>
+      <span class="card-kicker">owner tools</span>
+      <div class="owner-grid">
+        <div>
+          <h3>➕ Fund a schedule</h3>
+          <p class="muted">Pulls VEST from your wallet and vests it: cliff, then linear.</p>
+          <form id="form-create" class="stack-form">
+            <input type="text" id="create-beneficiary" placeholder="Beneficiary 0x…" autocomplete="off" spellcheck="false" />
+            <input type="number" id="create-amount" placeholder="Amount (VEST)" min="0" step="any" />
+            <input type="number" id="create-cliff-days" placeholder="Cliff (days)" min="1" step="1" />
+            <input type="number" id="create-vest-days" placeholder="Vesting (days)" min="1" step="1" />
+            <button class="btn btn-primary" type="submit">Create schedule</button>
+          </form>
+        </div>
+        <div>
+          <h3>⛔ Revoke a schedule</h3>
+          <p class="muted">Unvested tokens return to you; the beneficiary keeps what vested.</p>
+          <form id="form-revoke" class="stack-form">
+            <input type="text" id="revoke-beneficiary" placeholder="Beneficiary 0x…" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-danger" type="submit">Revoke</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ACTIVITY: HORIZONTAL CARDS ===================== -->
+    <section class="activity">
+      <div class="row between">
+        <h2 class="section-title">Activity</h2>
+        <div class="row">
+          <span class="muted" id="events-note" style="font-size:12.5px">loading…</span>
+          <button class="btn btn-ghost btn-sm" id="btn-refresh-events">↻</button>
+        </div>
+      </div>
+      <div class="event-strip" id="event-strip">
+        <p class="muted center" style="padding:24px 0">Loading…</p>
+      </div>
+    </section>
+
+    <!-- ===================== HOW-TO · PROCESS · FLOW (EDUCATIONAL) ===================== -->
+    <section class="card" style="margin-top:44px">
+      <h2 style="font-family:var(--font-display);font-size:20px;margin:0 0 4px">How this dApp works</h2>
+      <p class="muted" style="margin:0 0 22px;font-size:13px">A plain-language guide to the TokenVesting dApp — what each button does, and the on-chain flow behind it. Configured for <span class="mono">Sepolia testnet</span>.</p>
+
+      <h3 style="font-family:var(--font-display);font-size:16px;margin:0 0 10px">1 · How to use</h3>
+      <ol style="margin:0 0 26px;padding-left:1.25em;display:flex;flex-direction:column;gap:9px;font-size:14.5px">
+        <li>Connect your wallet with <b>Connect Wallet</b> (top-right). The dApp opens on the <b>Sepolia testnet</b> (chain 11155111) — switch MetaMask to Sepolia and grab test ETH from a faucet if needed.</li>
+        <li>Your vesting ring, the <span class="mono">start / cliff / end / total / claimed</span> chips and the schedule bar load from your schedule; the “releasable now” card shows what you can withdraw today.</li>
+        <li>Press <b>Claim vested tokens</b> whenever the releasable amount is above zero — the Activity strip below logs every claim (↻ refreshes it).</li>
+        <li>Owners see the <b>owner tools</b> card: enter beneficiary, amount (VEST), cliff days and vesting days, then press <b>Create schedule</b> — the dApp approves the token spend for you.</li>
+        <li>To stop a grant, enter the beneficiary and press <b>Revoke</b>: the unvested remainder returns to you, the beneficiary keeps what already vested.</li>
+        <li>⚙ Settings switches network or TokenVesting address (Mainnet / Sepolia / local Anvil); if no contract is configured yet, the setup banner accepts an address via <b>Use this contract</b>.</li>
+      </ol>
+
+      <h3 style="font-family:var(--font-display);font-size:16px;margin:0 0 10px">2 · The process — what happens on-chain</h3>
+      <ol style="margin:0 0 26px;padding-left:1.25em;display:flex;flex-direction:column;gap:9px;font-size:14.5px">
+        <li><span class="mono">MockToken</span> implements the minimal <span class="mono">IERC20</span> interface and is the VEST token; the owner approves <span class="mono">TokenVesting</span> to spend the grant from their wallet.</li>
+        <li><span class="mono">TokenVesting.createSchedule()</span> — owner-only (<span class="mono">Ownable</span>): pulls the full grant in with <span class="mono">transferFrom</span> and stores start, cliff and end, so claims are always backed by real tokens.</li>
+        <li><span class="mono">TokenVesting.vestedAmount()</span> does the math: 0% before the cliff, then linear — <span class="mono">total × (now − cliff) / (end − cliff)</span> — reaching 100% at the end.</li>
+        <li><span class="mono">TokenVesting.claim()</span> — the beneficiary withdraws vested-minus-claimed; <span class="mono">ReentrancyGuard</span> protects the payout against re-entrancy.</li>
+        <li><span class="mono">TokenVesting.revokeSchedule()</span> — the owner freezes accrual at the revocation timestamp, gets the unvested tokens back, and the beneficiary keeps exactly what vested.</li>
+      </ol>
+
+      <h3 style="font-family:var(--font-display);font-size:16px;margin:0 0 10px">3 · Flow graph</h3>
+      <svg viewBox="0 0 920 240" width="100%" style="height:auto;display:block" role="img" aria-label="TokenVesting flow: approve and fund VEST, create schedule, cliff then linear vesting, claim vested tokens, optional revoke">
+        <defs>
+          <marker id="flowArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0,0 L10,5 L0,10 Z" style="fill:var(--accent-2)"></path>
+          </marker>
+        </defs>
+
+        <!-- stage 1 -->
+        <rect x="0" y="64" width="168" height="74" rx="14" style="fill:rgba(251,113,133,0.07);stroke:var(--accent-1);stroke-width:1.5"></rect>
+        <circle cx="20" cy="84" r="11" style="fill:var(--accent-1)"></circle>
+        <text x="20" y="88" text-anchor="middle" style="fill:#1a0d10;font-family:var(--font-ui);font-weight:700;font-size:12px">1</text>
+        <text x="84" y="110" text-anchor="middle" style="fill:var(--text);font-family:var(--font-ui);font-weight:600;font-size:13.5px">Approve &amp; fund VEST</text>
+        <text x="84" y="130" text-anchor="middle" style="fill:var(--muted);font-family:var(--font-mono);font-size:10.5px">MockToken (VEST)</text>
+
+        <!-- stage 2 -->
+        <rect x="188" y="64" width="168" height="74" rx="14" style="fill:rgba(251,113,133,0.07);stroke:var(--accent-1);stroke-width:1.5"></rect>
+        <circle cx="208" cy="84" r="11" style="fill:var(--accent-1)"></circle>
+        <text x="208" y="88" text-anchor="middle" style="fill:#1a0d10;font-family:var(--font-ui);font-weight:700;font-size:12px">2</text>
+        <text x="272" y="110" text-anchor="middle" style="fill:var(--text);font-family:var(--font-ui);font-weight:600;font-size:13.5px">Create schedule</text>
+        <text x="272" y="130" text-anchor="middle" style="fill:var(--muted);font-family:var(--font-mono);font-size:10.5px">TokenVesting</text>
+
+        <!-- stage 3 -->
+        <rect x="376" y="64" width="168" height="74" rx="14" style="fill:rgba(251,113,133,0.07);stroke:var(--accent-1);stroke-width:1.5"></rect>
+        <circle cx="396" cy="84" r="11" style="fill:var(--accent-1)"></circle>
+        <text x="396" y="88" text-anchor="middle" style="fill:#1a0d10;font-family:var(--font-ui);font-weight:700;font-size:12px">3</text>
+        <text x="460" y="110" text-anchor="middle" style="fill:var(--text);font-family:var(--font-ui);font-weight:600;font-size:13.5px">Cliff, then linear</text>
+        <text x="460" y="130" text-anchor="middle" style="fill:var(--muted);font-family:var(--font-mono);font-size:10.5px">TokenVesting</text>
+
+        <!-- stage 4 -->
+        <rect x="564" y="64" width="168" height="74" rx="14" style="fill:rgba(251,113,133,0.07);stroke:var(--accent-1);stroke-width:1.5"></rect>
+        <circle cx="584" cy="84" r="11" style="fill:var(--accent-1)"></circle>
+        <text x="584" y="88" text-anchor="middle" style="fill:#1a0d10;font-family:var(--font-ui);font-weight:700;font-size:12px">4</text>
+        <text x="648" y="110" text-anchor="middle" style="fill:var(--text);font-family:var(--font-ui);font-weight:600;font-size:13.5px">Claim vested tokens</text>
+        <text x="648" y="130" text-anchor="middle" style="fill:var(--muted);font-family:var(--font-mono);font-size:10.5px">TokenVesting</text>
+
+        <!-- stage 5 -->
+        <rect x="752" y="64" width="168" height="74" rx="14" style="fill:rgba(251,113,133,0.07);stroke:var(--accent-1);stroke-width:1.5"></rect>
+        <circle cx="772" cy="84" r="11" style="fill:var(--accent-1)"></circle>
+        <text x="772" y="88" text-anchor="middle" style="fill:#1a0d10;font-family:var(--font-ui);font-weight:700;font-size:12px">5</text>
+        <text x="836" y="110" text-anchor="middle" style="fill:var(--text);font-family:var(--font-ui);font-weight:600;font-size:13.5px">Revoke (optional)</text>
+        <text x="836" y="130" text-anchor="middle" style="fill:var(--muted);font-family:var(--font-mono);font-size:10.5px">TokenVesting</text>
+
+        <!-- arrows -->
+        <line x1="170" y1="101" x2="186" y2="101" style="stroke:var(--accent-2);stroke-width:2" marker-end="url(#flowArrow)"></line>
+        <line x1="358" y1="101" x2="374" y2="101" style="stroke:var(--accent-2);stroke-width:2" marker-end="url(#flowArrow)"></line>
+        <line x1="546" y1="101" x2="562" y2="101" style="stroke:var(--accent-2);stroke-width:2" marker-end="url(#flowArrow)"></line>
+        <line x1="734" y1="101" x2="750" y2="101" style="stroke:var(--accent-2);stroke-width:2" marker-end="url(#flowArrow)"></line>
+
+        <text x="460" y="196" text-anchor="middle" style="fill:var(--muted);font-family:var(--font-ui);font-size:12px">Sepolia testnet · funded at creation · claims always backed</text>
+      </svg>
+      <p class="muted" style="margin:8px 0 0;font-size:12.5px">Left to right: fund a schedule → cliff, then linear unlock → claim. Revoke is an owner-only exit that stops future vesting.</p>
+    </section>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="site-footer">
+      <span>TokenVesting · cliff + linear from scratch — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/vesting</span>
+      </span>
+    </footer>
+  </main>
+
+  <!-- ===================== TOASTS ===================== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

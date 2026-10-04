@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rahala — Cross-Border Payments | s0sta.com/rahala</title>
+  <meta name="description" content="A real-world-usable money-movement network: FX, payment escrow, invoice factoring, netting and arbitration." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">🛫</span>
+      <div>
+        <span class="brand-name">Rahala <span class="brand-tag">PAY</span></span>
+        <span class="brand-sub">Cross-border payments &amp; remittances · s0sta.com/rahala</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙</button>
+      <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+    </div>
+  </header>
+
+  <main class="rahala">
+
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Accounts ledger not configured yet</h3>
+          <p>Paste your deployed <strong>RahalaAccounts</strong> address below, or deploy locally:
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… accounts address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this ledger</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Accounts address <input type="text" id="set-accounts-address" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+        <label>Network <select id="set-chain"></select></label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- BALANCE RIBBON -->
+    <section class="ribbon">
+      <div class="ribbon-cell"><span class="ribbon-label">Your AED-S</span><span class="ribbon-value" id="rib-balance">—</span></div>
+      <div class="ribbon-cell"><span class="ribbon-label">USD rate</span><span class="ribbon-value" id="rib-rate">—</span></div>
+      <div class="ribbon-cell"><span class="ribbon-label">Escrowed</span><span class="ribbon-value" id="rib-escrow">—</span></div>
+      <div class="ribbon-cell"><span class="ribbon-label">Fees collected</span><span class="ribbon-value" id="rib-fees">—</span></div>
+      <div class="ribbon-cell"><span class="ribbon-label">Netted</span><span class="ribbon-value" id="rib-netted">—</span></div>
+    </section>
+
+    <div class="rahala-grid">
+
+      <!-- SEND -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">💸</span><h2>Send Payment</h2></div>
+        <div class="act-form">
+          <label>Recipient <input type="text" id="send-to" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+          <label>Amount (AED-S) <input type="number" id="send-amount" placeholder="0.0" min="0" step="any" /></label>
+          <label>Mode <select id="send-mode">
+            <option value="0">Instant</option>
+            <option value="1">Timelocked (7 days)</option>
+            <option value="2">Milestones (2 approvals)</option>
+          </select></label>
+          <button class="btn btn-primary" id="btn-send">Send</button>
+        </div>
+        <div class="prop-list" id="pay-list">
+          <p class="muted">no payments yet</p>
+        </div>
+      </section>
+
+      <!-- FX -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">💱</span><h2>Foreign Exchange</h2></div>
+        <table class="kpi-table">
+          <tr><td>USD balance</td><td class="mono" id="fx-usd">—</td></tr>
+          <tr><td>Fee + spread</td><td class="mono" id="fx-fees">—</td></tr>
+        </table>
+        <div class="act-form">
+          <label>AED-S → USD <input type="number" id="fx-to-usd" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-primary" id="btn-fx-to">Convert to USD</button>
+        </div>
+        <div class="act-form">
+          <label>USD → AED-S <input type="number" id="fx-to-aed" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-fx-from">Convert to AED-S</button>
+        </div>
+      </section>
+
+      <!-- INVOICES & GOV -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">🧾</span><h2>Invoices &amp; Governance</h2></div>
+        <div class="act-form">
+          <label>Register invoice — payer <input type="text" id="inv-payer" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+          <label>Face value <input type="number" id="inv-value" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-invoice">Register</button>
+        </div>
+        <div class="prop-list" id="gov-list">
+          <p class="muted">no proposals yet</p>
+        </div>
+        <div class="act-form">
+          <label>Propose escrow fee (bps) <input type="number" id="gov-fee" placeholder="25" min="0" max="1000" step="1" /></label>
+          <button class="btn btn-ghost" id="btn-propose">Propose</button>
+        </div>
+      </section>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <section class="card" style="margin-top: 26px;">
+      <div class="card-head"><span class="card-ico">🎓</span><h2>How Rahala works</h2></div>
+      <p class="muted">Rahala is a cross-border payments and remittance network on the <strong>Sepolia</strong> testnet. Below: how to use this console, what happens on-chain, and the payment flow at a glance.</p>
+
+      <div class="act-form">
+        <div class="card-head"><span class="card-ico">🧭</span><h2>How to use</h2></div>
+        <div class="item-row"><span class="card-ico">1</span><span>Connect your wallet with the top-right <strong>Connect Wallet</strong> button — the chain badge shows the active network (<strong>Sepolia</strong>). If the setup banner appears, paste your <span class="mono">RahalaAccounts</span> address and press <strong>Use this ledger</strong>.</span></div>
+        <div class="item-row" style="margin-top: 8px;"><span class="card-ico">2</span><span>In <strong>Send Payment</strong>, enter the recipient address and the amount in AED-S, pick a release mode — <strong>Instant</strong>, <strong>Timelocked (7 days)</strong> or <strong>Milestones (2 approvals)</strong> — and press <strong>Send</strong>.</span></div>
+        <div class="item-row" style="margin-top: 8px;"><span class="card-ico">3</span><span>In <strong>Foreign Exchange</strong>, type an amount and press <strong>Convert to USD</strong> or <strong>Convert to AED-S</strong>; the table shows your USD balance and the fee + spread.</span></div>
+        <div class="item-row" style="margin-top: 8px;"><span class="card-ico">4</span><span>Under <strong>Invoices &amp; Governance</strong>, register a trade invoice — payer and face value — with <strong>Register</strong> so a financier can factor it at a discount.</span></div>
+        <div class="item-row" style="margin-top: 8px;"><span class="card-ico">5</span><span>Propose a new escrow fee in bps with <strong>Propose</strong> and watch your balance, USD rate, escrow, fees and netted totals in the ribbon above.</span></div>
+      </div>
+
+      <div class="act-form">
+        <div class="card-head"><span class="card-ico">🔗</span><h2>The process — what happens on-chain</h2></div>
+        <div class="item-row"><span class="card-ico">1</span><span>When you press <strong>Send</strong>, <span class="mono">RahalaEscrow</span> locks the AED-S payment — issued by <span class="mono">RahalaStable</span> and tracked on the <span class="mono">RahalaAccounts</span> ledger — until its release condition is met.</span></div>
+        <div class="item-row" style="margin-top: 8px;"><span class="card-ico">2</span><span>Before anything moves, <span class="mono">RahalaCompliance</span> validates both sides: KYC tier, sanctions, region allowlist and the transfer + daily caps.</span></div>
+        <div class="item-row" style="margin-top: 8px;"><span class="card-ico">3</span><span>For a conversion, <span class="mono">RahalaOracle</span> supplies the EMA-smoothed rate and <span class="mono">RahalaFX</span> swaps the amount, sending the fee + spread to <span class="mono">RahalaTreasury</span> behind its reserve floor.</span></div>
+        <div class="item-row" style="margin-top: 8px;"><span class="card-ico">4</span><span>Once the condition is met, the recipient claims from <span class="mono">RahalaEscrow</span>. If the payment is disputed, <span class="mono">RahalaDisputes</span> lets a 2-of-3 panel of arbiters issue a binding award.</span></div>
+        <div class="item-row" style="margin-top: 8px;"><span class="card-ico">5</span><span>A registered invoice lives in <span class="mono">RahalaInvoices</span>: a financier factors it at a disclosed discount and the payer later settles the face value.</span></div>
+        <div class="item-row" style="margin-top: 8px;"><span class="card-ico">6</span><span>The fee you proposed is decided by <span class="mono">RahalaGovernor</span> — balance-weighted voting with quorum, review, voting and timelock periods — while <span class="mono">RahalaSettlement</span> nets bilateral obligations in batches.</span></div>
+      </div>
+
+      <div class="act-form">
+        <div class="card-head"><span class="card-ico">📊</span><h2>Flow graph</h2></div>
+        <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="Rahala payment flow graph" style="display: block; margin-top: 8px;">
+          <defs>
+            <marker id="arrow-a2" viewBox="0 0 7 6" refX="6" refY="3" markerWidth="7" markerHeight="6" orient="auto">
+              <path d="M0,0 L7,3 L0,6 Z" fill="#0e7c86"></path>
+            </marker>
+          </defs>
+          <rect x="0" y="6" width="920" height="228" rx="14" fill="#f2ede0"></rect>
+          <g stroke="#0e7c86" stroke-width="2">
+            <line x1="162" y1="89" x2="192" y2="89" marker-end="url(#arrow-a2)"></line>
+            <line x1="350" y1="89" x2="380" y2="89" marker-end="url(#arrow-a2)"></line>
+            <line x1="538" y1="89" x2="568" y2="89" marker-end="url(#arrow-a2)"></line>
+            <line x1="726" y1="89" x2="756" y2="89" marker-end="url(#arrow-a2)"></line>
+          </g>
+          <g font-family="Inter, sans-serif">
+            <rect x="12" y="34" width="150" height="110" rx="12" fill="#fdfbf5" stroke="#0a2540" stroke-width="1.5"></rect>
+            <circle cx="87" cy="62" r="10.5" fill="#0e7c86"></circle>
+            <text x="87" y="65.5" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">1</text>
+            <text x="87" y="96" text-anchor="middle" font-size="12.5" font-weight="600" fill="#12263a">Compliance checks</text>
+            <text x="87" y="116" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#8a97a5">RahalaCompliance</text>
+            <text x="87" y="132" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#8a97a5">KYC · caps · region</text>
+
+            <rect x="200" y="34" width="150" height="110" rx="12" fill="#fdfbf5" stroke="#0a2540" stroke-width="1.5"></rect>
+            <circle cx="275" cy="62" r="10.5" fill="#0e7c86"></circle>
+            <text x="275" y="65.5" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">2</text>
+            <text x="275" y="96" text-anchor="middle" font-size="12.5" font-weight="600" fill="#12263a">FX at oracle rate</text>
+            <text x="275" y="116" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#8a97a5">RahalaFX</text>
+            <text x="275" y="132" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#8a97a5">rates: RahalaOracle</text>
+
+            <rect x="388" y="34" width="150" height="110" rx="12" fill="#fdfbf5" stroke="#0a2540" stroke-width="1.5"></rect>
+            <circle cx="463" cy="62" r="10.5" fill="#0e7c86"></circle>
+            <text x="463" y="65.5" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">3</text>
+            <text x="463" y="96" text-anchor="middle" font-size="12.5" font-weight="600" fill="#12263a">Escrow lock</text>
+            <text x="463" y="116" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#8a97a5">RahalaEscrow</text>
+            <text x="463" y="132" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#8a97a5">3 release modes</text>
+
+            <rect x="576" y="34" width="150" height="110" rx="12" fill="#fdfbf5" stroke="#0a2540" stroke-width="1.5"></rect>
+            <circle cx="651" cy="62" r="10.5" fill="#0e7c86"></circle>
+            <text x="651" y="65.5" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">4</text>
+            <text x="651" y="96" text-anchor="middle" font-size="12.5" font-weight="600" fill="#12263a">Claim or dispute</text>
+            <text x="651" y="116" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#8a97a5">RahalaDisputes</text>
+            <text x="651" y="132" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#8a97a5">2-of-3 arbiters</text>
+
+            <rect x="764" y="34" width="150" height="110" rx="12" fill="#fdfbf5" stroke="#0a2540" stroke-width="1.5"></rect>
+            <circle cx="839" cy="62" r="10.5" fill="#0e7c86"></circle>
+            <text x="839" y="65.5" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">5</text>
+            <text x="839" y="96" text-anchor="middle" font-size="12.5" font-weight="600" fill="#12263a">Net &amp; govern</text>
+            <text x="839" y="116" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#8a97a5">RahalaSettlement</text>
+            <text x="839" y="132" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#8a97a5">RahalaGovernor votes</text>
+          </g>
+          <text x="460" y="204" text-anchor="middle" font-family="Inter, sans-serif" font-size="11.5" fill="#8a97a5">All stages settle on-chain on Sepolia · AED-S (RahalaStable) is the settlement currency</text>
+        </svg>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <span>Rahala · payments network from scratch — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/rahala</span>
+      </span>
+    </footer>
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

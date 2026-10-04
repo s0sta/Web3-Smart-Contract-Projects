@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TrustEscrow — Buyer/Seller Escrow with Arbitration | s0sta.com/escrow</title>
+  <meta name="description" content="A modern dApp for the TrustEscrow protocol: open deals, release on delivery, refund, dispute with arbiter resolution — with role-based actions, lifecycle timelines and live on-chain activity." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="sparks" id="sparks" aria-hidden="true"></div>
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-mark">🤝</div>
+        <div>
+          <h1>Trust<span class="accent">Escrow</span></h1>
+          <p class="brand-sub">Buyer/seller escrow with arbitration · Solidity 0.8.26 · from scratch</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙ Settings</button>
+        <span class="chain-badge" id="chain-badge">—</span>
+        <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== SETUP BANNER ===================== -->
+  <section class="container" id="setup-banner" hidden>
+    <div class="card banner">
+      <div class="banner-icon">🛠</div>
+      <div>
+        <h3>Escrow not configured yet</h3>
+        <p>Paste your deployed <strong>TrustEscrow</strong> address below, or deploy locally with
+           <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.
+           See <code>frontend/README.md</code> for the full guide.</p>
+        <form id="form-setup" class="row">
+          <input type="text" id="setup-address" placeholder="0x… escrow address" autocomplete="off" spellcheck="false" />
+          <button class="btn btn-primary" type="submit">Use this escrow</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+
+    <!-- ===================== SETTINGS ===================== -->
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Escrow contract address
+          <input type="text" id="set-escrow-address" placeholder="0x…" autocomplete="off" spellcheck="false" />
+        </label>
+        <label>Network
+          <select id="set-chain"></select>
+        </label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- ===================== HERO ===================== -->
+    <section class="hero">
+      <div class="hero-text">
+        <h2>Deals with <span>built-in trust.</span></h2>
+        <p class="muted">A buyer locks ETH for a seller. The seller releases on delivery, the buyer can
+          cancel for a full refund, and a neutral arbiter settles disputes with any split — the platform
+          earns a fee only on completed deals.</p>
+        <div class="hero-links">
+          <a id="link-contract" href="#" target="_blank" rel="noopener">Escrow ↗</a>
+          <button class="link-btn" id="btn-copy-address" title="Copy escrow address">Copy address</button>
+          <span class="muted" id="hero-address">0x…</span>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat"><span class="stat-label">Deals</span><span class="stat-value accent" id="stat-deals">—</span></div>
+        <div class="stat"><span class="stat-label">Platform fee</span><span class="stat-value" id="stat-fee">—</span></div>
+        <div class="stat"><span class="stat-label">Fees accrued</span><span class="stat-value" id="stat-fees">—</span></div>
+        <div class="stat"><span class="stat-label">Your role</span><span class="stat-value stat-small" id="stat-role">—</span></div>
+      </div>
+    </section>
+
+    <!-- ===================== OPEN DEAL ===================== -->
+    <section class="section">
+      <div class="card create-card">
+        <div class="card-head"><span class="card-icon">📜</span><h3>Open a deal</h3></div>
+        <p class="muted">Lock ETH for a seller and name a neutral arbiter. All three parties must be distinct.</p>
+        <form id="form-open" class="create-row">
+          <label>Seller
+            <input type="text" id="open-seller" placeholder="0x…" autocomplete="off" spellcheck="false" />
+          </label>
+          <label>Arbiter
+            <input type="text" id="open-arbiter" placeholder="0x…" autocomplete="off" spellcheck="false" />
+          </label>
+          <label>Deposit (ETH)
+            <input type="number" id="open-amount" placeholder="0.1" min="0" step="any" />
+          </label>
+          <button class="btn btn-primary" type="submit">Open deal</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===================== DEALS ===================== -->
+    <section class="section">
+      <h2 class="section-title">Deals <span class="muted" id="deals-note">loading…</span></h2>
+      <div class="deals-list" id="deals-list">
+        <div class="card center muted">Loading deals…</div>
+      </div>
+    </section>
+
+    <!-- ===================== OWNER PANEL ===================== -->
+    <section class="section" id="admin-section" hidden>
+      <h2 class="section-title">Platform Controls <span class="tag tag-admin">you are the escrow owner</span></h2>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-head"><span class="card-icon">💰</span><h3>Platform fee</h3></div>
+          <p class="muted">Basis points charged on completed deals. Capped at 10% — open deals keep their frozen fee.</p>
+          <form id="form-set-fee">
+            <label>Fee (bps) <input type="number" id="fee-bps" placeholder="50" min="0" max="1000" step="1" /></label>
+            <button class="btn btn-primary" type="submit">Update fee</button>
+          </form>
+        </div>
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🏦</span><h3>Withdraw fees</h3></div>
+          <p class="muted">Pull accrued platform fees to any address.</p>
+          <form id="form-withdraw-fees">
+            <label>Recipient <input type="text" id="withdraw-to" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+            <button class="btn btn-accent" type="submit">Withdraw</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ACTIVITY ===================== -->
+    <section class="section">
+      <h2 class="section-title">Live Activity <span class="muted">(recent events from the chain)</span></h2>
+      <div class="card table-card">
+        <table class="activity-table">
+          <thead>
+            <tr><th>Event</th><th>Details</th><th>Block</th><th>Tx</th></tr>
+          </thead>
+          <tbody id="activity-body">
+            <tr><td colspan="4" class="muted center">Loading…</td></tr>
+          </tbody>
+        </table>
+        <div class="row between">
+          <button class="btn btn-ghost btn-sm" id="btn-refresh-events">↻ Refresh</button>
+          <span class="muted" id="events-note">showing the latest 15 events</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== HOW IT WORKS (educational) ===================== -->
+    <section class="section" id="how-it-works">
+      <h2 class="section-title">How it works <span class="muted">(a guide for visitors · Sepolia testnet)</span></h2>
+
+      <!-- A · How to use -->
+      <div class="card">
+        <div class="card-head"><span class="card-icon">🧭</span><h3>How to use</h3></div>
+        <p class="muted">This dApp is configured for the <strong>Sepolia</strong> testnet — switch your wallet to Sepolia and grab free test ETH from a faucet first.</p>
+        <ol style="margin-top:10px; padding-left:20px; display:flex; flex-direction:column; gap:9px; font-size:13.5px; line-height:1.6">
+          <li>Connect your wallet — press <strong>Connect Wallet</strong> (top-right); the chain badge shows the network you are on.</li>
+          <li>Open a deal — as the buyer, fill in the seller address, the arbiter address and a deposit in ETH, then press <strong>Open deal</strong> to lock the funds.</li>
+          <li>Release on delivery — as the seller, deliver the work, then open the deal and press <strong>Release funds</strong> to get paid (minus the platform fee).</li>
+          <li>Cancel for a refund — as the buyer, press <strong>Refund</strong> on an active deal to get your full deposit back, free of charge.</li>
+          <li>Dispute and resolve — buyer or seller presses <strong>Raise dispute</strong> to freeze the deal; the arbiter then enters the buyer's share and presses <strong>Resolve</strong>.</li>
+          <li>Owner controls — if your wallet owns the contract, use <strong>Update fee</strong> and <strong>Withdraw</strong> in the Platform Controls panel.</li>
+        </ol>
+      </div>
+
+      <!-- B · On-chain process -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-head"><span class="card-icon">⛓</span><h3>The process — what happens on-chain</h3></div>
+        <p class="muted">Every step below is a transaction on Sepolia that changes the state of the TrustEscrow contract.</p>
+        <ol style="margin-top:10px; padding-left:20px; display:flex; flex-direction:column; gap:9px; font-size:13.5px; line-height:1.6">
+          <li><strong>TrustEscrow.openDeal()</strong> — the buyer's ETH moves into the TrustEscrow contract, the deal is stored as <strong>Active</strong>, and the funds stay locked there until it settles.</li>
+          <li><strong>TrustEscrow.release()</strong> — the seller calls this on delivery; the contract marks the deal Released, credits the platform fee (<code>feeBps</code>, capped at <code>MAX_FEE_BPS</code>) to <code>accruedFees</code> and sends the rest to the seller.</li>
+          <li><strong>TrustEscrow.refund()</strong> — the buyer cancels an active deal; the contract returns the full deposit and charges no fee.</li>
+          <li><strong>TrustEscrow.dispute()</strong> — buyer or seller freezes the deal into the Disputed state, so no funds can move.</li>
+          <li><strong>TrustEscrow.resolve()</strong> — the arbiter picks the buyer's share; the contract pays the buyer, keeps the fee and sends the remainder to the seller.</li>
+          <li><strong>Ownable &amp; ReentrancyGuard</strong> — only the owner can call <code>setFeeBps()</code> and <code>withdrawFees()</code> (pull-based fees), and every payout path is guarded against reentrancy.</li>
+        </ol>
+      </div>
+
+      <!-- C · Flow graph -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-head"><span class="card-icon">🔄</span><h3>Flow graph — the deal lifecycle</h3></div>
+        <p class="muted">Funds leave the TrustEscrow contract only when a deal reaches Released, Refunded or Resolved.</p>
+        <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="TrustEscrow deal lifecycle: open deal, release or refund, dispute, resolve" style="display:block; margin-top:6px">
+          <!-- theme colors from css/:root — border var(--accent-1) #d946ef, arrows var(--accent-2) #f97316, text var(--text), muted var(--muted), box fill lightened from --bg #140b14 -->
+          <defs>
+            <marker id="flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7.5" markerHeight="7.5" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" style="fill:var(--accent-2)"></path>
+            </marker>
+          </defs>
+
+          <!-- arrows -->
+          <line x1="186" y1="73" x2="368" y2="73" style="stroke:var(--accent-2); stroke-width:2" marker-end="url(#flow-arrow)"></line>
+          <line x1="99" y1="113" x2="99" y2="130" style="stroke:var(--accent-2); stroke-width:2; stroke-dasharray:5 4" marker-end="url(#flow-arrow)"></line>
+          <line x1="173" y1="112" x2="390" y2="130" style="stroke:var(--accent-2); stroke-width:2; stroke-dasharray:5 4" marker-end="url(#flow-arrow)"></line>
+          <line x1="548" y1="173" x2="730" y2="173" style="stroke:var(--accent-2); stroke-width:2" marker-end="url(#flow-arrow)"></line>
+
+          <text x="277" y="60" text-anchor="middle" style="fill:var(--muted); font-family:var(--font-ui); font-size:11px">deliver → release()</text>
+          <text x="107" y="126" style="fill:var(--muted); font-family:var(--font-ui); font-size:11px">cancel → refund()</text>
+          <text x="283" y="105" text-anchor="middle" style="fill:var(--muted); font-family:var(--font-ui); font-size:11px">either party → dispute()</text>
+          <text x="638" y="160" text-anchor="middle" style="fill:var(--muted); font-family:var(--font-ui); font-size:11px">arbiter → resolve()</text>
+
+          <!-- stage boxes -->
+          <g>
+            <rect x="14" y="34" width="170" height="78" rx="14" style="fill:rgba(44,24,48,0.85); stroke:var(--accent-1); stroke-width:1.5"></rect>
+            <text x="99" y="67" text-anchor="middle" style="fill:var(--text); font-family:var(--font-ui); font-size:15px; font-weight:600">1 · Open deal</text>
+            <text x="99" y="92" text-anchor="middle" style="fill:var(--muted); font-family:var(--font-mono); font-size:12px">TrustEscrow</text>
+          </g>
+          <g>
+            <rect x="376" y="34" width="170" height="78" rx="14" style="fill:rgba(44,24,48,0.85); stroke:var(--accent-1); stroke-width:1.5"></rect>
+            <text x="461" y="67" text-anchor="middle" style="fill:var(--text); font-family:var(--font-ui); font-size:15px; font-weight:600">2 · Seller releases</text>
+            <text x="461" y="92" text-anchor="middle" style="fill:var(--muted); font-family:var(--font-mono); font-size:12px">TrustEscrow</text>
+          </g>
+          <g>
+            <rect x="14" y="134" width="170" height="78" rx="14" style="fill:rgba(44,24,48,0.85); stroke:var(--accent-1); stroke-width:1.5"></rect>
+            <text x="99" y="167" text-anchor="middle" style="fill:var(--text); font-family:var(--font-ui); font-size:15px; font-weight:600">3 · Buyer refunds</text>
+            <text x="99" y="192" text-anchor="middle" style="fill:var(--muted); font-family:var(--font-mono); font-size:12px">TrustEscrow</text>
+          </g>
+          <g>
+            <rect x="376" y="134" width="170" height="78" rx="14" style="fill:rgba(44,24,48,0.85); stroke:var(--accent-1); stroke-width:1.5"></rect>
+            <text x="461" y="167" text-anchor="middle" style="fill:var(--text); font-family:var(--font-ui); font-size:15px; font-weight:600">4 · Dispute raised</text>
+            <text x="461" y="192" text-anchor="middle" style="fill:var(--muted); font-family:var(--font-mono); font-size:12px">TrustEscrow</text>
+          </g>
+          <g>
+            <rect x="736" y="134" width="170" height="78" rx="14" style="fill:rgba(44,24,48,0.85); stroke:var(--accent-1); stroke-width:1.5"></rect>
+            <text x="821" y="167" text-anchor="middle" style="fill:var(--text); font-family:var(--font-ui); font-size:15px; font-weight:600">5 · Arbiter resolves</text>
+            <text x="821" y="192" text-anchor="middle" style="fill:var(--muted); font-family:var(--font-mono); font-size:12px">TrustEscrow</text>
+          </g>
+
+          <text x="460" y="233" text-anchor="middle" style="fill:var(--muted); font-family:var(--font-mono); font-size:11px">Active → Released · Refunded · Disputed → Resolved</text>
+        </svg>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>TrustEscrow · from-scratch escrow platform — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/escrow</span>
+      </span>
+    </div>
+  </footer>
+
+  <!-- ===================== TOASTS ===================== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

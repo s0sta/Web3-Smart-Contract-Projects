@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estate Tokenization — Marina Gate Tower | s0sta.com/estate</title>
+  <meta name="description" content="Fractional real-estate ownership with rental distributions — DLD/RERA pattern: property ledger, KYC shares, maintenance reserve, snapshot epochs." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">🏙</span>
+      <div>
+        <span class="brand-name">Marina Gate <span class="brand-tag">TOKENIZED</span></span>
+        <span class="brand-sub">DLD/RERA fractional ownership · s0sta.com/estate</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙</button>
+      <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+    </div>
+  </header>
+
+  <main class="estate">
+
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Registry not configured yet</h3>
+          <p>Paste your deployed <strong>RERAPropertyRegistry</strong> address below, or deploy locally:
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… registry address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this registry</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Registry address <input type="text" id="set-registry-address" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+        <label>Network <select id="set-chain"></select></label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <div class="estate-grid">
+
+      <!-- PROPERTY -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">🏢</span><h2>The Property</h2></div>
+        <p class="prop-name" id="prop-name">—</p>
+        <table class="kpi-table">
+          <tr><td>Appraisal</td><td class="mono" id="prop-valuation">—</td></tr>
+          <tr><td>Shares</td><td class="mono" id="prop-shares">—</td></tr>
+          <tr><td>Issued</td><td class="mono" id="prop-issued">—</td></tr>
+          <tr><td>Status</td><td id="prop-status">—</td></tr>
+          <tr><td>Your shares</td><td class="mono" id="prop-mine">—</td></tr>
+          <tr><td>Your KYC</td><td id="prop-kyc">—</td></tr>
+        </table>
+        <div class="share-form">
+          <label>Transfer shares to
+            <input type="text" id="transfer-to" placeholder="0x… whitelisted investor" autocomplete="off" spellcheck="false" />
+          </label>
+          <label>Amount <input type="number" id="transfer-amount" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-primary" id="btn-transfer">Transfer</button>
+        </div>
+      </section>
+
+      <!-- DISTRIBUTIONS -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">💸</span><h2>Rental Distributions</h2></div>
+        <table class="kpi-table">
+          <tr><td>Total rent received</td><td class="mono" id="dist-received">—</td></tr>
+          <tr><td>Pending pool</td><td class="mono" id="dist-pending">—</td></tr>
+          <tr><td>Epochs</td><td class="mono" id="dist-epochs">—</td></tr>
+          <tr><td>Your claimable</td><td class="mono accent" id="dist-claimable">—</td></tr>
+          <tr><td>Maintenance fund</td><td class="mono" id="dist-fund">—</td></tr>
+        </table>
+        <div class="row">
+          <button class="btn btn-primary" id="btn-distribute">Distribute pool</button>
+          <button class="btn btn-accent" id="btn-claim">Claim my yield</button>
+        </div>
+        <div class="rent-form">
+          <label>Pay rent (AED-S) <input type="number" id="rent-amount" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-pay-rent">Pay rent</button>
+        </div>
+      </section>
+
+      <!-- MANAGEMENT -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">🛠</span><h2>Management</h2></div>
+        <div class="mgr-form">
+          <label>Appraise (USD) <input type="number" id="appraise-value" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-appraise">File appraisal</button>
+        </div>
+        <div class="mgr-form">
+          <label>Maintenance payout to <input type="text" id="maint-to" placeholder="0x… vendor" autocomplete="off" spellcheck="false" /></label>
+          <label>Amount <input type="number" id="maint-amount" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-maint">Spend maintenance</button>
+        </div>
+        <div class="mgr-form" id="compliance-box">
+          <label>KYC address <input type="text" id="kyc-address" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+          <div class="row">
+            <button class="btn btn-ghost" id="btn-kyc-add">Whitelist</button>
+            <button class="btn btn-ghost" id="btn-kyc-remove">Revoke</button>
+            <button class="btn btn-danger" id="btn-freeze">Freeze</button>
+          </div>
+        </div>
+        <div class="mgr-form">
+          <label>Maintenance reserve (bps) <input type="number" id="reserve-bps" placeholder="1000" min="0" max="10000" step="1" /></label>
+          <button class="btn btn-ghost" id="btn-reserve">Set reserve</button>
+        </div>
+      </section>
+    </div>
+
+    <section class="card" id="how-it-works" style="margin-top: 28px;">
+      <div class="card-head"><span class="card-ico">📘</span><h2>How this dApp works</h2></div>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-family: var(--font-display); font-size: 15px; margin: 2px 0 10px;">How to use</h3>
+          <ol style="padding-left: 20px; margin: 0; display: grid; gap: 8px; font-size: 13.5px;">
+            <li>Connect your wallet — press <span class="mono">Connect Wallet</span> (top-right). The dApp targets <strong>Sepolia</strong> testnet, so switch your wallet to Sepolia first.</li>
+            <li>Read <strong>The Property</strong> card: appraisal, share supply, your balance and your KYC status.</li>
+            <li>Transfer shares: enter a whitelisted investor address and an amount, then press <span class="mono">Transfer</span> — both sides must be KYC-whitelisted.</li>
+            <li>Pay rent: in <strong>Rental Distributions</strong>, enter an AED-S amount and press <span class="mono">Pay rent</span> — the dApp approves the stable token automatically.</li>
+            <li>Press <span class="mono">Distribute pool</span> to open a distribution epoch, then <span class="mono">Claim my yield</span> to withdraw your pro-rata rent.</li>
+            <li>Managers &amp; regulators: use <strong>Management</strong> to file appraisals, whitelist or revoke KYC, freeze the property, spend maintenance and tune the reserve.</li>
+          </ol>
+        </div>
+
+        <div>
+          <h3 style="font-family: var(--font-display); font-size: 15px; margin: 2px 0 10px;">The process — what happens on-chain</h3>
+          <ol style="padding-left: 20px; margin: 0; display: grid; gap: 8px; font-size: 13.5px;">
+            <li>The manager registers the building in <strong>RERAPropertyRegistry</strong> via <span class="mono">registerProperty()</span> — name, appraisal and total shares create the on-chain property ledger.</li>
+            <li>Compliance whitelists investors (<span class="mono">setWhitelisted()</span>) and the manager issues fractional shares (<span class="mono">issueShares()</span>); every balance is checkpointed per block for a provable history.</li>
+            <li>Rent is paid in the AED-pegged <strong>MockStable</strong> through <strong>RentalDistributor.payRent()</strong> — the reserve ratio is withheld into the maintenance fund, the rest joins the pending pool.</li>
+            <li>Anyone calls <strong>RentalDistributor.distribute()</strong> — the pending pool becomes a new epoch with a snapshot block and a per-share rate.</li>
+            <li>Holders call <strong>RentalDistributor.claim()</strong>, which reads <strong>RERAPropertyRegistry.getPastBalance()</strong> at each epoch's snapshot block — shares sold later can never take earlier income.</li>
+          </ol>
+        </div>
+      </div>
+
+      <h3 style="font-family: var(--font-display); font-size: 15px; margin: 18px 0 6px;">Flow graph</h3>
+      <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="On-chain flow: KYC whitelist, issue shares, pay rent, distribute epoch, claim yield" style="display: block; max-width: 920px; margin: 0 auto;">
+        <defs>
+          <marker id="flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" style="fill: var(--accent-2);"></path>
+          </marker>
+        </defs>
+        <line x1="172" y1="118" x2="195" y2="118" stroke-width="3" style="stroke: var(--accent-2);" marker-end="url(#flow-arrow)"></line>
+        <line x1="356" y1="118" x2="379" y2="118" stroke-width="3" style="stroke: var(--accent-2);" marker-end="url(#flow-arrow)"></line>
+        <line x1="540" y1="118" x2="563" y2="118" stroke-width="3" style="stroke: var(--accent-2);" marker-end="url(#flow-arrow)"></line>
+        <line x1="724" y1="118" x2="747" y2="118" stroke-width="3" style="stroke: var(--accent-2);" marker-end="url(#flow-arrow)"></line>
+        <rect x="20" y="70" width="152" height="96" rx="14" style="fill: var(--bg); stroke: var(--accent-1); stroke-width: 2;"></rect>
+        <text x="96" y="112" text-anchor="middle" style="font-family: var(--font-display); font-size: 15px; font-weight: 600; fill: var(--text);">KYC whitelist</text>
+        <text x="96" y="138" text-anchor="middle" style="font-family: var(--font-mono); font-size: 11px; fill: var(--muted);">RERAPropertyRegistry</text>
+        <rect x="204" y="70" width="152" height="96" rx="14" style="fill: var(--bg); stroke: var(--accent-1); stroke-width: 2;"></rect>
+        <text x="280" y="112" text-anchor="middle" style="font-family: var(--font-display); font-size: 15px; font-weight: 600; fill: var(--text);">Issue shares</text>
+        <text x="280" y="138" text-anchor="middle" style="font-family: var(--font-mono); font-size: 11px; fill: var(--muted);">RERAPropertyRegistry</text>
+        <rect x="388" y="70" width="152" height="96" rx="14" style="fill: var(--bg); stroke: var(--accent-1); stroke-width: 2;"></rect>
+        <text x="464" y="112" text-anchor="middle" style="font-family: var(--font-display); font-size: 15px; font-weight: 600; fill: var(--text);">Pay rent (AED-S)</text>
+        <text x="464" y="138" text-anchor="middle" style="font-family: var(--font-mono); font-size: 11px; fill: var(--muted);">RentalDistributor</text>
+        <rect x="572" y="70" width="152" height="96" rx="14" style="fill: var(--bg); stroke: var(--accent-1); stroke-width: 2;"></rect>
+        <text x="648" y="112" text-anchor="middle" style="font-family: var(--font-display); font-size: 15px; font-weight: 600; fill: var(--text);">Distribute epoch</text>
+        <text x="648" y="138" text-anchor="middle" style="font-family: var(--font-mono); font-size: 11px; fill: var(--muted);">RentalDistributor</text>
+        <rect x="756" y="70" width="152" height="96" rx="14" style="fill: var(--bg); stroke: var(--accent-1); stroke-width: 2;"></rect>
+        <text x="832" y="112" text-anchor="middle" style="font-family: var(--font-display); font-size: 15px; font-weight: 600; fill: var(--text);">Claim yield</text>
+        <text x="832" y="138" text-anchor="middle" style="font-family: var(--font-mono); font-size: 11px; fill: var(--muted);">RentalDistributor</text>
+      </svg>
+      <p class="muted" style="font-size: 12.5px; margin-top: 8px;">Rent path: reserve withheld → pending pool → snapshot epochs → pro-rata claims — all on Sepolia.</p>
+    </section>
+
+    <footer class="site-footer">
+      <span>Estate Tokenization · fractional ownership from scratch — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/estate</span>
+      </span>
+    </footer>
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

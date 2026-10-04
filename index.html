@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>s0sta — Web3 Smart Contract Projects</title>
+  <meta name="description" content="Ten from-scratch Foundry smart-contract projects by s0sta — each with live dApps, tests, deploy scripts and full documentation." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --card: rgba(15, 23, 42, 0.85);
+      --border: rgba(148, 163, 184, 0.16);
+      --text: #e8eefb;
+      --muted: #93a1b8;
+      --violet: #8b5cf6;
+      --cyan: #22d3ee;
+      --grad: linear-gradient(135deg, #8b5cf6, #22d3ee);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Inter", system-ui, sans-serif;
+      background: radial-gradient(800px 500px at 15% 0%, rgba(139, 92, 246, 0.14), transparent 60%),
+                  radial-gradient(800px 500px at 90% 20%, rgba(34, 211, 238, 0.10), transparent 60%),
+                  var(--bg);
+      background-attachment: fixed;
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 48px 22px 40px; }
+    header { text-align: center; margin-bottom: 40px; }
+    .logo {
+      width: 64px; height: 64px; margin: 0 auto 16px;
+      border-radius: 18px; background: var(--grad);
+      display: grid; place-items: center;
+      font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 26px; color: #0a0f1e;
+      animation: pop .5s cubic-bezier(.2,.9,.3,1.3) both;
+    }
+    @keyframes pop { from { opacity: 0; transform: scale(.5) rotate(-8deg); } to { opacity: 1; transform: scale(1); } }
+    h1 { font-family: "Space Grotesk", sans-serif; font-size: 34px; }
+    h1 span { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .sub { color: var(--muted); font-size: 15px; margin-top: 8px; }
+    .badges { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+    .badge {
+      font-family: "JetBrains Mono", monospace; font-size: 12px;
+      border: 1px solid var(--border); border-radius: 999px;
+      padding: 6px 14px; color: var(--muted);
+    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+    a.card {
+      display: block; text-decoration: none; color: var(--text);
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+      padding: 18px 20px; transition: transform .18s ease, border-color .18s ease, box-shadow .2s ease;
+      animation: rise .5s ease both;
+    }
+    a.card:nth-child(2) { animation-delay: .05s; } a.card:nth-child(3) { animation-delay: .1s; }
+    a.card:nth-child(4) { animation-delay: .15s; } a.card:nth-child(5) { animation-delay: .2s; }
+    a.card:nth-child(6) { animation-delay: .25s; } a.card:nth-child(7) { animation-delay: .3s; }
+    a.card:nth-child(8) { animation-delay: .35s; } a.card:nth-child(9) { animation-delay: .4s; }
+    a.card:nth-child(10) { animation-delay: .45s; }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    a.card:hover { transform: translateY(-3px); border-color: rgba(139, 92, 246, .5); box-shadow: 0 14px 30px rgba(0,0,0,.4); }
+    .c-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .c-num { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--cyan); }
+    .c-diff { font-size: 11px; color: var(--muted); }
+    .c-title { font-family: "Space Grotesk", sans-serif; font-size: 17px; margin: 8px 0 4px; }
+    .c-desc { font-size: 13px; color: var(--muted); }
+    .c-tags { margin-top: 10px; font-size: 12px; color: var(--violet); }
+    .soon { opacity: .55; }
+    .soon .c-tags { color: var(--muted); }
+    /* ---- how-to / process / flow ---- */
+    .how {
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+      padding: 26px 28px; margin-top: 30px;
+    }
+    .how h2 {
+      font-family: "Space Grotesk", sans-serif; font-size: 20px; margin-bottom: 4px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .how h2 .ico { font-size: 20px; }
+    .how p.lead { color: var(--muted); font-size: 13.5px; margin-bottom: 14px; }
+    .how ol { list-style: none; counter-reset: step; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .how ol li {
+      counter-increment: step; position: relative; padding-left: 42px; font-size: 13.5px; color: var(--text);
+    }
+    .how ol li::before {
+      content: counter(step); position: absolute; left: 0; top: 0;
+      width: 28px; height: 28px; border-radius: 9px;
+      background: var(--grad); color: #0a0f1e;
+      font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 600;
+      display: grid; place-items: center;
+    }
+    .how ol li .mono { font-family: "JetBrains Mono", monospace; font-size: 12.5px; color: var(--cyan); }
+    .how ol li .dim { color: var(--muted); }
+    .how .sub-block { margin-top: 26px; }
+    .flow-box { margin-top: 8px; }
+    .flow-box svg { display: block; max-width: 100%; height: auto; }
+    footer { text-align: center; margin-top: 40px; color: var(--muted); font-size: 13px; }
+    footer a { color: var(--cyan); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">s0</div>
+      <h1>s0sta · <span>Web3 Smart Contract Projects</span></h1>
+      <p class="sub">Twenty-four from-scratch Foundry projects — contracts, tests, deploy scripts, and live dApps on Sepolia testnet.</p>
+      <div class="badges">
+        <span class="badge">Solidity 0.8.26</span>
+        <span class="badge">Foundry 1.5.1</span>
+        <span class="badge">Sepolia testnet</span>
+        <span class="badge">722 tests · all green</span>
+      </div>
+    </header>
+
+    <div class="grid">
+      <a class="card" href="./erc20-token/">
+        <div class="c-top"><span class="c-num">01</span><span class="c-diff">★★☆☆☆</span></div>
+        <div class="c-title">ERC-20 Token</div>
+        <p class="c-desc">Mintable, burnable, permit-ready token with a live mint/burn dApp.</p>
+        <div class="c-tags">→ /erc20-token</div>
+      </a>
+      <a class="card" href="./crowdfund/">
+        <div class="c-top"><span class="c-num">02</span><span class="c-diff">★★☆☆☆</span></div>
+        <div class="c-title">Crowdfunding</div>
+        <p class="c-desc">Factory-spawned campaigns with goals, refunds and time limits.</p>
+        <div class="c-tags">→ /crowdfund</div>
+      </a>
+      <a class="card" href="./multisig/">
+        <div class="c-top"><span class="c-num">03</span><span class="c-diff">★★★☆☆</span></div>
+        <div class="c-title">MultiSig Wallet</div>
+        <p class="c-desc">Gnosis-style N-of-M treasury with arbitrary calls and retry.</p>
+        <div class="c-tags">→ /multisig</div>
+      </a>
+      <a class="card" href="./escrow/">
+        <div class="c-top"><span class="c-num">04</span><span class="c-diff">★★★☆☆</span></div>
+        <div class="c-title">Escrow Service</div>
+        <p class="c-desc">Buyer/seller escrow with arbitration splits and frozen fees.</p>
+        <div class="c-tags">→ /escrow</div>
+      </a>
+      <a class="card" href="./nft/">
+        <div class="c-top"><span class="c-num">05</span><span class="c-diff">★★★☆☆</span></div>
+        <div class="c-title">NFT Collection</div>
+        <p class="c-desc">ERC-721 from scratch: Merkle whitelist, royalties, reveal.</p>
+        <div class="c-tags">→ /nft</div>
+      </a>
+      <a class="card" href="./stake/">
+        <div class="c-top"><span class="c-num">06</span><span class="c-diff">★★★★☆</span></div>
+        <div class="c-title">Staking Rewards</div>
+        <p class="c-desc">Synthetix-style time-weighted emissions with live ticker.</p>
+        <div class="c-tags">→ /stake</div>
+      </a>
+      <a class="card" href="./vesting/">
+        <div class="c-top"><span class="c-num">07</span><span class="c-diff">★★★☆☆</span></div>
+        <div class="c-title">Token Vesting</div>
+        <p class="c-desc">Cliff + linear schedules, revocable, with a vesting donut.</p>
+        <div class="c-tags">→ /vesting</div>
+      </a>
+      <a class="card" href="./dex/">
+        <div class="c-top"><span class="c-num">08</span><span class="c-diff">★★★★★</span></div>
+        <div class="c-title">AMM DEX</div>
+        <p class="c-desc">Uniswap-V2-style factory/pair/router with swap terminal.</p>
+        <div class="c-tags">→ /dex</div>
+      </a>
+      <a class="card" href="./dao/">
+        <div class="c-top"><span class="c-num">09</span><span class="c-diff">★★★★★</span></div>
+        <div class="c-title">DAO Governance</div>
+        <p class="c-desc">Snapshot voting, quorum, on-chain execution — the senate.</p>
+        <div class="c-tags">→ /dao</div>
+      </a>
+      <a class="card" href="./lend/">
+        <div class="c-top"><span class="c-num">10</span><span class="c-diff">★★★★★</span></div>
+        <div class="c-title">Lending Protocol</div>
+        <p class="c-desc">Collateralized lending with liquidations and a health gauge.</p>
+        <div class="c-tags">→ /lend</div>
+      </a>
+      <a class="card" href="./hoa/">
+        <div class="c-top"><span class="c-num">11</span><span class="c-diff">★★★★★</span></div>
+        <div class="c-title">Owners Association (JOP)</div>
+        <p class="c-desc">Dubai Law No. 6 of 2019 governance — units, charges, board &amp; veto.</p>
+        <div class="c-tags">→ /hoa</div>
+      </a>
+      <a class="card" href="./estate/">
+        <div class="c-top"><span class="c-num">12</span><span class="c-diff">★★★★★</span></div>
+        <div class="c-title">Estate Tokenization</div>
+        <p class="c-desc">DLD/RERA fractional ownership with rental distributions.</p>
+        <div class="c-tags">→ /estate</div>
+      </a>
+      <a class="card" href="./waqf/">
+        <div class="c-top"><span class="c-num">13</span><span class="c-diff">★★★★★</span></div>
+        <div class="c-title">Waqf Endowment</div>
+        <p class="c-desc">Irrevocable corpus with income-only charitable distributions.</p>
+        <div class="c-tags">→ /waqf</div>
+      </a>
+      <a class="card" href="./vara/">
+        <div class="c-top"><span class="c-num">14</span><span class="c-diff">★★★★★</span></div>
+        <div class="c-title">VARA Treasury</div>
+        <p class="c-desc">Regulated VASP custody — segregation, limits, reserve, drain.</p>
+        <div class="c-tags">→ /vara</div>
+      </a>
+      <a class="card" href="./sukuk/">
+        <div class="c-top"><span class="c-num">15</span><span class="c-diff">★★★★★</span></div>
+        <div class="c-title">Sukuk Vault</div>
+        <p class="c-desc">Ijarah yield certificates with Shariah-approved profit.</p>
+        <div class="c-tags">→ /sukuk</div>
+      </a>
+      <a class="card" href="./takaful/">
+        <div class="c-top"><span class="c-num">16</span><span class="c-diff">★★★★★</span></div>
+        <div class="c-title">Takaful Insurance</div>
+        <p class="c-desc">Mutual risk pools with a claims committee and no-claim surplus.</p>
+        <div class="c-tags">→ /takaful</div>
+      </a>
+      <a class="card" href="./murabaha/">
+        <div class="c-top"><span class="c-num">17</span><span class="c-diff">★★★★★</span></div>
+        <div class="c-title">Murabaha Finance</div>
+        <p class="c-desc">Cost-plus trade finance with charity-routed late fees.</p>
+        <div class="c-tags">→ /murabaha</div>
+      </a>
+      <a class="card" href="./zakat/">
+        <div class="c-top"><span class="c-num">18</span><span class="c-diff">★★★★★</span></div>
+        <div class="c-title">Zakat Engine</div>
+        <p class="c-desc">Nisab &amp; hawl, 2.5%, and the eight asnaf of Quran 9:60.</p>
+        <div class="c-tags">→ /zakat</div>
+      </a>
+      <a class="card" href="./mawarid/">
+        <div class="c-top"><span class="c-num">19</span><span class="c-diff">★★★★★★</span></div>
+        <div class="c-title">Mawarid — RWA Platform</div>
+        <p class="c-desc">End-to-end tokenized real estate: issuance, exchange, rent, governance.</p>
+        <div class="c-tags">→ /mawarid</div>
+      </a>
+      <a class="card" href="./tamweel/">
+        <div class="c-top"><span class="c-num">20</span><span class="c-diff">★★★★★★</span></div>
+        <div class="c-title">Tamweel — Credit Protocol</div>
+        <p class="c-desc">A complete digital bank: deposits, credit, loans, auctions, governance.</p>
+        <div class="c-tags">→ /tamweel</div>
+      </a>
+      <a class="card" href="./sahm/">
+        <div class="c-top"><span class="c-num">21</span><span class="c-diff">★★★★★★</span></div>
+        <div class="c-title">Sahm — Exchange</div>
+        <p class="c-desc">Order book, AMM pools, leveraged margin, breakers, governance.</p>
+        <div class="c-tags">→ /sahm</div>
+      </a>
+      <a class="card" href="./rahala/">
+        <div class="c-top"><span class="c-num">22</span><span class="c-diff">★★★★★★</span></div>
+        <div class="c-title">Rahala — Payments</div>
+        <p class="c-desc">Cross-border rail: FX, escrow, factoring, netting, arbitration.</p>
+        <div class="c-tags">→ /rahala</div>
+      </a>
+      <a class="card" href="./huwiyya/">
+        <div class="c-top"><span class="c-num">23</span><span class="c-diff">★★★★★★</span></div>
+        <div class="c-title">Huwiyya — Identity</div>
+        <p class="c-desc">DIDs, verifiable credentials, selective disclosure, recovery.</p>
+        <div class="c-tags">→ /huwiyya</div>
+      </a>
+      <a class="card" href="./silsila/">
+        <div class="c-top"><span class="c-num">24</span><span class="c-diff">★★★★★★</span></div>
+        <div class="c-title">Silsila — Supply Chain</div>
+        <p class="c-desc">Orders, shipment tracking, quality, milestone payments, cargo cover.</p>
+        <div class="c-tags">→ /silsila</div>
+      </a>
+    </div>
+
+    <section class="how">
+      <h2><span class="ico">📘</span> How to use this portal</h2>
+      <p class="lead">Every card links to a live dApp hosted under s0sta.com — each dApp also contains its own <em>How to use</em>, on-chain process explanation and flow graph.</p>
+      <ol>
+        <li>Pick a project card — difficulty stars rise from <span class="mono">02★ Foundations</span> to <span class="mono">06★ Full Platforms</span>. Beginners should start at 01 and move right.</li>
+        <li>Click the card (or the <span class="mono">→ s0sta.com/…</span> link) to open its live dApp. All dApps run on the <span class="mono">Sepolia testnet</span>.</li>
+        <li>In the dApp, connect MetaMask and switch to <span class="mono">Sepolia</span> (the chain badge must show <span class="mono">Sepolia Testnet</span>).</li>
+        <li>Read the <span class="mono">How to use</span> and <span class="mono">Flow graph</span> sections at the bottom of each dApp before pressing buttons.</li>
+        <li>Get free Sepolia ETH from a faucet if a transaction asks for gas; the demo tokens used by each dApp are free and minted by the app itself.</li>
+        <li>Want the source? Every project links to its folder in <span class="mono">github.com/s0sta/Web3-Smart-Contract-Projects</span> — contracts, tests, deploy script and the dApp.</li>
+      </ol>
+
+      <div class="sub-block">
+        <h2><span class="ico">⚙️</span> The process — how the learning path builds up</h2>
+        <p class="lead">The 23 projects are five series. Each series builds on the previous one, from one smart contract to entire platforms.</p>
+        <ol>
+          <li><strong>Series I · Foundations (01–05)</strong> <span class="dim">— tokens, crowdfunding, multisig, escrow, NFTs: one-contract mechanics and wallet UX.</span></li>
+          <li><strong>Series II · DeFi (06–10)</strong> <span class="dim">— staking, vesting, an AMM DEX, a DAO and a lending protocol: composable yield, swaps and governance.</span></li>
+          <li><strong>Series III · Real-World Governance (11–12)</strong> <span class="dim">— Dubai's Owners Association (Law No. 6 of 2019) and DLD/RERA estate tokenization: statutory rules on-chain.</span></li>
+          <li><strong>Series IV · Islamic Finance (13–18)</strong> <span class="dim">— waqf, VARA treasury, sukuk, takaful, murabaha and zakat: Shariah-compliant structures with committee governance.</span></li>
+          <li><strong>Series V · Full Platforms (19–23)</strong> <span class="dim">— Mawarid (real estate), Tamweel (banking), Sahm (exchange), Rahala (payments), Huwiyya (identity): 9–12 contracts each, end-to-end.</span></li>
+        </ol>
+      </div>
+
+      <div class="sub-block flow-box">
+        <h2><span class="ico">🔀</span> Flow graph — the journey through all 23 projects</h2>
+        <p class="lead">Five stages, one continuous build-up of skill and system complexity.</p>
+        <svg viewBox="0 0 940 300" width="100%" role="img" aria-label="The five series of the s0sta portfolio with their projects">
+          <defs>
+            <marker id="pw-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 Z" fill="#22d3ee"></path>
+            </marker>
+          </defs>
+          <!-- series boxes -->
+          <rect x="20" y="30" width="164" height="86" rx="14" fill="#151d33" stroke="#8b5cf6" stroke-width="2"/>
+          <text x="102" y="62" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="15" font-weight="600" fill="#e8eefb">I · Foundations</text>
+          <text x="102" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#93a1b8">01–05 · one contract</text>
+          <text x="102" y="102" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#22d3ee">token → NFT</text>
+
+          <rect x="208" y="30" width="164" height="86" rx="14" fill="#151d33" stroke="#8b5cf6" stroke-width="2"/>
+          <text x="290" y="62" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="15" font-weight="600" fill="#e8eefb">II · DeFi</text>
+          <text x="290" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#93a1b8">06–10 · yield + swaps</text>
+          <text x="290" y="102" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#22d3ee">stake → DEX → DAO → lend</text>
+
+          <rect x="396" y="30" width="164" height="86" rx="14" fill="#151d33" stroke="#8b5cf6" stroke-width="2"/>
+          <text x="478" y="62" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="15" font-weight="600" fill="#e8eefb">III · Real World</text>
+          <text x="478" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#93a1b8">11–12 · statutory law</text>
+          <text x="478" y="102" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#22d3ee">JOP → RERA estate</text>
+
+          <rect x="584" y="30" width="164" height="86" rx="14" fill="#151d33" stroke="#8b5cf6" stroke-width="2"/>
+          <text x="666" y="62" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="15" font-weight="600" fill="#e8eefb">IV · Islamic Finance</text>
+          <text x="666" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#93a1b8">13–18 · Shariah-compliant</text>
+          <text x="666" y="102" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#22d3ee">waqf → sukuk → zakat</text>
+
+          <rect x="772" y="30" width="148" height="86" rx="14" fill="#151d33" stroke="#22d3ee" stroke-width="2"/>
+          <text x="846" y="62" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="15" font-weight="600" fill="#e8eefb">V · Platforms</text>
+          <text x="846" y="84" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#93a1b8">19–23 · 9–12 contracts</text>
+          <text x="846" y="102" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#22d3ee">RWA · bank · DEX</text>
+
+          <!-- arrows -->
+          <line x1="184" y1="73" x2="204" y2="73" stroke="#22d3ee" stroke-width="2" marker-end="url(#pw-arrow)"/>
+          <line x1="372" y1="73" x2="392" y2="73" stroke="#22d3ee" stroke-width="2" marker-end="url(#pw-arrow)"/>
+          <line x1="560" y1="73" x2="580" y2="73" stroke="#22d3ee" stroke-width="2" marker-end="url(#pw-arrow)"/>
+          <line x1="748" y1="73" x2="768" y2="73" stroke="#22d3ee" stroke-width="2" marker-end="url(#pw-arrow)"/>
+
+          <!-- how a dApp works -->
+          <text x="470" y="160" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="15" font-weight="600" fill="#e8eefb">Inside every dApp — the universal flow</text>
+          <g>
+            <rect x="20" y="180" width="160" height="76" rx="12" fill="#151d33" stroke="#22d3ee" stroke-width="1.5"/>
+            <text x="100" y="206" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="13" font-weight="600" fill="#e8eefb">1 · Connect wallet</text>
+            <text x="100" y="226" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#93a1b8">MetaMask on Sepolia</text>
+            <text x="100" y="242" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#93a1b8">read-only without it</text>
+
+            <rect x="208" y="180" width="160" height="76" rx="12" fill="#151d33" stroke="#22d3ee" stroke-width="1.5"/>
+            <text x="288" y="206" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="13" font-weight="600" fill="#e8eefb">2 · Press a button</text>
+            <text x="288" y="226" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#93a1b8">approve → action tx</text>
+            <text x="288" y="242" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#93a1b8">signed in the wallet</text>
+
+            <rect x="396" y="180" width="160" height="76" rx="12" fill="#151d33" stroke="#22d3ee" stroke-width="1.5"/>
+            <text x="476" y="206" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="13" font-weight="600" fill="#e8eefb">3 · Smart contract runs</text>
+            <text x="476" y="226" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#93a1b8">checks → state change</text>
+            <text x="476" y="242" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#93a1b8">emits events, reverts on error</text>
+
+            <rect x="584" y="180" width="160" height="76" rx="12" fill="#151d33" stroke="#22d3ee" stroke-width="1.5"/>
+            <text x="664" y="206" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="13" font-weight="600" fill="#e8eefb">4 · Verified on-chain</text>
+            <text x="664" y="226" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#93a1b8">explorer link in the toast</text>
+            <text x="664" y="242" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#93a1b8">see it on Sepolia etherscan</text>
+
+            <rect x="772" y="180" width="148" height="76" rx="12" fill="#151d33" stroke="#8b5cf6" stroke-width="1.5"/>
+            <text x="846" y="206" text-anchor="middle" font-family="Space Grotesk, sans-serif" font-size="13" font-weight="600" fill="#e8eefb">5 · dApp updates</text>
+            <text x="846" y="226" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#93a1b8">fresh balances + state</text>
+            <text x="846" y="242" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#93a1b8">graphs re-render live</text>
+
+            <line x1="180" y1="218" x2="204" y2="218" stroke="#22d3ee" stroke-width="2" marker-end="url(#pw-arrow)"/>
+            <line x1="368" y1="218" x2="392" y2="218" stroke="#22d3ee" stroke-width="2" marker-end="url(#pw-arrow)"/>
+            <line x1="556" y1="218" x2="580" y2="218" stroke="#22d3ee" stroke-width="2" marker-end="url(#pw-arrow)"/>
+            <line x1="744" y1="218" x2="768" y2="218" stroke="#22d3ee" stroke-width="2" marker-end="url(#pw-arrow)"/>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <footer>
+      Built by <strong>s0sta</strong> · <a href="https://github.com/s0sta/Web3-Smart-Contract-Projects" target="_blank" rel="noopener">github.com/s0sta/Web3-Smart-Contract-Projects</a> · this mirror on <strong>s0sta.github.io</strong> · production at <a href="https://s0sta.com" target="_blank" rel="noopener">s0sta.com</a> · all dApps on Sepolia testnet
+    </footer>
+  </div>
+</body>
+</html>
