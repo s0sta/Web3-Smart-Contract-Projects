@@ -8,22 +8,22 @@
 
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.26-363636?logo=solidity&logoColor=white)
 ![Foundry](https://img.shields.io/badge/Foundry-1.5.1-8b5cf6)
-![Tests](https://img.shields.io/badge/tests-679%20passing-brightgreen)
-![CI](https://img.shields.io/badge/CI-23%2F23%20green-2ea44f)
+![Tests](https://img.shields.io/badge/tests-722%20passing-brightgreen)
+![CI](https://img.shields.io/badge/CI-24%2F24%20green-2ea44f)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Live](https://img.shields.io/badge/Live-23%20dApps%20on%20s0sta.com-06b6d4)
+![Live](https://img.shields.io/badge/Live-24%20dApps%20on%20s0sta.com-06b6d4)
 
 ---
 
 ## The repository
 
-**23 complete protocols · 679 passing tests · 32,000+ lines of Solidity · zero external
-dependencies · CI green on all 23 projects.** Every contract in this repository is written
+**24 complete protocols · 722 passing tests · 35,000+ lines of Solidity · zero external
+dependencies · CI green on all 24 projects.** Every contract in this repository is written
 **from scratch** — no OpenZeppelin, no libraries — then exercised the way an auditor would:
 invariant tests, fuzz tests, attack PoCs, time-travel edge cases, deploy scripts, and a
 production-style dApp live on Sepolia for each project.
 
-All 23 dApps are hosted under one roof: **[s0sta.com](https://s0sta.com)** — the portal hub.
+All 24 dApps are hosted under one roof: **[s0sta.com](https://s0sta.com)** — the portal hub.
 
 ---
 
@@ -76,12 +76,13 @@ All 23 dApps are hosted under one roof: **[s0sta.com](https://s0sta.com)** — t
 | 21 | [Sahm Exchange](21-sahm-exchange) 🖥️ [live](https://s0sta.com/sahm) | **A decentralized exchange & derivatives venue** — order book, AMM pools, leveraged margin, risk breakers, insurance, governance (11 contracts) | Price–time matching, x·y=k with fees, funding + liquidations, circuit breakers, LP governance | 45 ✅ |
 | 22 | [Rahala Payments](22-rahala-payments) 🖥️ [live](https://s0sta.com/rahala) | **A cross-border payments & remittance network** — FX, escrow, invoice factoring, netting, arbitration, governance (12 contracts) | Travel-rule compliance, EMA FX rates, conditional releases, 2-of-3 arbiters, batch netting | 37 ✅ |
 | 23 | [Huwiyya Identity](23-huwiyya-identity) 🖥️ [live](https://s0sta.com/huwiyya) | **A decentralized identity & credentials platform** — DIDs, verifiable credentials, selective disclosure, attestations, reputation, gates, recovery (10 contracts) | Merkle-proof disclosure, weighted reputation with decay, 2-of-3 guardian recovery, reputation-weighted governance | 30 ✅ |
+| 24 | [Silsila Supply Chain](24-silsila-supplychain) 🖥️ [live](https://s0sta.com/silsila) | **A supply chain & logistics platform** — purchase orders, shipment tracking, quality inspections, milestone payments, cargo insurance, reputation (12 contracts) | POD-tracked milestones, milestone-gated escrow, 2-of-3 adjuster claims, delivery-based reputation | 43 ✅ |
 
 ---
 
 ## Stats
 
-| 23 protocols | 679 tests · 0 failures | 32,000+ Solidity lines | 0 external dependencies | CI 23/23 green | 23 live dApps |
+| 24 protocols | 722 tests · 0 failures | 35,000+ Solidity lines | 0 external dependencies | CI 24/24 green | 24 live dApps |
 |---|---|---|---|---|---|
 
 Every project ships with: **from-scratch contracts + NatSpec** · **foundry.toml / remappings** ·
@@ -94,7 +95,7 @@ One portal, 18 apps — **[s0sta.com](https://s0sta.com)** (source: [`portal/`](
 
 `/erc20-token` · `/crowdfund` · `/multisig` · `/escrow` · `/nft` · `/stake` · `/vesting` ·
 `/dex` · `/dao` · `/lend` · `/hoa` · `/estate` · `/waqf` · `/vara` · `/sukuk` · `/takaful` ·
-`/murabaha` · `/zakat` · `/mawarid` · `/tamweel` · `/sahm` · `/rahala` · `/huwiyya`
+`/murabaha` · `/zakat` · `/mawarid` · `/tamweel` · `/sahm` · `/rahala` · `/huwiyya` · `/silsila`
 
 ## Security methodology
 
@@ -138,7 +139,7 @@ forge build && forge test
 forge snapshot   # gas report
 ```
 
-GitHub Actions runs `forge build` + `forge test` on **all 23 projects** for every push —
+GitHub Actions runs `forge build` + `forge test` on **all 24 projects** for every push —
 check the checks tab on any commit.
 
 ## Working together

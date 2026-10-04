@@ -35,6 +35,7 @@ jobs:
           - 21-sahm-exchange
           - 22-rahala-payments
           - 23-huwiyya-identity
+          - 24-silsila-supplychain
     steps:
       - uses: actions/checkout@v4
 

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ff6d1f"/>
+      <stop offset="1" stop-color="#e8a15c"/>
+    </linearGradient>
+  </defs>
+
+  <!-- control tower (static) -->
+  <rect width="1200" height="300" fill="#17181c"/>
+  <circle cx="140" cy="60" r="150" fill="#ff6d1f" opacity="0.10"/>
+  <circle cx="1070" cy="250" r="160" fill="#a8b0ba" opacity="0.06"/>
+
+  <!-- identity -->
+  <text x="60" y="112" font-size="40" font-weight="700" fill="#eef0f2" opacity="0">
+    Silsila — Supply Chain
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.3s"/>
+  </text>
+  <text x="62" y="150" font-size="19" font-weight="600" fill="#ff6d1f" opacity="0">
+    Trade &amp; logistics on-chain · twelve contracts
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.7s"/>
+  </text>
+  <text x="62" y="178" font-size="13.5" fill="#9aa0a8" opacity="0">
+    orders · tracking · quality · milestone payments · cargo insurance · reputation
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1s"/>
+  </text>
+
+  <!-- tracker panel -->
+  <g transform="translate(700 40)">
+    <rect width="460" height="220" rx="14" fill="#212329" stroke="#3a3d44" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.4s"/>
+    </rect>
+
+    <text x="20" y="42" font-size="13.5" font-weight="700" fill="#eef0f2" opacity="0">
+      Shipment #0 · live milestones
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.5s"/>
+    </text>
+
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.8s"/>
+      <rect x="20" y="60" width="420" height="30" rx="8" fill="#2a2c33"/>
+      <text x="34" y="79" font-size="11" fill="#ff6d1f" font-family="ui-monospace, Menlo, monospace">✓ order #0 accepted · 100 × 100 AED-S</text>
+      <rect x="20" y="96" width="420" height="30" rx="8" fill="#2a2c33"/>
+      <text x="34" y="115" font-size="11" fill="#eef0f2" font-family="ui-monospace, Menlo, monospace">✓ packed → in transit → customs → delivered (POD)</text>
+      <rect x="20" y="132" width="420" height="30" rx="8" fill="#2a2c33"/>
+      <text x="34" y="151" font-size="11" fill="#9aa0a8" font-family="ui-monospace, Menlo, monospace">escrow 10,000 · 30% packing · 70% delivery</text>
+    </g>
+
+    <rect x="20" y="174" width="420" height="30" rx="8" fill="#2a2c33" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.4s"/>
+    </rect>
+    <text x="34" y="193" font-size="11" fill="#ff6d1f" opacity="0">
+      🚚 carrier paid 300 · on-time ✓ · insured 2%
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.5s"/>
+    </text>
+  </g>
+</svg>
