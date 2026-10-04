@@ -125,6 +125,81 @@
       </section>
     </div>
 
+    <!-- HOW TO USE + ON-CHAIN PROCESS -->
+    <section class="card" id="how-to">
+      <div class="card-head"><span class="card-ico">🎓</span><h2>How to use &amp; the on-chain process</h2></div>
+      <p class="muted">Every step below matches a real button above — the dApp talks straight to the live contracts on Sepolia.</p>
+
+      <div class="card-head"><span class="card-ico">🖱</span><h2>How to use</h2></div>
+      <div class="item-row"><span class="mono">1.</span><span>Press <strong>Connect Wallet</strong> (top-right) and switch to the <strong>Sepolia</strong> testnet — the badge next to the button shows the active chain.</span></div>
+      <div class="item-row"><span class="mono">2.</span><span>Approve the AED-S stable, then press <strong>Deposit</strong> in “Swap &amp; Margin” — your quote tokens move into your on-chain margin account.</span></div>
+      <div class="item-row"><span class="mono">3.</span><span>Trade spot: type a price and amount, then press <strong>Place bid</strong> or <strong>Place ask</strong> on the Order Book — or press <strong>Swap</strong> to trade against the AMM pool.</span></div>
+      <div class="item-row"><span class="mono">4.</span><span>Go leveraged: set margin and leverage in “Swap &amp; Margin” and press <strong>Open long</strong>.</span></div>
+      <div class="item-row"><span class="mono">5.</span><span>Become an LP: press <strong>Add liquidity</strong> to mint LP shares, then <strong>Propose</strong> a vote — your LP shares are your voting power.</span></div>
+
+      <div class="card-head"><span class="card-ico">⛓</span><h2>The process — what happens on-chain</h2></div>
+      <div class="item-row"><span class="mono">1.</span><span><strong>SahmCompliance</strong> screens every trade — your KYC tier, the daily volume cap and the global halt must all pass.</span></div>
+      <div class="item-row"><span class="mono">2.</span><span><strong>SahmCollateral</strong> is the custody desk: it holds your deposit and locks margin while orders rest or positions stay open.</span></div>
+      <div class="item-row"><span class="mono">3.</span><span><strong>SahmOracle</strong> posts EMA-smoothed prices, and <strong>SahmRisk</strong> trips a circuit breaker if a move leaves the band.</span></div>
+      <div class="item-row"><span class="mono">4.</span><span><strong>SahmOrderBook</strong> escrows funds and matches bids/asks price–time; <strong>SahmAMM</strong> swaps against x·y=k pools with slippage limits.</span></div>
+      <div class="item-row"><span class="mono">5.</span><span><strong>SahmMargin</strong> settles leveraged PnL and funding; positions under maintenance margin are liquidated, backstopped by <strong>SahmInsuranceFund</strong>.</span></div>
+      <div class="item-row"><span class="mono">6.</span><span><strong>SahmGovernor</strong> lets LP-share holders vote (quorum + timelock) on fees and risk; collected fees land in <strong>SahmTreasury</strong>.</span></div>
+
+      <div class="card-head"><span class="card-ico">📊</span><h2>Flow graph</h2></div>
+      <!-- Theme colors from css/style.css :root — accent-1 #5b8def (boxes), accent-2 #d4e157 (arrows), text #e2e8f0, muted #8494a8, fill lightened from --bg #12161f -->
+      <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="Sahm on-chain flow: KYC, deposit, oracle price, trade, risk and fees, governance">
+        <defs>
+          <marker id="howto-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#d4e157"></path>
+          </marker>
+        </defs>
+        <!-- 1 · Connect + KYC -->
+        <rect x="13" y="64" width="128" height="116" rx="12" fill="#1e2635" stroke="#5b8def" stroke-width="1.5"></rect>
+        <circle cx="32" cy="83" r="9" fill="#d4e157"></circle>
+        <text x="32" y="83" text-anchor="middle" dominant-baseline="central" font-size="10.5" font-weight="700" fill="#12161f">1</text>
+        <text x="77" y="116" text-anchor="middle" font-size="13" font-weight="600" fill="#e2e8f0" font-family="Inter, system-ui, sans-serif">Connect + KYC</text>
+        <text x="77" y="146" text-anchor="middle" font-size="10" fill="#8494a8" font-family="JetBrains Mono, ui-monospace, monospace">SahmCompliance</text>
+        <line x1="142" y1="122" x2="162" y2="122" stroke="#d4e157" stroke-width="2" marker-end="url(#howto-arrow)"></line>
+        <!-- 2 · Deposit margin -->
+        <rect x="166" y="64" width="128" height="116" rx="12" fill="#1e2635" stroke="#5b8def" stroke-width="1.5"></rect>
+        <circle cx="185" cy="83" r="9" fill="#d4e157"></circle>
+        <text x="185" y="83" text-anchor="middle" dominant-baseline="central" font-size="10.5" font-weight="700" fill="#12161f">2</text>
+        <text x="230" y="116" text-anchor="middle" font-size="13" font-weight="600" fill="#e2e8f0" font-family="Inter, system-ui, sans-serif">Deposit margin</text>
+        <text x="230" y="146" text-anchor="middle" font-size="10" fill="#8494a8" font-family="JetBrains Mono, ui-monospace, monospace">SahmCollateral</text>
+        <line x1="295" y1="122" x2="315" y2="122" stroke="#d4e157" stroke-width="2" marker-end="url(#howto-arrow)"></line>
+        <!-- 3 · EMA price feed -->
+        <rect x="319" y="64" width="128" height="116" rx="12" fill="#1e2635" stroke="#5b8def" stroke-width="1.5"></rect>
+        <circle cx="338" cy="83" r="9" fill="#d4e157"></circle>
+        <text x="338" y="83" text-anchor="middle" dominant-baseline="central" font-size="10.5" font-weight="700" fill="#12161f">3</text>
+        <text x="383" y="116" text-anchor="middle" font-size="13" font-weight="600" fill="#e2e8f0" font-family="Inter, system-ui, sans-serif">EMA price feed</text>
+        <text x="383" y="146" text-anchor="middle" font-size="10" fill="#8494a8" font-family="JetBrains Mono, ui-monospace, monospace">SahmOracle</text>
+        <line x1="448" y1="122" x2="468" y2="122" stroke="#d4e157" stroke-width="2" marker-end="url(#howto-arrow)"></line>
+        <!-- 4 · Trade & margin -->
+        <rect x="472" y="64" width="128" height="116" rx="12" fill="#1e2635" stroke="#5b8def" stroke-width="1.5"></rect>
+        <circle cx="491" cy="83" r="9" fill="#d4e157"></circle>
+        <text x="491" y="83" text-anchor="middle" dominant-baseline="central" font-size="10.5" font-weight="700" fill="#12161f">4</text>
+        <text x="536" y="116" text-anchor="middle" font-size="13" font-weight="600" fill="#e2e8f0" font-family="Inter, system-ui, sans-serif">Trade &amp; margin</text>
+        <text x="536" y="140" text-anchor="middle" font-size="10" fill="#8494a8" font-family="JetBrains Mono, ui-monospace, monospace">SahmOrderBook</text>
+        <text x="536" y="157" text-anchor="middle" font-size="10" fill="#8494a8" font-family="JetBrains Mono, ui-monospace, monospace">SahmAMM · SahmMargin</text>
+        <line x1="601" y1="122" x2="621" y2="122" stroke="#d4e157" stroke-width="2" marker-end="url(#howto-arrow)"></line>
+        <!-- 5 · Risk & fees -->
+        <rect x="625" y="64" width="128" height="116" rx="12" fill="#1e2635" stroke="#5b8def" stroke-width="1.5"></rect>
+        <circle cx="644" cy="83" r="9" fill="#d4e157"></circle>
+        <text x="644" y="83" text-anchor="middle" dominant-baseline="central" font-size="10.5" font-weight="700" fill="#12161f">5</text>
+        <text x="689" y="116" text-anchor="middle" font-size="13" font-weight="600" fill="#e2e8f0" font-family="Inter, system-ui, sans-serif">Risk &amp; fees</text>
+        <text x="689" y="140" text-anchor="middle" font-size="10" fill="#8494a8" font-family="JetBrains Mono, ui-monospace, monospace">SahmRisk</text>
+        <text x="689" y="157" text-anchor="middle" font-size="10" fill="#8494a8" font-family="JetBrains Mono, ui-monospace, monospace">SahmTreasury</text>
+        <line x1="754" y1="122" x2="774" y2="122" stroke="#d4e157" stroke-width="2" marker-end="url(#howto-arrow)"></line>
+        <!-- 6 · LP governance -->
+        <rect x="778" y="64" width="128" height="116" rx="12" fill="#1e2635" stroke="#5b8def" stroke-width="1.5"></rect>
+        <circle cx="797" cy="83" r="9" fill="#d4e157"></circle>
+        <text x="797" y="83" text-anchor="middle" dominant-baseline="central" font-size="10.5" font-weight="700" fill="#12161f">6</text>
+        <text x="842" y="116" text-anchor="middle" font-size="13" font-weight="600" fill="#e2e8f0" font-family="Inter, system-ui, sans-serif">LP governance</text>
+        <text x="842" y="146" text-anchor="middle" font-size="10" fill="#8494a8" font-family="JetBrains Mono, ui-monospace, monospace">SahmGovernor</text>
+        <text x="460" y="224" text-anchor="middle" font-size="11" fill="#8494a8" font-family="Inter, system-ui, sans-serif">SahmRisk checks every order against position &amp; volume caps · fees route to SahmTreasury and the SahmInsuranceFund backstop</text>
+      </svg>
+    </section>
+
     <footer class="site-footer">
       <span>Sahm · exchange from scratch — <span id="footer-address">not configured</span></span>
       <span>

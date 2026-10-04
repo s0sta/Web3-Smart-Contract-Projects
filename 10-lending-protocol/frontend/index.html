@@ -206,6 +206,111 @@
       </div>
     </section>
 
+    <!-- ===================== HOW IT WORKS ===================== -->
+    <section class="card" style="margin-top:16px">
+      <div class="panel-head"><span class="panel-ico">📖</span><h2>How it works</h2></div>
+      <p class="muted small" style="margin-bottom:14px">
+        LendVault is a collateralized lending protocol on the <strong>Sepolia</strong> testnet:
+        you lock ETH, borrow the vault-issued USDx stablecoin against it, and keep your
+        position healthy while interest accrues — or earn a bonus liquidating positions that break down.
+      </p>
+
+      <!-- A · how to use -->
+      <div class="panel-head"><span class="panel-ico">🖱</span><h2>How to use</h2></div>
+      <ol class="muted" style="margin:0 0 18px 20px; display:flex; flex-direction:column; gap:9px; font-size:13.5px">
+        <li><strong style="color:var(--text)">Connect your wallet</strong> — press <span class="mono">Connect Wallet</span> (top-right);
+            the chain badge shows <span class="mono">Sepolia</span>, the network this dApp is configured for.</li>
+        <li><strong style="color:var(--text)">Supply collateral</strong> — enter an amount in the Supply panel and press
+            <span class="mono">Deposit</span>; the vault locks your ETH.</li>
+        <li><strong style="color:var(--text)">Borrow stablecoins</strong> — enter an amount in the Borrow / Repay panel and press
+            <span class="mono">Borrow</span>; you receive USDx, capped at 66% of your collateral (LTV).</li>
+        <li><strong style="color:var(--text)">Stay healthy</strong> — watch the health-factor arc in “Your position”;
+            press <span class="mono">Repay</span> (USDx) or <span class="mono">Withdraw</span> (ETH) to keep health above 1.0.</li>
+        <li><strong style="color:var(--text)">Earn by liquidating</strong> — if a position falls below health 1.0, press
+            <span class="mono">Liquidate a position</span>, paste the borrower’s address, set a repay amount and press
+            <span class="mono">Seize collateral</span> to claim their ETH at a 10% discount.</li>
+      </ol>
+
+      <!-- B · on-chain process -->
+      <div class="panel-head"><span class="panel-ico">⛓</span><h2>The process — what happens on-chain</h2></div>
+      <ol class="muted" style="margin:0 0 18px 20px; display:flex; flex-direction:column; gap:9px; font-size:13.5px">
+        <li><strong style="color:var(--text)">LendVault.deposit()</strong> — the <span class="mono">LendVault</span> contract locks your
+            ETH in its <span class="mono">collateral</span> mapping; every ETH/token movement runs under
+            <span class="mono">ReentrancyGuard</span>.</li>
+        <li><strong style="color:var(--text)">LendVault.borrow()</strong> — interest is accrued first, then the vault checks the
+            66% LTV limit before authorizing new USDx against your collateral.</li>
+        <li><strong style="color:var(--text)">MockStable.mint()</strong> — only the vault may mint: <span class="mono">MockStable</span> creates
+            USDx via its <span class="mono">onlyVault</span> modifier, the same way DAI is born from collateral.</li>
+        <li><strong style="color:var(--text)">LendVault._accrue() / currentDebt</strong> — debt compounds every second at 10% APR
+            (<span class="mono">ratePerSecond</span>); as interest grows, <span class="mono">healthFactor</span> sinks and the position
+            becomes liquidatable below 1.0 (80% threshold).</li>
+        <li><strong style="color:var(--text)">LendVault.liquidate()</strong> — a liquidator repays up to 50% of the bad debt
+            (close factor); <span class="mono">MockStable.burn()</span> destroys the repaid USDx and the liquidator
+            seizes ETH worth 110% of the repayment.</li>
+      </ol>
+
+      <!-- C · flow graph -->
+      <div class="panel-head"><span class="panel-ico">🕸</span><h2>Flow graph</h2></div>
+      <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="LendVault on-chain flow: deposit ETH, borrow USDx, mint USDx, accrue interest, repay or liquidate"
+           font-family="var(--font-ui)" style="display:block">
+        <defs>
+          <marker id="howto-flow-arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent-2)" />
+          </marker>
+        </defs>
+
+        <!-- stage 1 -->
+        <circle cx="83" cy="34" r="13" fill="var(--accent-1)" />
+        <text x="83" y="34" fill="#1a0a0c" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">1</text>
+        <line x1="83" y1="48" x2="83" y2="62" stroke="var(--accent-2)" stroke-width="1.5" opacity="0.7" />
+        <rect x="8" y="64" width="150" height="92" rx="14" fill="rgba(148,163,184,0.07)" stroke="var(--accent-1)" stroke-width="1.5" />
+        <text x="83" y="92" fill="var(--text)" font-size="13" font-weight="600" text-anchor="middle">Deposit ETH</text>
+        <text x="83" y="114" fill="var(--muted)" font-size="10" font-family="var(--font-mono)" text-anchor="middle">LendVault.deposit()</text>
+
+        <!-- stage 2 -->
+        <circle cx="271.5" cy="34" r="13" fill="var(--accent-1)" />
+        <text x="271.5" y="34" fill="#1a0a0c" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">2</text>
+        <line x1="271.5" y1="48" x2="271.5" y2="62" stroke="var(--accent-2)" stroke-width="1.5" opacity="0.7" />
+        <rect x="196.5" y="64" width="150" height="92" rx="14" fill="rgba(148,163,184,0.07)" stroke="var(--accent-1)" stroke-width="1.5" />
+        <text x="271.5" y="92" fill="var(--text)" font-size="13" font-weight="600" text-anchor="middle">Borrow USDx</text>
+        <text x="271.5" y="114" fill="var(--muted)" font-size="10" font-family="var(--font-mono)" text-anchor="middle">LendVault.borrow()</text>
+
+        <!-- stage 3 -->
+        <circle cx="460" cy="34" r="13" fill="var(--accent-1)" />
+        <text x="460" y="34" fill="#1a0a0c" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">3</text>
+        <line x1="460" y1="48" x2="460" y2="62" stroke="var(--accent-2)" stroke-width="1.5" opacity="0.7" />
+        <rect x="385" y="64" width="150" height="92" rx="14" fill="rgba(148,163,184,0.07)" stroke="var(--accent-1)" stroke-width="1.5" />
+        <text x="460" y="92" fill="var(--text)" font-size="13" font-weight="600" text-anchor="middle">Mint USDx</text>
+        <text x="460" y="114" fill="var(--muted)" font-size="10" font-family="var(--font-mono)" text-anchor="middle">MockStable.mint()</text>
+
+        <!-- stage 4 -->
+        <circle cx="648.5" cy="34" r="13" fill="var(--accent-1)" />
+        <text x="648.5" y="34" fill="#1a0a0c" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">4</text>
+        <line x1="648.5" y1="48" x2="648.5" y2="62" stroke="var(--accent-2)" stroke-width="1.5" opacity="0.7" />
+        <rect x="573.5" y="64" width="150" height="92" rx="14" fill="rgba(148,163,184,0.07)" stroke="var(--accent-1)" stroke-width="1.5" />
+        <text x="648.5" y="92" fill="var(--text)" font-size="13" font-weight="600" text-anchor="middle">Accrue interest</text>
+        <text x="648.5" y="114" fill="var(--muted)" font-size="10" font-family="var(--font-mono)" text-anchor="middle">LendVault._accrue()</text>
+
+        <!-- stage 5 -->
+        <circle cx="837" cy="34" r="13" fill="var(--accent-1)" />
+        <text x="837" y="34" fill="#1a0a0c" font-size="12" font-weight="700" text-anchor="middle" dominant-baseline="central">5</text>
+        <line x1="837" y1="48" x2="837" y2="62" stroke="var(--accent-2)" stroke-width="1.5" opacity="0.7" />
+        <rect x="762" y="64" width="150" height="92" rx="14" fill="rgba(148,163,184,0.07)" stroke="var(--accent-1)" stroke-width="1.5" />
+        <text x="837" y="92" fill="var(--text)" font-size="13" font-weight="600" text-anchor="middle">Repay / Liquidate</text>
+        <text x="837" y="114" fill="var(--muted)" font-size="10" font-family="var(--font-mono)" text-anchor="middle">LendVault · MockStable</text>
+
+        <!-- arrows -->
+        <line x1="160" y1="110" x2="193.5" y2="110" stroke="var(--accent-2)" stroke-width="2" marker-end="url(#howto-flow-arrow)" />
+        <line x1="348.5" y1="110" x2="382" y2="110" stroke="var(--accent-2)" stroke-width="2" marker-end="url(#howto-flow-arrow)" />
+        <line x1="537" y1="110" x2="570.5" y2="110" stroke="var(--accent-2)" stroke-width="2" marker-end="url(#howto-flow-arrow)" />
+        <line x1="725.5" y1="110" x2="759" y2="110" stroke="var(--accent-2)" stroke-width="2" marker-end="url(#howto-flow-arrow)" />
+
+        <!-- legend -->
+        <text x="460" y="200" fill="var(--muted)" font-size="11" text-anchor="middle">LTV 66% · liquidation threshold 80% · close factor 50% · liquidation bonus 10%</text>
+        <text x="460" y="222" fill="var(--muted)" font-size="11" text-anchor="middle">Fixed price $2,000 / ETH · 10% APR per-second interest · Sepolia testnet</text>
+      </svg>
+    </section>
+
     <!-- ===================== FOOTER ===================== -->
     <footer class="site-footer">
       <span>LendVault · collateralized lending from scratch — <span id="footer-address">not configured</span></span>

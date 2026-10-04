@@ -126,6 +126,84 @@
       </aside>
     </div>
 
+    <!-- ===================== HOW-TO & ON-CHAIN PROCESS ===================== -->
+    <section class="card">
+      <div class="card-head"><span class="card-ico">🎓</span><h3>How to use this dApp</h3></div>
+      <p class="muted small">This dashboard is wired to the <span class="mono">Governor</span> contract on the <strong>Sepolia</strong> testnet (chain ID 11155111). Every step below follows the real buttons and forms on this page.</p>
+      <ol>
+        <li><strong>Connect your wallet</strong> <span class="muted">— press <span class="mono">Connect Wallet</span> in the top-right corner. The dApp opens on Sepolia, so set your wallet to that network and the chain badge turns green.</span></li>
+        <li><strong>Check your voting power</strong> <span class="muted">— the “Your voting power” card shows your GOV balance, the proposal threshold and the governor’s live stats (voting period, quorum, treasury).</span></li>
+        <li><strong>Create a proposal</strong> <span class="muted">— fill the “Create a proposal” form (target address, ETH value, calldata hex, description) and press <span class="mono">Propose</span>. You need at least the threshold in GOV voting power.</span></li>
+        <li><strong>Vote</strong> <span class="muted">— open any Active proposal in the feed and press <span class="mono">👍 For</span> or <span class="mono">👎 Against</span>. Your vote weighs the GOV balance you held at the proposal’s snapshot block.</span></li>
+        <li><strong>Execute or cancel</strong> <span class="muted">— after the 3-day voting window a passing proposal shows an <span class="mono">Execute</span> button that runs its calls on-chain; as proposer you can press <span class="mono">Cancel</span> while voting is still open.</span></li>
+        <li><strong>Tune the dApp</strong> <span class="muted">— the ⚙ button opens Settings to switch networks or point the dashboard at another Governor address, then save &amp; reload.</span></li>
+      </ol>
+
+      <div class="card-head"><span class="card-ico">⛓</span><h3>The process — what happens on-chain</h3></div>
+      <ol>
+        <li><strong><span class="mono">GovToken</span> checkpoints</strong> <span class="muted">— every GOV transfer appends a per-block checkpoint to the <span class="mono">GovToken</span> contract, so the balance at any past block can be resolved with a binary search (<span class="mono">getPastVotes</span>).</span></li>
+        <li><strong><span class="mono">Governor.propose()</span></strong> <span class="muted">— the <span class="mono">Governor</span> contract checks the proposer’s past voting power against the threshold, then stores the proposal with its snapshot block and a 3-day deadline.</span></li>
+        <li><strong><span class="mono">Governor.vote()</span></strong> <span class="muted">— each ballot is weighed by the <span class="mono">GovToken</span> balance at the snapshot block, not the live balance, so tokens bought after the proposal add nothing.</span></li>
+        <li><strong><span class="mono">Governor.state()</span> &amp; <span class="mono">quorum()</span></strong> <span class="muted">— when the deadline passes, <span class="mono">state()</span> compares for-vs-against and checks quorum (4% of snapshot supply via <span class="mono">quorum()</span>); the proposal becomes Succeeded or Defeated.</span></li>
+        <li><strong><span class="mono">Governor.execute()</span></strong> <span class="muted">— anyone can run a Succeeded proposal; the contract flips the state to Executed before calling each target with its ETH value (checks-effects-interactions). The proposer may <span class="mono">cancel()</span> while it is Active.</span></li>
+      </ol>
+
+      <div class="card-head"><span class="card-ico">🧭</span><h3>Flow graph</h3></div>
+      <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="On-chain flow: propose, snapshot voting power, vote, quorum and majority check, execute">
+        <defs>
+          <marker id="gov-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="var(--accent-2)"></path>
+          </marker>
+        </defs>
+        <rect x="2" y="2" width="916" height="236" rx="14" fill="var(--bg)" stroke="var(--card-border)" stroke-width="1"></rect>
+
+        <line x1="158" y1="110" x2="188" y2="110" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#gov-arr)"></line>
+        <line x1="346" y1="110" x2="376" y2="110" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#gov-arr)"></line>
+        <line x1="534" y1="110" x2="564" y2="110" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#gov-arr)"></line>
+        <line x1="722" y1="110" x2="752" y2="110" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#gov-arr)"></line>
+
+        <g font-family="Inter, system-ui, sans-serif" text-anchor="middle">
+          <g>
+            <rect x="8" y="40" width="150" height="140" rx="12" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5"></rect>
+            <text x="83" y="66" font-size="10" letter-spacing="1" fill="var(--muted)">STEP 1</text>
+            <text x="83" y="94" font-size="15" font-weight="700" fill="var(--ink)">Propose</text>
+            <text x="83" y="122" font-size="10.5" font-family="JetBrains Mono, monospace" fill="var(--muted)">Governor.propose()</text>
+            <text x="83" y="146" font-size="10.5" fill="var(--muted)">needs ≥ threshold</text>
+          </g>
+          <g>
+            <rect x="196" y="40" width="150" height="140" rx="12" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5"></rect>
+            <text x="271" y="66" font-size="10" letter-spacing="1" fill="var(--muted)">STEP 2</text>
+            <text x="271" y="94" font-size="15" font-weight="700" fill="var(--ink)">Snapshot voting</text>
+            <text x="271" y="122" font-size="10.5" font-family="JetBrains Mono, monospace" fill="var(--muted)">GovToken.getPastVotes</text>
+            <text x="271" y="146" font-size="10.5" fill="var(--muted)">power frozen here</text>
+          </g>
+          <g>
+            <rect x="384" y="40" width="150" height="140" rx="12" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5"></rect>
+            <text x="459" y="66" font-size="10" letter-spacing="1" fill="var(--muted)">STEP 3</text>
+            <text x="459" y="94" font-size="15" font-weight="700" fill="var(--ink)">Vote for/against</text>
+            <text x="459" y="122" font-size="10.5" font-family="JetBrains Mono, monospace" fill="var(--muted)">Governor.vote()</text>
+            <text x="459" y="146" font-size="10.5" fill="var(--muted)">3-day window</text>
+          </g>
+          <g>
+            <rect x="572" y="40" width="150" height="140" rx="12" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5"></rect>
+            <text x="647" y="66" font-size="10" letter-spacing="1" fill="var(--muted)">STEP 4</text>
+            <text x="647" y="94" font-size="15" font-weight="700" fill="var(--ink)">Quorum &amp; majority</text>
+            <text x="647" y="122" font-size="10.5" font-family="JetBrains Mono, monospace" fill="var(--muted)">Governor.state()</text>
+            <text x="647" y="146" font-size="10.5" fill="var(--muted)">4% quorum check</text>
+          </g>
+          <g>
+            <rect x="760" y="40" width="150" height="140" rx="12" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5"></rect>
+            <text x="835" y="66" font-size="10" letter-spacing="1" fill="var(--muted)">STEP 5</text>
+            <text x="835" y="94" font-size="15" font-weight="700" fill="var(--ink)">Execute calls</text>
+            <text x="835" y="122" font-size="10.5" font-family="JetBrains Mono, monospace" fill="var(--muted)">Governor.execute()</text>
+            <text x="835" y="146" font-size="10.5" fill="var(--muted)">runs targets[i]</text>
+          </g>
+        </g>
+
+        <text x="460" y="214" font-size="11" text-anchor="middle" fill="var(--muted)" font-family="Inter, system-ui, sans-serif">Dead ends: cancel() while Active · a failed quorum or majority check leaves the proposal Defeated</text>
+      </svg>
+    </section>
+
     <!-- ===================== FOOTER ===================== -->
     <footer class="site-footer">
       <span>Senate DAO · from-scratch governor — <span id="footer-address">not configured</span></span>

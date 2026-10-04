@@ -125,6 +125,80 @@
       </section>
     </div>
 
+    <!-- HOW TO USE & ON-CHAIN PROCESS (educational) -->
+    <section>
+      <div class="card" style="margin-bottom: 18px;">
+        <div class="card-head"><span class="card-ico">📖</span><h2>How to use</h2></div>
+        <ol style="margin: 4px 0 0 18px; display: grid; gap: 9px; font-size: 13.5px;">
+          <li>Connect your wallet with <span class="mono">Connect Wallet</span> (top-right). This dApp is configured for the <span class="mono">Sepolia</span> testnet — switch your wallet to Sepolia and use test ETH / AED-S.</li>
+          <li>Read the certificate panel: series name, face value (<span class="mono">100 AED-S</span>), total certificates, indicative profit and maturity.</li>
+          <li>Enter a number of certificates in the <span class="mono">Purchase</span> box and press <span class="mono">Purchase</span> — you pay the face value in the AED-S token.</li>
+          <li>If you hold the issuer role, type the lease income into <span class="mono">Record income</span>; the Shariah board then presses <span class="mono">Approve income (Shariah)</span> to clear it for distribution.</li>
+          <li>Press <span class="mono">Distribute pool</span> to open a distribution epoch, then <span class="mono">Claim profit</span> to receive your pro-rata AED-S share.</li>
+          <li>At maturity the issuer sells the underlying asset via <span class="mono">Sell asset</span>; certificate holders then press <span class="mono">Redeem</span> to get the face value back.</li>
+        </ol>
+      </div>
+
+      <div class="card" style="margin-bottom: 18px;">
+        <div class="card-head"><span class="card-ico">⛓️</span><h2>The process — what happens on-chain</h2></div>
+        <ol style="margin: 4px 0 0 18px; display: grid; gap: 9px; font-size: 13.5px;">
+          <li><span class="mono">SukukVault.purchase()</span> mints certificates at face value, paid in the <span class="mono">MockStable</span> AED-S token, capped by the series' exact certificate supply.</li>
+          <li><span class="mono">SukukVault.recordIncome()</span> (issuer role, enforced by <span class="mono">AccessControl</span>) stores ijarah lease income in the pending pool — nothing is distributable yet.</li>
+          <li><span class="mono">SukukVault.approveIncome()</span> (Shariah role) approves the income source; a smoothing share is withheld into the profit reserve before the pool grows.</li>
+          <li><span class="mono">SukukVault.distribute()</span> snapshots each holder's certificates (via <span class="mono">Checkpoints</span>) and opens an epoch; <span class="mono">claim()</span> then pays out pro-rata by the snapshot.</li>
+          <li>At maturity <span class="mono">SukukVault.sellUnderlying()</span> fills the redemption pool from the asset sale and <span class="mono">redeem()</span> returns face value — early redemption is not allowed.</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><span class="card-ico">🔄</span><h2>Flow graph</h2></div>
+        <!-- Theme colors mirror the CSS :root tokens: --accent-1 #7fd8b0, --accent-2 #c86dd9, --text #f3f0fa, --muted #9d93b8, --card rgba(31,24,51,0.94), --bg #171226 -->
+        <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="Sukuk Vault on-chain flow: buy certificates, record lease income, Shariah approval, distribute and claim, asset sale and redeem">
+          <defs>
+            <marker id="edu-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#c86dd9" />
+            </marker>
+          </defs>
+          <!-- arrows -->
+          <line x1="174" y1="121" x2="197" y2="121" stroke="#c86dd9" stroke-width="2" marker-end="url(#edu-arrow)" />
+          <line x1="356" y1="121" x2="379" y2="121" stroke="#c86dd9" stroke-width="2" marker-end="url(#edu-arrow)" />
+          <line x1="538" y1="121" x2="561" y2="121" stroke="#c86dd9" stroke-width="2" marker-end="url(#edu-arrow)" />
+          <line x1="720" y1="121" x2="743" y2="121" stroke="#c86dd9" stroke-width="2" marker-end="url(#edu-arrow)" />
+          <!-- stage 1 -->
+          <rect x="18" y="88" width="156" height="66" rx="12" fill="rgba(31,24,51,0.94)" stroke="#7fd8b0" stroke-width="1.5" />
+          <circle cx="96" cy="88" r="11" fill="#7fd8b0" />
+          <text x="96" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#171226">1</text>
+          <text x="96" y="119" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#f3f0fa">Buy certificates</text>
+          <text x="96" y="139" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#9d93b8">SukukVault.purchase</text>
+          <!-- stage 2 -->
+          <rect x="200" y="88" width="156" height="66" rx="12" fill="rgba(31,24,51,0.94)" stroke="#7fd8b0" stroke-width="1.5" />
+          <circle cx="278" cy="88" r="11" fill="#7fd8b0" />
+          <text x="278" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#171226">2</text>
+          <text x="278" y="119" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#f3f0fa">Record lease income</text>
+          <text x="278" y="139" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#9d93b8">SukukVault.recordIncome</text>
+          <!-- stage 3 -->
+          <rect x="382" y="88" width="156" height="66" rx="12" fill="rgba(31,24,51,0.94)" stroke="#7fd8b0" stroke-width="1.5" />
+          <circle cx="460" cy="88" r="11" fill="#7fd8b0" />
+          <text x="460" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#171226">3</text>
+          <text x="460" y="119" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#f3f0fa">Shariah approval</text>
+          <text x="460" y="139" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#9d93b8">SukukVault.approveIncome</text>
+          <!-- stage 4 -->
+          <rect x="564" y="88" width="156" height="66" rx="12" fill="rgba(31,24,51,0.94)" stroke="#7fd8b0" stroke-width="1.5" />
+          <circle cx="642" cy="88" r="11" fill="#7fd8b0" />
+          <text x="642" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#171226">4</text>
+          <text x="642" y="119" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#f3f0fa">Distribute &amp; claim</text>
+          <text x="642" y="139" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#9d93b8">SukukVault.distribute</text>
+          <!-- stage 5 -->
+          <rect x="746" y="88" width="156" height="66" rx="12" fill="rgba(31,24,51,0.94)" stroke="#7fd8b0" stroke-width="1.5" />
+          <circle cx="824" cy="88" r="11" fill="#7fd8b0" />
+          <text x="824" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#171226">5</text>
+          <text x="824" y="119" text-anchor="middle" font-family="Inter, sans-serif" font-size="13" font-weight="600" fill="#f3f0fa">Asset sale &amp; redeem</text>
+          <text x="824" y="139" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#9d93b8">SukukVault.sell / redeem</text>
+        </svg>
+        <p class="muted" style="margin-top: 10px; font-size: 12.5px;">Boxes are the five on-chain stages — all executed by the <span class="mono">SukukVault</span> contract on Sepolia. Arrows show the AED-S payment / state flow.</p>
+      </div>
+    </section>
+
     <footer class="site-footer">
       <span>Sukuk Vault · ijarah certificates from scratch — <span id="footer-address">not configured</span></span>
       <span>

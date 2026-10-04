@@ -126,6 +126,64 @@
       </section>
     </div>
 
+    <section class="card" id="how-it-works" style="margin-top: 28px;">
+      <div class="card-head"><span class="card-ico">📘</span><h2>How this dApp works</h2></div>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="font-family: var(--font-display); font-size: 15px; margin: 2px 0 10px;">How to use</h3>
+          <ol style="padding-left: 20px; margin: 0; display: grid; gap: 8px; font-size: 13.5px;">
+            <li>Connect your wallet — press <span class="mono">Connect Wallet</span> (top-right). The dApp targets <strong>Sepolia</strong> testnet, so switch your wallet to Sepolia first.</li>
+            <li>Read <strong>The Property</strong> card: appraisal, share supply, your balance and your KYC status.</li>
+            <li>Transfer shares: enter a whitelisted investor address and an amount, then press <span class="mono">Transfer</span> — both sides must be KYC-whitelisted.</li>
+            <li>Pay rent: in <strong>Rental Distributions</strong>, enter an AED-S amount and press <span class="mono">Pay rent</span> — the dApp approves the stable token automatically.</li>
+            <li>Press <span class="mono">Distribute pool</span> to open a distribution epoch, then <span class="mono">Claim my yield</span> to withdraw your pro-rata rent.</li>
+            <li>Managers &amp; regulators: use <strong>Management</strong> to file appraisals, whitelist or revoke KYC, freeze the property, spend maintenance and tune the reserve.</li>
+          </ol>
+        </div>
+
+        <div>
+          <h3 style="font-family: var(--font-display); font-size: 15px; margin: 2px 0 10px;">The process — what happens on-chain</h3>
+          <ol style="padding-left: 20px; margin: 0; display: grid; gap: 8px; font-size: 13.5px;">
+            <li>The manager registers the building in <strong>RERAPropertyRegistry</strong> via <span class="mono">registerProperty()</span> — name, appraisal and total shares create the on-chain property ledger.</li>
+            <li>Compliance whitelists investors (<span class="mono">setWhitelisted()</span>) and the manager issues fractional shares (<span class="mono">issueShares()</span>); every balance is checkpointed per block for a provable history.</li>
+            <li>Rent is paid in the AED-pegged <strong>MockStable</strong> through <strong>RentalDistributor.payRent()</strong> — the reserve ratio is withheld into the maintenance fund, the rest joins the pending pool.</li>
+            <li>Anyone calls <strong>RentalDistributor.distribute()</strong> — the pending pool becomes a new epoch with a snapshot block and a per-share rate.</li>
+            <li>Holders call <strong>RentalDistributor.claim()</strong>, which reads <strong>RERAPropertyRegistry.getPastBalance()</strong> at each epoch's snapshot block — shares sold later can never take earlier income.</li>
+          </ol>
+        </div>
+      </div>
+
+      <h3 style="font-family: var(--font-display); font-size: 15px; margin: 18px 0 6px;">Flow graph</h3>
+      <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="On-chain flow: KYC whitelist, issue shares, pay rent, distribute epoch, claim yield" style="display: block; max-width: 920px; margin: 0 auto;">
+        <defs>
+          <marker id="flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" style="fill: var(--accent-2);"></path>
+          </marker>
+        </defs>
+        <line x1="172" y1="118" x2="195" y2="118" stroke-width="3" style="stroke: var(--accent-2);" marker-end="url(#flow-arrow)"></line>
+        <line x1="356" y1="118" x2="379" y2="118" stroke-width="3" style="stroke: var(--accent-2);" marker-end="url(#flow-arrow)"></line>
+        <line x1="540" y1="118" x2="563" y2="118" stroke-width="3" style="stroke: var(--accent-2);" marker-end="url(#flow-arrow)"></line>
+        <line x1="724" y1="118" x2="747" y2="118" stroke-width="3" style="stroke: var(--accent-2);" marker-end="url(#flow-arrow)"></line>
+        <rect x="20" y="70" width="152" height="96" rx="14" style="fill: var(--bg); stroke: var(--accent-1); stroke-width: 2;"></rect>
+        <text x="96" y="112" text-anchor="middle" style="font-family: var(--font-display); font-size: 15px; font-weight: 600; fill: var(--text);">KYC whitelist</text>
+        <text x="96" y="138" text-anchor="middle" style="font-family: var(--font-mono); font-size: 11px; fill: var(--muted);">RERAPropertyRegistry</text>
+        <rect x="204" y="70" width="152" height="96" rx="14" style="fill: var(--bg); stroke: var(--accent-1); stroke-width: 2;"></rect>
+        <text x="280" y="112" text-anchor="middle" style="font-family: var(--font-display); font-size: 15px; font-weight: 600; fill: var(--text);">Issue shares</text>
+        <text x="280" y="138" text-anchor="middle" style="font-family: var(--font-mono); font-size: 11px; fill: var(--muted);">RERAPropertyRegistry</text>
+        <rect x="388" y="70" width="152" height="96" rx="14" style="fill: var(--bg); stroke: var(--accent-1); stroke-width: 2;"></rect>
+        <text x="464" y="112" text-anchor="middle" style="font-family: var(--font-display); font-size: 15px; font-weight: 600; fill: var(--text);">Pay rent (AED-S)</text>
+        <text x="464" y="138" text-anchor="middle" style="font-family: var(--font-mono); font-size: 11px; fill: var(--muted);">RentalDistributor</text>
+        <rect x="572" y="70" width="152" height="96" rx="14" style="fill: var(--bg); stroke: var(--accent-1); stroke-width: 2;"></rect>
+        <text x="648" y="112" text-anchor="middle" style="font-family: var(--font-display); font-size: 15px; font-weight: 600; fill: var(--text);">Distribute epoch</text>
+        <text x="648" y="138" text-anchor="middle" style="font-family: var(--font-mono); font-size: 11px; fill: var(--muted);">RentalDistributor</text>
+        <rect x="756" y="70" width="152" height="96" rx="14" style="fill: var(--bg); stroke: var(--accent-1); stroke-width: 2;"></rect>
+        <text x="832" y="112" text-anchor="middle" style="font-family: var(--font-display); font-size: 15px; font-weight: 600; fill: var(--text);">Claim yield</text>
+        <text x="832" y="138" text-anchor="middle" style="font-family: var(--font-mono); font-size: 11px; fill: var(--muted);">RentalDistributor</text>
+      </svg>
+      <p class="muted" style="font-size: 12.5px; margin-top: 8px;">Rent path: reserve withheld → pending pool → snapshot epochs → pro-rata claims — all on Sepolia.</p>
+    </section>
+
     <footer class="site-footer">
       <span>Estate Tokenization · fractional ownership from scratch — <span id="footer-address">not configured</span></span>
       <span>

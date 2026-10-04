@@ -155,6 +155,84 @@
       </div>
     </section>
 
+    <!-- ===================== HOW IT WORKS ===================== -->
+    <section class="section">
+      <h2 class="section-title">How it works <span class="muted">(using the dApp + the on-chain flow)</span></h2>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🧭</span><h3>How to use</h3></div>
+          <ol style="padding-left: 1.35em; display: grid; gap: 10px; font-size: 13.5px; line-height: 1.6;">
+            <li><strong>Connect your wallet</strong> <span class="muted">— press “Connect Wallet” (top-right). The dApp runs on Sepolia testnet; if the chain badge shows another network, open ⚙ Settings and pick Sepolia, then top up with faucet ETH.</span></li>
+            <li><strong>Launch a campaign</strong> <span class="muted">— in the “Launch a campaign” card, fill in Goal (ETH) and Duration (days) and press “Create campaign”.</span></li>
+            <li><strong>Pledge to a campaign</strong> <span class="muted">— on any Active card in Campaigns, enter an amount and press “Pledge”. Creators cannot pledge to their own campaign.</span></li>
+            <li><strong>Claim or refund after the deadline</strong> <span class="muted">— if the goal was met, the creator presses “Claim funds”; otherwise every backer presses “Refund my … ETH” to pull their pledge back.</span></li>
+            <li><strong>Owner controls</strong> <span class="muted">— if you are the factory owner, Platform Controls lets you “Update fee” (basis points, max 1000) or “Withdraw” accrued fees to any address.</span></li>
+            <li><strong>Watch the chain</strong> <span class="muted">— Live Activity shows the latest events from the network; press ↻ Refresh to re-sync.</span></li>
+          </ol>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-icon">⛓️</span><h3>The process — what happens on-chain</h3></div>
+          <ol style="padding-left: 1.35em; display: grid; gap: 10px; font-size: 13.5px; line-height: 1.6;">
+            <li><strong>CrowdFundFactory.createCampaign()</strong> <span class="muted">deploys a fresh CrowdFundCampaign for the caller, registers it in the allCampaigns index and the isCampaign whitelist, and emits CampaignCreated. The platform fee is frozen per campaign at creation.</span></li>
+            <li><strong>CrowdFundCampaign.pledge()</strong> <span class="muted">receives each backer’s ETH, updating pledged and totalPledged until the deadline; it reverts zero pledges and blocks the creator from self-funding.</span></li>
+            <li><strong>CrowdFundCampaign.status()</strong> <span class="muted">resolves the lifecycle at the deadline: Successful when totalPledged ≥ goal, otherwise Failed.</span></li>
+            <li><strong>CrowdFundCampaign.claim()</strong> <span class="muted">pays out on success: state is settled first (checks-effects-interactions), the platform fee is sent to the factory via CrowdFundFactory.creditFees(), then the rest goes to the creator — all guarded by ReentrancyGuard.</span></li>
+            <li><strong>CrowdFundCampaign.refund()</strong> <span class="muted">lets each backer pull their own ETH on failure; the entitlement is zeroed before the transfer, making refunds DoS-proof.</span></li>
+            <li><strong>CrowdFundFactory.setFeeBps() / withdrawFees()</strong> <span class="muted">are owner-only: the fee is capped at 1000 bps and only affects future campaigns, and accrued fees are withdrawn with a pull transfer.</span></li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 16px;">
+        <div class="card-head"><span class="card-icon">🗺️</span><h3>Flow graph</h3></div>
+        <p class="muted">After the deadline, status() resolves the branch: goal met → the creator claims (the platform fee is credited to the factory); goal missed → each backer pulls a refund.</p>
+        <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="CrowdFund on-chain flow: create campaign, pledge ETH, deadline check, then claim funds on success or pull refund on failure" style="display: block; max-width: 920px; margin: 6px auto 0;">
+          <defs>
+            <marker id="cf-flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 Z" fill="#f59e0b" />
+            </marker>
+          </defs>
+
+          <!-- arrows (accent-2 amber) -->
+          <g stroke="#f59e0b" stroke-width="2" fill="none" marker-end="url(#cf-flow-arrow)">
+            <line x1="180" y1="120" x2="218" y2="120" />
+            <line x1="390" y1="120" x2="428" y2="120" />
+            <path d="M 600 120 H 625 V 53 H 698" />
+            <path d="M 600 120 H 625 V 193 H 698" />
+          </g>
+          <text x="621" y="70" text-anchor="end" font-family="'Inter', sans-serif" font-size="10.5" fill="#93a49b">goal met</text>
+          <text x="621" y="174" text-anchor="end" font-family="'Inter', sans-serif" font-size="10.5" fill="#93a49b">goal missed</text>
+
+          <!-- stage 1 -->
+          <rect x="10" y="75" width="170" height="90" rx="14" fill="#182a22" stroke="#10b981" stroke-width="1.6" />
+          <text x="95" y="113" text-anchor="middle" font-family="'Space Grotesk', 'Inter', sans-serif" font-size="15" font-weight="600" fill="#e7eee9">Create campaign</text>
+          <text x="95" y="134" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11.5" fill="#93a49b">CrowdFundFactory</text>
+
+          <!-- stage 2 -->
+          <rect x="220" y="75" width="170" height="90" rx="14" fill="#182a22" stroke="#10b981" stroke-width="1.6" />
+          <text x="305" y="113" text-anchor="middle" font-family="'Space Grotesk', 'Inter', sans-serif" font-size="15" font-weight="600" fill="#e7eee9">Pledge ETH</text>
+          <text x="305" y="134" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11.5" fill="#93a49b">CrowdFundCampaign</text>
+
+          <!-- stage 3 -->
+          <rect x="430" y="75" width="170" height="90" rx="14" fill="#182a22" stroke="#10b981" stroke-width="1.6" />
+          <text x="515" y="113" text-anchor="middle" font-family="'Space Grotesk', 'Inter', sans-serif" font-size="15" font-weight="600" fill="#e7eee9">Deadline check</text>
+          <text x="515" y="134" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11.5" fill="#93a49b">Campaign · status()</text>
+
+          <!-- stage 4: success branch -->
+          <rect x="700" y="15" width="180" height="76" rx="14" fill="#182a22" stroke="#10b981" stroke-width="1.6" />
+          <text x="790" y="46" text-anchor="middle" font-family="'Space Grotesk', 'Inter', sans-serif" font-size="15" font-weight="600" fill="#e7eee9">Claim funds</text>
+          <text x="790" y="67" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11.5" fill="#93a49b">Campaign · claim()</text>
+
+          <!-- stage 5: failure branch -->
+          <rect x="700" y="155" width="180" height="76" rx="14" fill="#182a22" stroke="#10b981" stroke-width="1.6" />
+          <text x="790" y="186" text-anchor="middle" font-family="'Space Grotesk', 'Inter', sans-serif" font-size="15" font-weight="600" fill="#e7eee9">Pull refund</text>
+          <text x="790" y="207" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11.5" fill="#93a49b">Campaign · refund()</text>
+        </svg>
+      </div>
+    </section>
+
   </main>
 
   <!-- ===================== FOOTER ===================== -->

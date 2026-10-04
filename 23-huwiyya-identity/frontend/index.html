@@ -118,6 +118,89 @@
       </section>
     </div>
 
+    <!-- HOW IT WORKS — educational section (insert-only) -->
+    <section class="card" style="margin-top: 20px;">
+
+      <div class="card-head"><span class="card-ico">📖</span><h2>How to use</h2></div>
+      <table class="kpi-table">
+        <tr><td>Network</td><td class="mono accent">Sepolia testnet</td></tr>
+        <tr><td>Registry</td><td class="mono">0x77701d73b4615715f3767E5ca308EB07Eb0A8Ae9</td></tr>
+      </table>
+      <ol style="margin: 14px 0 0; padding-left: 24px;">
+        <li style="margin-bottom: 6px;">Check the <span class="mono">chain badge</span> in the top bar — the dApp is configured for <strong>Sepolia</strong>; switch your wallet to Sepolia if needed.</li>
+        <li style="margin-bottom: 6px;">Press <strong>Connect Wallet</strong> (top-right) and approve the connection in your wallet.</li>
+        <li style="margin-bottom: 6px;">Press <strong>Create DID</strong> on the DID card to register your identity on-chain.</li>
+        <li style="margin-bottom: 6px;">In the <strong>Credentials</strong> card, fill the subject address and claims root, then press <strong>Issue credential</strong>.</li>
+        <li style="margin-bottom: 6px;">In <strong>Attestations &amp; Reputation</strong>, enter a subject and a score (0–1000), then press <strong>Submit</strong>.</li>
+        <li>In <strong>Gates &amp; Governance</strong>, enter a proposed issuance fee and press <strong>Propose</strong>; vote <strong>For</strong>/<strong>Against</strong> on open proposals and press <strong>Execute</strong> when they pass.</li>
+      </ol>
+
+      <div class="card-head" style="margin-top: 22px;"><span class="card-ico">⛓</span><h2>The process — what happens on-chain</h2></div>
+      <ol style="margin: 0; padding-left: 24px;">
+        <li style="margin-bottom: 6px;"><strong>HuwiyyaRegistry</strong> is the DID ledger: <span class="mono">createDid()</span> stores your key record and DID document, and supports key rotation, delegation, freeze and revocation.</li>
+        <li style="margin-bottom: 6px;"><strong>HuwiyyaSchema</strong> defines versioned claim-field definitions; <strong>HuwiyyaCredentials</strong>.<span class="mono">issue()</span> mints a verifiable credential holding a Merkle root of the claims (an issuance fee is collected by <strong>HuwiyyaTreasury</strong>).</li>
+        <li style="margin-bottom: 6px;"><strong>HuwiyyaCredentials</strong>.<span class="mono">present()</span> proves a single claim to a verifier with a Merkle proof built by <strong>HuwiyyaMerkle</strong> — the rest of the credential stays hidden.</li>
+        <li style="margin-bottom: 6px;"><strong>HuwiyyaAttestations</strong>.<span class="mono">submit()</span> records weighted attestations from trusted attestors; <strong>HuwiyyaReputation</strong> aggregates them into a decaying score and a named band.</li>
+        <li style="margin-bottom: 6px;"><strong>HuwiyyaGates</strong>.<span class="mono">checkAccess()</span> lets services gate access with policies combining credentials, reputation and disclosed-claim minimums.</li>
+        <li><strong>HuwiyyaGovernor</strong> is the ecosystem's parliament: <span class="mono">propose()</span> → <span class="mono">vote()</span> with reputation-weighted quorum → <span class="mono">execute()</span> after the timelock.</li>
+      </ol>
+
+      <div class="card-head" style="margin-top: 22px;"><span class="card-ico">🗺</span><h2>Flow graph</h2></div>
+      <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="Huwiyya on-chain flow: create DID, issue credential, selective proof, attestation, reputation, gate access">
+        <defs>
+          <marker id="howto-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 Z" fill="#a5b4fc"></path>
+          </marker>
+        </defs>
+        <g stroke="#a5b4fc" stroke-width="2">
+          <line x1="146" y1="118" x2="160" y2="118" marker-end="url(#howto-arrow)"></line>
+          <line x1="298" y1="118" x2="312" y2="118" marker-end="url(#howto-arrow)"></line>
+          <line x1="450" y1="118" x2="464" y2="118" marker-end="url(#howto-arrow)"></line>
+          <line x1="602" y1="118" x2="616" y2="118" marker-end="url(#howto-arrow)"></line>
+          <line x1="754" y1="118" x2="768" y2="118" marker-end="url(#howto-arrow)"></line>
+        </g>
+        <g>
+          <rect x="14" y="70" width="132" height="96" rx="14" fill="#ffffff" stroke="#4338ca" stroke-width="1.5"></rect>
+          <text x="80" y="100" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1e1b33">1 · Create DID</text>
+          <text x="80" y="124" text-anchor="middle" font-size="10" font-family="JetBrains Mono, ui-monospace, monospace" fill="#8b87a8">HuwiyyaRegistry</text>
+          <text x="80" y="144" text-anchor="middle" font-size="9" fill="#8b87a8">keys &amp; DID doc</text>
+        </g>
+        <g>
+          <rect x="166" y="70" width="132" height="96" rx="14" fill="#ffffff" stroke="#4338ca" stroke-width="1.5"></rect>
+          <text x="232" y="100" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1e1b33">2 · Issue credential</text>
+          <text x="232" y="124" text-anchor="middle" font-size="10" font-family="JetBrains Mono, ui-monospace, monospace" fill="#8b87a8">HuwiyyaCredentials</text>
+          <text x="232" y="144" text-anchor="middle" font-size="9" fill="#8b87a8">VC + claims root</text>
+        </g>
+        <g>
+          <rect x="318" y="70" width="132" height="96" rx="14" fill="#eef0fd" stroke="#a5b4fc" stroke-width="1.5"></rect>
+          <text x="384" y="100" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1e1b33">3 · Prove a claim</text>
+          <text x="384" y="124" text-anchor="middle" font-size="10" font-family="JetBrains Mono, ui-monospace, monospace" fill="#8b87a8">HuwiyyaMerkle</text>
+          <text x="384" y="144" text-anchor="middle" font-size="9" fill="#8b87a8">one-claim proof</text>
+        </g>
+        <g>
+          <rect x="470" y="70" width="132" height="96" rx="14" fill="#ffffff" stroke="#4338ca" stroke-width="1.5"></rect>
+          <text x="536" y="100" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1e1b33">4 · Attest &amp; score</text>
+          <text x="536" y="124" text-anchor="middle" font-size="10" font-family="JetBrains Mono, ui-monospace, monospace" fill="#8b87a8">HuwiyyaAttestations</text>
+          <text x="536" y="144" text-anchor="middle" font-size="9" fill="#8b87a8">weighted evidence</text>
+        </g>
+        <g>
+          <rect x="622" y="70" width="132" height="96" rx="14" fill="#ffffff" stroke="#4338ca" stroke-width="1.5"></rect>
+          <text x="688" y="100" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1e1b33">5 · Reputation</text>
+          <text x="688" y="124" text-anchor="middle" font-size="10" font-family="JetBrains Mono, ui-monospace, monospace" fill="#8b87a8">HuwiyyaReputation</text>
+          <text x="688" y="144" text-anchor="middle" font-size="9" fill="#8b87a8">score &amp; bands</text>
+        </g>
+        <g>
+          <rect x="774" y="70" width="132" height="96" rx="14" fill="#ffffff" stroke="#4338ca" stroke-width="1.5"></rect>
+          <text x="840" y="100" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1e1b33">6 · Gate access</text>
+          <text x="840" y="124" text-anchor="middle" font-size="10" font-family="JetBrains Mono, ui-monospace, monospace" fill="#8b87a8">HuwiyyaGates</text>
+          <text x="840" y="144" text-anchor="middle" font-size="9" fill="#8b87a8">policy check</text>
+        </g>
+        <text x="460" y="215" text-anchor="middle" font-size="11" fill="#8b87a8">your wallet → DID → credential → proof → trust → access · on Sepolia</text>
+      </svg>
+      <p class="muted" style="font-size: 12px; margin-top: 4px;">Each box is a contract in the Huwiyya stack; the arrows are the call flow starting from your wallet.</p>
+
+    </section>
+
     <footer class="site-footer">
       <span>Huwiyya · identity stack from scratch — <span id="footer-address">not configured</span></span>
       <span>

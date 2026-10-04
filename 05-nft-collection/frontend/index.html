@@ -201,6 +201,124 @@
       </div>
     </section>
 
+    <!-- ===================== HOW IT WORKS ===================== -->
+    <section class="section">
+      <h2 class="section-title">How it works <span class="muted">(learn the dApp before you mint)</span></h2>
+
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-head"><span class="card-icon">🧭</span><h3>How to use</h3></div>
+          <ol style="margin:8px 0 0 18px;font-size:13px;color:var(--text);display:grid;gap:8px;">
+            <li>Press <strong>Connect Wallet</strong> in the top-right header. The dApp runs on the
+              <strong>Sepolia</strong> testnet (chain id 11155111) — switch networks in your wallet if prompted.</li>
+            <li>Point the app at a collection. If the setup banner shows, paste the deployed
+              <strong>GenesisNFT</strong> address and press <strong>Use this collection</strong>;
+              you can change it anytime via <strong>⚙ Settings</strong> → <strong>Save &amp; reload</strong>.</li>
+            <li>Mint an NFT. In the <strong>Public mint</strong> card, choose a quantity and press
+              <strong>Mint</strong>; in the <strong>Whitelist mint</strong> card, paste your Merkle proof
+              (one 32-byte hash per line) and press <strong>Mint (whitelist)</strong>.</li>
+            <li>Follow the result. Your token appears in the <strong>Gallery</strong> and the transaction in
+              <strong>Live Activity</strong>; press <strong>↻ Refresh</strong> to re-pull the latest 15 events.</li>
+            <li>Owner only — manage the drop. If you own the collection, <strong>Owner Controls</strong> unlocks:
+              set phase, set Merkle root, toggle reveal, update URIs, set royalties, reserve-mint and withdraw.</li>
+          </ol>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><span class="card-icon">⛓️</span><h3>The process — what happens on-chain</h3></div>
+          <ol style="margin:8px 0 0 18px;font-size:13px;color:var(--text);display:grid;gap:8px;">
+            <li><strong>GenesisNFT.mintWhitelist</strong> checks the phase is WHITELIST and that you sent exactly
+              0.05 ETH per token (max 2 per wallet) before minting.</li>
+            <li><strong>MerkleProof.verify</strong> recomputes the Merkle root from your proof; the leaf is
+              <code>keccak256(address)</code>, so a proof can never be reused by another wallet.</li>
+            <li>The hand-written <strong>ERC721</strong> contract mints via <strong>_mintBatch</strong>: sequential
+              token ids, updated balances and <code>Transfer</code> events, capped at 5000 supply.</li>
+            <li><strong>tokenURI</strong> returns the shared pre-reveal placeholder until the owner calls
+              <strong>setRevealed(true)</strong>; then it becomes <code>baseURI + id + ".json"</code> served via IPFS.</li>
+            <li><strong>royaltyInfo</strong> (ERC-2981) pays 5% of every secondary sale to the owner — marketplaces
+              settle the artist automatically.</li>
+            <li><strong>withdraw()</strong> sends the contract's full ETH balance to the owner, guarded by
+              <strong>ReentrancyGuard</strong>; the owner reserve respects the 5000 cap too.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="card-head"><span class="card-icon">🔀</span><h3>Flow graph</h3></div>
+        <svg viewBox="0 0 920 240" width="100%" role="img"
+             aria-label="On-chain mint flow: whitelist mint, Merkle check, tokens minted, reveal metadata, royalty payout"
+             style="display:block;">
+          <defs>
+            <marker id="how-arrow" viewBox="0 0 10 10" refX="9" refY="5"
+                    markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#a3e635" />
+            </marker>
+          </defs>
+
+          <!-- stage 1 -->
+          <rect x="20" y="70" width="160" height="100" rx="14"
+                fill="rgba(30, 15, 38, 0.85)" stroke="#ec4899" stroke-width="1.5" />
+          <circle cx="100" cy="88" r="11" fill="rgba(236, 72, 153, 0.16)" stroke="#ec4899" stroke-width="1" />
+          <text x="100" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#f9a8d4">1</text>
+          <text x="100" y="114" text-anchor="middle" font-size="13.5" font-weight="600"
+                font-family="Space Grotesk, Inter, sans-serif" fill="#f6eef8">Whitelist mint</text>
+          <text x="100" y="138" text-anchor="middle" font-size="10"
+                font-family="JetBrains Mono, ui-monospace, monospace" fill="#a892b0">GenesisNFT.mintWhitelist</text>
+          <line x1="181" y1="120" x2="194" y2="120" stroke="#a3e635" stroke-width="2" marker-end="url(#how-arrow)" />
+
+          <!-- stage 2 -->
+          <rect x="200" y="70" width="160" height="100" rx="14"
+                fill="rgba(30, 15, 38, 0.85)" stroke="#ec4899" stroke-width="1.5" />
+          <circle cx="280" cy="88" r="11" fill="rgba(236, 72, 153, 0.16)" stroke="#ec4899" stroke-width="1" />
+          <text x="280" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#f9a8d4">2</text>
+          <text x="280" y="114" text-anchor="middle" font-size="13.5" font-weight="600"
+                font-family="Space Grotesk, Inter, sans-serif" fill="#f6eef8">Merkle check</text>
+          <text x="280" y="138" text-anchor="middle" font-size="10"
+                font-family="JetBrains Mono, ui-monospace, monospace" fill="#a892b0">MerkleProof.verify</text>
+          <line x1="361" y1="120" x2="374" y2="120" stroke="#a3e635" stroke-width="2" marker-end="url(#how-arrow)" />
+
+          <!-- stage 3 -->
+          <rect x="380" y="70" width="160" height="100" rx="14"
+                fill="rgba(30, 15, 38, 0.85)" stroke="#ec4899" stroke-width="1.5" />
+          <circle cx="460" cy="88" r="11" fill="rgba(236, 72, 153, 0.16)" stroke="#ec4899" stroke-width="1" />
+          <text x="460" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#f9a8d4">3</text>
+          <text x="460" y="114" text-anchor="middle" font-size="13.5" font-weight="600"
+                font-family="Space Grotesk, Inter, sans-serif" fill="#f6eef8">Tokens minted</text>
+          <text x="460" y="138" text-anchor="middle" font-size="10"
+                font-family="JetBrains Mono, ui-monospace, monospace" fill="#a892b0">ERC721._mintBatch</text>
+          <line x1="541" y1="120" x2="554" y2="120" stroke="#a3e635" stroke-width="2" marker-end="url(#how-arrow)" />
+
+          <!-- stage 4 -->
+          <rect x="560" y="70" width="160" height="100" rx="14"
+                fill="rgba(30, 15, 38, 0.85)" stroke="#ec4899" stroke-width="1.5" />
+          <circle cx="640" cy="88" r="11" fill="rgba(236, 72, 153, 0.16)" stroke="#ec4899" stroke-width="1" />
+          <text x="640" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#f9a8d4">4</text>
+          <text x="640" y="114" text-anchor="middle" font-size="13.5" font-weight="600"
+                font-family="Space Grotesk, Inter, sans-serif" fill="#f6eef8">Reveal metadata</text>
+          <text x="640" y="138" text-anchor="middle" font-size="10"
+                font-family="JetBrains Mono, ui-monospace, monospace" fill="#a892b0">GenesisNFT.tokenURI</text>
+          <line x1="721" y1="120" x2="734" y2="120" stroke="#a3e635" stroke-width="2" marker-end="url(#how-arrow)" />
+
+          <!-- stage 5 -->
+          <rect x="740" y="70" width="160" height="100" rx="14"
+                fill="rgba(30, 15, 38, 0.85)" stroke="#ec4899" stroke-width="1.5" />
+          <circle cx="820" cy="88" r="11" fill="rgba(236, 72, 153, 0.16)" stroke="#ec4899" stroke-width="1" />
+          <text x="820" y="92" text-anchor="middle" font-size="11" font-weight="700" fill="#f9a8d4">5</text>
+          <text x="820" y="114" text-anchor="middle" font-size="13.5" font-weight="600"
+                font-family="Space Grotesk, Inter, sans-serif" fill="#f6eef8">Royalty payout</text>
+          <text x="820" y="138" text-anchor="middle" font-size="10"
+                font-family="JetBrains Mono, ui-monospace, monospace" fill="#a892b0">GenesisNFT.royaltyInfo</text>
+
+          <!-- public-mint shortcut -->
+          <line x1="100" y1="170" x2="460" y2="210" stroke="#a3e635" stroke-width="1.5" stroke-dasharray="5 4"
+                marker-end="url(#how-arrow)" />
+          <text x="460" y="232" text-anchor="middle" font-size="10.5" font-style="italic" fill="#a892b0">public mint: same path, 0.08 ETH × qty</text>
+        </svg>
+        <p class="muted">Every token shows the same placeholder until the owner reveals the collection;
+          royalties are paid on secondary sales by marketplaces.</p>
+      </div>
+    </section>
+
   </main>
 
   <!-- ===================== FOOTER ===================== -->

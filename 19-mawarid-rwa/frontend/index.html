@@ -142,6 +142,79 @@
       </section>
     </div>
 
+    <!-- HOW IT WORKS (educational) -->
+    <section class="card">
+      <div class="card-head">
+        <span class="card-ico">📖</span>
+        <h2>How it works</h2>
+        <span class="muted small">Sepolia testnet · what the buttons really do</span>
+      </div>
+
+      <div class="card-head">
+        <span class="card-ico">🖱</span>
+        <h2>How to use</h2>
+      </div>
+      <ol>
+        <li>Connect your wallet with the <span class="mono">Connect Wallet</span> button (top-right). The dApp is configured for the <strong>Sepolia</strong> testnet, so switch your wallet to Sepolia first.</li>
+        <li>Open the <strong>Invest</strong> card to check <em>Your shares</em>, <em>Claimable rent</em> and <em>Your KYC</em> before acting.</li>
+        <li>Enter a share amount and press <span class="mono">Subscribe</span> to join phase #0 (100 AED-S/share). Your payment is escrowed until the phase closes.</li>
+        <li>Once the manager finalizes the phase, press <span class="mono">Claim shares</span> to receive your allocation (oversubscriptions are refunded pro-rata).</li>
+        <li>In <strong>The Exchange</strong> card, set shares and price per share, then press <span class="mono">Place order</span> to list your shares for sale.</li>
+        <li>Press <span class="mono">Claim rent</span> in the Invest card for rental income, and use the <strong>Governance</strong> card to propose an appraisal or vote on proposals.</li>
+      </ol>
+
+      <div class="card-head">
+        <span class="card-ico">⛓</span>
+        <h2>The process — what happens on-chain</h2>
+      </div>
+      <ol>
+        <li>Every interaction starts at <span class="mono">MawaridCompliance</span>: it checks your KYC tier, sanctions status and per-asset exposure limits; a failed check reverts the whole call.</li>
+        <li><span class="mono">MawaridPrimaryMarket.subscribe()</span> pulls the AED-S payment from your wallet and escrows it in the phase; when the manager finalizes, allocations are pro-rata with automatic refunds.</li>
+        <li><span class="mono">MawaridShares</span> mints compliance-gated ERC-20 shares when you claim your allocation — every transfer re-runs the compliance check.</li>
+        <li>In <span class="mono">MawaridSecondaryMarket</span> your shares are escrowed by the sell order; a fill pays the seller net and sends the platform fee to <span class="mono">MawaridTreasury</span>.</li>
+        <li><span class="mono">MawaridRentalDistributor</span> records rent, withholds the maintenance reserve and distributes each epoch using historical balance snapshots; holders claim their share.</li>
+        <li><span class="mono">MawaridAssetGovernor</span> runs token-weighted votes with per-type quorums and a timelock, while <span class="mono">MawaridInsuranceFund</span> covers rental shortfalls via 2-of-3 assessor approval.</li>
+      </ol>
+
+      <div class="card-head">
+        <span class="card-ico">🔁</span>
+        <h2>Flow graph</h2>
+      </div>
+      <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="Mawarid on-chain process flow">
+        <defs>
+          <marker id="maw-arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+            <path d="M0,0 L12,6 L0,12 z" fill="var(--accent-2)" />
+          </marker>
+        </defs>
+        <rect x="11" y="52" width="128" height="72" rx="12" fill="var(--bg)" stroke="var(--accent-1)" stroke-width="1.5" />
+        <text x="75" y="80" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12.5" font-weight="700" fill="var(--text)">KYC gate</text>
+        <text x="75" y="100" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="8.5" fill="var(--muted)">MawaridCompliance</text>
+        <line x1="141" y1="88" x2="163" y2="88" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#maw-arrow)" />
+        <rect x="165" y="52" width="128" height="72" rx="12" fill="var(--bg)" stroke="var(--accent-1)" stroke-width="1.5" />
+        <text x="229" y="80" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12.5" font-weight="700" fill="var(--text)">Escrow payment</text>
+        <text x="229" y="100" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="8.5" fill="var(--muted)">MawaridPrimaryMarket</text>
+        <line x1="295" y1="88" x2="317" y2="88" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#maw-arrow)" />
+        <rect x="319" y="52" width="128" height="72" rx="12" fill="var(--bg)" stroke="var(--accent-1)" stroke-width="1.5" />
+        <text x="383" y="80" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12.5" font-weight="700" fill="var(--text)">Mint shares</text>
+        <text x="383" y="100" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="8.5" fill="var(--muted)">MawaridShares</text>
+        <line x1="449" y1="88" x2="471" y2="88" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#maw-arrow)" />
+        <rect x="473" y="52" width="128" height="72" rx="12" fill="var(--bg)" stroke="var(--accent-1)" stroke-width="1.5" />
+        <text x="537" y="80" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12.5" font-weight="700" fill="var(--text)">OTC trading</text>
+        <text x="537" y="100" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="8.5" fill="var(--muted)">MawaridSecondaryMarket</text>
+        <line x1="603" y1="88" x2="625" y2="88" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#maw-arrow)" />
+        <rect x="627" y="52" width="128" height="72" rx="12" fill="var(--bg)" stroke="var(--accent-1)" stroke-width="1.5" />
+        <text x="691" y="80" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12.5" font-weight="700" fill="var(--text)">Rent epochs</text>
+        <text x="691" y="100" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="8.5" fill="var(--muted)">MawaridRentalDistributor</text>
+        <line x1="757" y1="88" x2="779" y2="88" stroke="var(--accent-2)" stroke-width="2.5" marker-end="url(#maw-arrow)" />
+        <rect x="781" y="52" width="128" height="72" rx="12" fill="var(--bg)" stroke="var(--accent-1)" stroke-width="1.5" />
+        <text x="845" y="80" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="12.5" font-weight="700" fill="var(--text)">Govern &amp; insure</text>
+        <text x="845" y="100" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="8.5" fill="var(--muted)">MawaridAssetGovernor</text>
+        <text x="460" y="164" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="var(--muted)">Primary-market payments stay escrowed in MawaridPrimaryMarket until the phase finalizes</text>
+        <text x="460" y="184" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="var(--muted)">Trade fees flow to MawaridTreasury · rental shortfalls are covered by MawaridInsuranceFund (2-of-3 assessors)</text>
+        <text x="460" y="204" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="11" fill="var(--muted)">Distributions and votes read historical share balances — past income or votes cannot be redirected</text>
+      </svg>
+    </section>
+
     <footer class="site-footer">
       <span>Mawarid · RWA platform from scratch — <span id="footer-address">not configured</span></span>
       <span>

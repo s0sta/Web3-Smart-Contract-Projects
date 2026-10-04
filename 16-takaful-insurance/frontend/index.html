@@ -120,6 +120,80 @@
       </section>
     </div>
 
+    <!-- ===================== HOW TO USE · ON-CHAIN PROCESS ===================== -->
+    <section class="card" id="howto">
+
+      <!-- A · HOW TO USE -->
+      <div class="card-head"><span class="card-ico">🧭</span><h2>How to use</h2></div>
+      <div class="item-row"><b>1. Connect your wallet.</b> Press <span class="mono">Connect Wallet</span> (top-right). The dApp is configured for the <b>Sepolia testnet</b> — switch your wallet to Sepolia and get test ETH plus AED-S.</div>
+      <br>
+      <div class="item-row"><b>2. Join a Risk Pool.</b> Pick <b>Motor</b>, <b>Health</b> or <b>Property</b> and press <span class="mono">Join</span>; confirm the AED-S approval and the tabarru contribution in your wallet.</div>
+      <br>
+      <div class="item-row"><b>3. Check your policy.</b> It appears under <b>My Policies</b> with its coverage window and claim limit.</div>
+      <br>
+      <div class="item-row"><b>4. File a claim.</b> In <b>My Policies</b>, enter the policy id, amount and reason, then press <span class="mono">File claim</span>.</div>
+      <br>
+      <div class="item-row"><b>5. Committee &amp; community.</b> Assessors press <span class="mono">Approve</span> / <span class="mono">Reject</span> on open claims (2 approvals pay out). Anyone can <span class="mono">Donate to the bridge</span> and press <span class="mono">Distribute period surplus</span>.</div>
+
+      <!-- B · THE PROCESS — WHAT HAPPENS ON-CHAIN -->
+      <div class="act-form">
+        <div class="card-head"><span class="card-ico">⛓</span><h2>The process — what happens on-chain</h2></div>
+        <div class="item-row"><b>1. Approve — <span class="mono">MockStable</span> (AED-S).</b> Your wallet approves <span class="mono">TakafulPool</span> to spend AED-S, the contribution and payout currency.</div>
+        <br>
+        <div class="item-row"><b>2. <span class="mono">TakafulPool.joinPool(poolId)</span>.</b> The contract pulls your contribution via <span class="mono">transferFrom</span>, withholds the 10% wakalah fee, issues your policy and snapshots your contribution for the surplus maths.</div>
+        <br>
+        <div class="item-row"><b>3. <span class="mono">TakafulPool.fileClaim(policyId, amount, reason)</span>.</b> The claim is recorded against an active policy inside its coverage window and claim limit.</div>
+        <br>
+        <div class="item-row"><b>4. <span class="mono">TakafulPool.voteClaim(claimId, approve)</span>.</b> Independent assessors (an <span class="mono">AccessControl</span> role) vote on-chain; <b>2-of-3 approvals</b> settle the claim and pay the holder from the pool, drawing on the qard hasan bridge if the pool runs short.</div>
+        <br>
+        <div class="item-row"><b>5. <span class="mono">TakafulPool.distributeSurplus(poolId, participants)</span>.</b> At period end the operator distributes the underwriting surplus pro-rata to non-claiming participants, verified against contribution snapshots.</div>
+      </div>
+
+      <!-- C · FLOW GRAPH -->
+      <div class="act-form">
+        <div class="card-head"><span class="card-ico">🗺</span><h2>Flow graph</h2></div>
+        <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="Takaful on-chain flow: approve AED-S, join a risk pool, file a claim, committee votes 2-of-3, then payout or surplus.">
+          <defs>
+            <marker id="tkf-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#6ecbf5"/>
+            </marker>
+          </defs>
+
+          <rect x="20" y="64" width="148" height="76" rx="14" fill="#fffdfa" stroke="#ff7f66" stroke-width="1.5"/>
+          <text x="94" y="99" text-anchor="middle" font-family="'Space Grotesk', Inter, sans-serif" font-size="14" font-weight="700" fill="#33241f">1 · Approve AED-S</text>
+          <text x="94" y="120" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#9a8277">MockStable.approve</text>
+
+          <line x1="168" y1="102" x2="200" y2="102" stroke="#6ecbf5" stroke-width="2.5" marker-end="url(#tkf-arrow)"/>
+
+          <rect x="203" y="64" width="148" height="76" rx="14" fill="#fffdfa" stroke="#ff7f66" stroke-width="1.5"/>
+          <text x="277" y="99" text-anchor="middle" font-family="'Space Grotesk', Inter, sans-serif" font-size="14" font-weight="700" fill="#33241f">2 · Join a risk pool</text>
+          <text x="277" y="120" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#9a8277">TakafulPool.joinPool</text>
+
+          <line x1="351" y1="102" x2="383" y2="102" stroke="#6ecbf5" stroke-width="2.5" marker-end="url(#tkf-arrow)"/>
+
+          <rect x="386" y="64" width="148" height="76" rx="14" fill="#fffdfa" stroke="#ff7f66" stroke-width="1.5"/>
+          <text x="460" y="99" text-anchor="middle" font-family="'Space Grotesk', Inter, sans-serif" font-size="14" font-weight="700" fill="#33241f">3 · File a claim</text>
+          <text x="460" y="120" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#9a8277">TakafulPool.fileClaim</text>
+
+          <line x1="534" y1="102" x2="566" y2="102" stroke="#6ecbf5" stroke-width="2.5" marker-end="url(#tkf-arrow)"/>
+
+          <rect x="569" y="64" width="148" height="76" rx="14" fill="#fffdfa" stroke="#ff7f66" stroke-width="1.5"/>
+          <text x="643" y="99" text-anchor="middle" font-family="'Space Grotesk', Inter, sans-serif" font-size="14" font-weight="700" fill="#33241f">4 · Committee votes</text>
+          <text x="643" y="120" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#9a8277">TakafulPool.voteClaim</text>
+
+          <line x1="717" y1="102" x2="749" y2="102" stroke="#6ecbf5" stroke-width="2.5" marker-end="url(#tkf-arrow)"/>
+
+          <rect x="752" y="64" width="148" height="76" rx="14" fill="#fffdfa" stroke="#ff7f66" stroke-width="1.5"/>
+          <text x="826" y="99" text-anchor="middle" font-family="'Space Grotesk', Inter, sans-serif" font-size="14" font-weight="700" fill="#33241f">5 · Payout / surplus</text>
+          <text x="826" y="120" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="10" fill="#9a8277">TakafulPool · settle</text>
+
+          <text x="460" y="190" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#9a8277">All steps are transactions on the Sepolia testnet — gas in ETH, contributions and claims in AED-S.</text>
+        </svg>
+        <p class="muted">One policy lifecycle — every step is a transaction signed in your wallet on Sepolia.</p>
+      </div>
+
+    </section>
+
     <footer class="site-footer">
       <span>Takaful · mutual insurance from scratch — <span id="footer-address">not configured</span></span>
       <span>

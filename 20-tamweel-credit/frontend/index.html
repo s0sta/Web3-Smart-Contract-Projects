@@ -140,6 +140,59 @@
       </section>
     </div>
 
+    <!-- HOW TAMWEEL WORKS — educational walkthrough -->
+    <section class="card" style="margin-top:20px">
+      <div class="card-head"><span class="card-ico">🎓</span><h2>How Tamweel works</h2></div>
+
+      <h3 style="margin:16px 0 8px">How to use</h3>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="item-row"><span class="mono">1.</span><span>Connect your wallet (top-right <span class="mono">Connect Wallet</span> button). The dApp is configured for the <strong>Sepolia</strong> testnet (<span class="mono">11155111</span>) — AED-S and ETH here are test funds.</span></div>
+        <div class="item-row"><span class="mono">2.</span><span>In the <strong>Deposits</strong> card, enter an amount and press <span class="mono">Deposit</span> to mint interest-earning vault shares — redeem them any time with <span class="mono">Withdraw</span>.</span></div>
+        <div class="item-row"><span class="mono">3.</span><span>In the <strong>Credit</strong> card, press <span class="mono">Supply</span> to lock ETH as collateral; your health factor and credit score show up in the table.</span></div>
+        <div class="item-row"><span class="mono">4.</span><span>Press <span class="mono">Borrow</span> to draw AED-S against your collateral, then use <span class="mono">Repay</span> to pay the debt back down.</span></div>
+        <div class="item-row"><span class="mono">5.</span><span>In <strong>Loans &amp; Governance</strong>, request an installment loan, or propose a loan-rate change and vote on proposals with your shares.</span></div>
+      </div>
+
+      <h3 style="margin:20px 0 8px">The process — what happens on-chain</h3>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="item-row"><span class="mono">1.</span><span><span class="mono">TamweelVault</span> mints shares for your AED-S deposit and enforces a liquidity buffer that withdrawals can never breach.</span></div>
+        <div class="item-row"><span class="mono">2.</span><span><span class="mono">TamweelOracle</span> publishes EMA-smoothed prices, so a single manipulated price print cannot crash collateral values.</span></div>
+        <div class="item-row"><span class="mono">3.</span><span><span class="mono">TamweelMarkets</span> lends against your collateral only while the LTV cap and a health factor of at least 1 hold; interest accrues per second and repayments return liquidity first.</span></div>
+        <div class="item-row"><span class="mono">4.</span><span><span class="mono">TamweelLoans</span> (gated by <span class="mono">TamweelCompliance</span> credit scores) runs installment loans on an on-chain schedule — late fees go to charity, never the bank.</span></div>
+        <div class="item-row"><span class="mono">5.</span><span><span class="mono">TamweelCollateral</span> Dutch-auctions collateral seized from unhealthy positions, and <span class="mono">TamweelInsuranceFund</span> backstops any remaining bad debt.</span></div>
+        <div class="item-row"><span class="mono">6.</span><span><span class="mono">TamweelGovernor</span> lets depositors vote with vault shares; parameter changes execute only after quorum and a timelock.</span></div>
+      </div>
+
+      <h3 style="margin:20px 0 8px">Flow graph</h3>
+      <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="On-chain credit cycle: deposit into TamweelVault, supply collateral to TamweelMarkets, borrow and repay through TamweelMarkets, Dutch-auction liquidations via TamweelCollateral, and the TamweelInsuranceFund bad-debt backstop.">
+        <defs>
+          <marker id="tg-flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0 0 L10 5 L0 10 z" fill="var(--accent-2)"></path>
+          </marker>
+        </defs>
+        <rect x="20" y="78" width="140" height="84" rx="14" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5"></rect>
+        <text x="90" y="114" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">Deposit AED-S</text>
+        <text x="90" y="138" text-anchor="middle" font-size="10" font-family="var(--font-mono)" fill="var(--muted)">TamweelVault</text>
+        <rect x="205" y="78" width="140" height="84" rx="14" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5"></rect>
+        <text x="275" y="114" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">Supply collateral</text>
+        <text x="275" y="138" text-anchor="middle" font-size="10" font-family="var(--font-mono)" fill="var(--muted)">TamweelMarkets</text>
+        <rect x="390" y="78" width="140" height="84" rx="14" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5"></rect>
+        <text x="460" y="114" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">Borrow &amp; repay</text>
+        <text x="460" y="138" text-anchor="middle" font-size="10" font-family="var(--font-mono)" fill="var(--muted)">TamweelMarkets</text>
+        <rect x="575" y="78" width="140" height="84" rx="14" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5"></rect>
+        <text x="645" y="114" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">Dutch auction</text>
+        <text x="645" y="138" text-anchor="middle" font-size="10" font-family="var(--font-mono)" fill="var(--muted)">TamweelCollateral</text>
+        <rect x="760" y="78" width="140" height="84" rx="14" fill="var(--card)" stroke="var(--accent-1)" stroke-width="1.5"></rect>
+        <text x="830" y="114" text-anchor="middle" font-size="13.5" font-weight="600" fill="var(--text)">Insurance backstop</text>
+        <text x="830" y="138" text-anchor="middle" font-size="10" font-family="var(--font-mono)" fill="var(--muted)">TamweelInsuranceFund</text>
+        <line x1="163" y1="120" x2="199" y2="120" stroke="var(--accent-2)" stroke-width="2" marker-end="url(#tg-flow-arrow)"></line>
+        <line x1="348" y1="120" x2="384" y2="120" stroke="var(--accent-2)" stroke-width="2" marker-end="url(#tg-flow-arrow)"></line>
+        <line x1="533" y1="120" x2="569" y2="120" stroke="var(--accent-2)" stroke-width="2" marker-end="url(#tg-flow-arrow)"></line>
+        <line x1="718" y1="120" x2="754" y2="120" stroke="var(--accent-2)" stroke-width="2" marker-end="url(#tg-flow-arrow)"></line>
+      </svg>
+      <p class="muted" style="margin-top:10px">The happy path: deposits fund the vault, collateral unlocks credit, and Dutch auctions plus the insurance fund keep depositors whole.</p>
+    </section>
+
     <footer class="site-footer">
       <span>Tamweel · digital bank from scratch — <span id="footer-address">not configured</span></span>
       <span>

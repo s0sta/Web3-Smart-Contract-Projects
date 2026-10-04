@@ -141,6 +141,76 @@
       </section>
     </div>
 
+    <!-- HOW IT WORKS — educational section -->
+    <section class="card" id="how-it-works" style="margin-bottom:18px">
+      <div class="card-head"><span class="card-ico">🧭</span><h2>How it works — from wallet to asnaf</h2></div>
+
+      <h3 style="margin:16px 0 10px; font-family:var(--font-display); font-size:15px; color:var(--accent-2)">📖 How to use</h3>
+      <ol style="margin:0; padding-left:20px; display:grid; gap:8px; font-size:13.5px; line-height:1.6">
+        <li>Press <strong>Connect Wallet</strong> (top-right) and switch to the <strong>Sepolia</strong> testnet — the dApp is pre-configured for Sepolia (chain id <span class="mono">11155111</span>) and the chain badge shows your current network.</li>
+        <li>In <strong>Your Zakat</strong>, enter your zakatable wealth in AED-S and press <strong>Declare wealth</strong> — this self-assessment starts your hawl (lunar-year) clock.</li>
+        <li>Once the hawl is complete, the card shows your <strong>Zakat due (2.5%)</strong> — press <strong>Pay my zakat</strong> and confirm the AED-S approval + transfer into the ring-fenced fund.</li>
+        <li>Committee members: fill in the recipient address + asnaf and press <strong>Register recipient</strong>, then <strong>Propose</strong> a disbursement in <strong>Zakat Committee</strong> and <strong>Approve</strong> it in <strong>Disbursements</strong> — at 2-of-3 approvals the recipient is paid.</li>
+      </ol>
+
+      <h3 style="margin:18px 0 10px; font-family:var(--font-display); font-size:15px; color:var(--accent-2)">⛓ The process — what happens on-chain</h3>
+      <ol style="margin:0; padding-left:20px; display:grid; gap:8px; font-size:13.5px; line-height:1.6">
+        <li><code class="mono">ZakatEngine.declareWealth</code> records your declared wealth and starts — or resets — the hawl clock whenever the wealth crosses the nisab.</li>
+        <li><code class="mono">ZakatEngine.zakatDue</code> computes the exact 2.5% (250 bps) due once wealth has stayed above the nisab for a full lunar year (354 days).</li>
+        <li><code class="mono">ZakatEngine.payZakat</code> pulls AED-S from your wallet into the ring-fenced <code class="mono">zakatFund</code> — funds can only ever leave through an executed disbursement.</li>
+        <li><code class="mono">AsnafRegistry.registerRecipient</code> stores KYC'd recipients with a proof-of-eligibility hash; every disbursement must name one of these registered recipients.</li>
+        <li><code class="mono">ZakatEngine.voteDisbursement</code> collects committee votes and, at 2-of-3 approvals, <code class="mono">_executeDisbursement</code> transfers AED-S straight to the registered asnaf recipient.</li>
+      </ol>
+
+      <h3 style="margin:18px 0 10px; font-family:var(--font-display); font-size:15px; color:var(--accent-2)">🕸 Flow graph</h3>
+      <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="Zakat Engine on-chain flow: declare wealth, hawl completes, pay zakat, register recipient, 2-of-3 committee vote, execute payment" style="display:block;margin-top:8px">
+        <defs>
+          <marker id="zarrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#4f46e5"/>
+          </marker>
+        </defs>
+        <g font-family="Inter, system-ui, sans-serif" text-anchor="middle">
+          <!-- stage 1 -->
+          <rect x="14" y="66" width="132" height="88" rx="14" fill="#fffdf8" stroke="#e8a317" stroke-width="2"/>
+          <circle cx="80" cy="82" r="10" fill="#e8a317"/><text x="80" y="86" font-size="12" font-weight="700" fill="#ffffff">1</text>
+          <text x="80" y="112" font-size="12" font-weight="600" fill="#2a2416">Declare wealth</text>
+          <text x="80" y="134" font-size="10" fill="#9a8f74" font-family="JetBrains Mono, ui-monospace, monospace">ZakatEngine</text>
+          <line x1="148" y1="110" x2="160" y2="110" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#zarrow)"/>
+          <!-- stage 2 -->
+          <rect x="166" y="66" width="132" height="88" rx="14" fill="#fffdf8" stroke="#e8a317" stroke-width="2"/>
+          <circle cx="232" cy="82" r="10" fill="#e8a317"/><text x="232" y="86" font-size="12" font-weight="700" fill="#ffffff">2</text>
+          <text x="232" y="112" font-size="12" font-weight="600" fill="#2a2416">Hawl completes</text>
+          <text x="232" y="134" font-size="10" fill="#9a8f74" font-family="JetBrains Mono, ui-monospace, monospace">ZakatEngine</text>
+          <line x1="300" y1="110" x2="312" y2="110" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#zarrow)"/>
+          <!-- stage 3 -->
+          <rect x="318" y="66" width="132" height="88" rx="14" fill="#fffdf8" stroke="#e8a317" stroke-width="2" stroke-dasharray="6 3"/>
+          <circle cx="384" cy="82" r="10" fill="#e8a317"/><text x="384" y="86" font-size="12" font-weight="700" fill="#ffffff">3</text>
+          <text x="384" y="112" font-size="12" font-weight="600" fill="#2a2416">Pay 2.5% zakat</text>
+          <text x="384" y="134" font-size="10" fill="#9a8f74" font-family="JetBrains Mono, ui-monospace, monospace">ZakatEngine</text>
+          <line x1="452" y1="110" x2="464" y2="110" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#zarrow)"/>
+          <!-- stage 4 -->
+          <rect x="470" y="66" width="132" height="88" rx="14" fill="#fffdf8" stroke="#e8a317" stroke-width="2"/>
+          <circle cx="536" cy="82" r="10" fill="#e8a317"/><text x="536" y="86" font-size="12" font-weight="700" fill="#ffffff">4</text>
+          <text x="536" y="112" font-size="12" font-weight="600" fill="#2a2416">Register recipient</text>
+          <text x="536" y="134" font-size="10" fill="#9a8f74" font-family="JetBrains Mono, ui-monospace, monospace">AsnafRegistry</text>
+          <line x1="604" y1="110" x2="616" y2="110" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#zarrow)"/>
+          <!-- stage 5 -->
+          <rect x="622" y="66" width="132" height="88" rx="14" fill="#fffdf8" stroke="#e8a317" stroke-width="2"/>
+          <circle cx="688" cy="82" r="10" fill="#e8a317"/><text x="688" y="86" font-size="12" font-weight="700" fill="#ffffff">5</text>
+          <text x="688" y="112" font-size="12" font-weight="600" fill="#2a2416">2-of-3 vote</text>
+          <text x="688" y="134" font-size="10" fill="#9a8f74" font-family="JetBrains Mono, ui-monospace, monospace">ZakatEngine</text>
+          <line x1="756" y1="110" x2="768" y2="110" stroke="#4f46e5" stroke-width="2.5" marker-end="url(#zarrow)"/>
+          <!-- stage 6 -->
+          <rect x="774" y="66" width="132" height="88" rx="14" fill="#fffdf8" stroke="#e8a317" stroke-width="2"/>
+          <circle cx="840" cy="82" r="10" fill="#e8a317"/><text x="840" y="86" font-size="12" font-weight="700" fill="#ffffff">6</text>
+          <text x="840" y="112" font-size="12" font-weight="600" fill="#2a2416">Execute payment</text>
+          <text x="840" y="134" font-size="10" fill="#9a8f74" font-family="JetBrains Mono, ui-monospace, monospace">ZakatEngine</text>
+        </g>
+        <text x="460" y="196" font-size="12" fill="#9a8f74" text-anchor="middle" font-family="Inter, system-ui, sans-serif">AED-S: payer → ring-fenced zakatFund → registered asnaf recipient</text>
+        <text x="460" y="216" font-size="12" fill="#9a8f74" text-anchor="middle" font-family="Inter, system-ui, sans-serif">nisab &amp; hawl verified on-chain · 2-of-3 committee approves every disbursement</text>
+      </svg>
+    </section>
+
     <footer class="site-footer">
       <span>Zakat Engine · Quran 9:60 from scratch — <span id="footer-address">not configured</span></span>
       <span>

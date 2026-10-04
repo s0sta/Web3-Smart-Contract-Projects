@@ -171,6 +171,87 @@
       </div>
     </section>
 
+    <!-- ===================== HOW TO USE · PROCESS · FLOW GRAPH ===================== -->
+    <section class="card howto-card">
+      <div class="card-head">
+        <h3>📘 How this dApp works</h3>
+        <span class="mono muted" style="margin-left:auto">GLD/USD · Sepolia · 0.3% fee</span>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:26px 34px">
+        <!-- A · HOW TO USE -->
+        <div style="flex:1 1 280px;min-width:0">
+          <div class="card-head" style="margin-bottom:6px"><h3>How to use</h3></div>
+          <p style="margin-top:10px"><span class="mono" style="color:var(--accent-1)">1.</span> Press <strong>Connect Wallet</strong> (top-right) and switch your wallet to <strong>Sepolia</strong> — the chain badge next to it turns green when the network matches (the ⚙ Settings panel can switch chains too).</p>
+          <p style="margin-top:10px"><span class="mono" style="color:var(--accent-1)">2.</span> Fund your wallet with Sepolia ETH for gas and test GLD/USD; the Swap card shows your <strong>balance</strong> with a <strong>MAX</strong> button.</p>
+          <p style="margin-top:10px"><span class="mono" style="color:var(--accent-1)">3.</span> Swap: type an amount under <strong>“You pay”</strong> — the <strong>“You receive”</strong> quote, rate, price impact and min received fill in live — then press <strong>Swap</strong> and confirm in your wallet.</p>
+          <p style="margin-top:10px"><span class="mono" style="color:var(--accent-1)">4.</span> Provide liquidity: on the <strong>Add</strong> tab enter GLD and USD, check the share preview, and press <strong>Add liquidity</strong> to receive LP tokens.</p>
+          <p style="margin-top:10px"><span class="mono" style="color:var(--accent-1)">5.</span> Exit and follow: on the <strong>Remove</strong> tab enter LP tokens (<strong>MAX</strong>) and press <strong>Remove liquidity</strong>; track your share in <strong>My position</strong> and every trade in <strong>Pool activity</strong>.</p>
+        </div>
+
+        <!-- B · ON-CHAIN PROCESS -->
+        <div style="flex:1 1 280px;min-width:0">
+          <div class="card-head" style="margin-bottom:6px"><h3>The process — what happens on-chain</h3></div>
+          <p style="margin-top:10px"><span class="mono" style="color:var(--accent-2)">1.</span> You only ever talk to the <strong>AMMRouter</strong> contract. It prices your trade with the pure math of <strong>AMMLibrary</strong> — <span class="mono">getAmountOut</span> on the constant-product curve, 0.3% fee included.</p>
+          <p style="margin-top:10px"><span class="mono" style="color:var(--accent-2)">2.</span> After your approval, the router pulls the input tokens from your wallet with <span class="mono">transferFrom</span> into the <strong>AMMPair</strong> pool, which holds both reserves.</p>
+          <p style="margin-top:10px"><span class="mono" style="color:var(--accent-2)">3.</span> <strong>AMMPair.swap</strong> pays out your tokens, then re-checks the invariant: with the 0.3% fee left in the pool, x·y must not shrink — otherwise the whole transaction reverts (<span class="mono">K()</span>) and you keep your tokens.</p>
+          <p style="margin-top:10px"><span class="mono" style="color:var(--accent-2)">4.</span> For liquidity, <strong>AMMRouter.addLiquidity</strong> looks the pair up in <strong>AMMFactory</strong> (creating it with <span class="mono">createPair</span> if missing) and <strong>AMMPair.mint</strong> issues your <strong>ERC20</strong> LP tokens; <span class="mono">removeLiquidity</span> + <span class="mono">burn</span> return your pro-rata share of both reserves, fees included.</p>
+          <p style="margin-top:10px"><span class="mono" style="color:var(--accent-2)">5.</span> Every step updates the reserves and emits <strong>Swap / Mint / Burn / Sync</strong> events — the KPI row and the <strong>Pool activity</strong> feed decode exactly these logs.</p>
+        </div>
+      </div>
+
+      <!-- C · FLOW GRAPH -->
+      <div style="margin-top:26px">
+        <div class="card-head" style="margin-bottom:4px"><h3>Flow graph</h3></div>
+        <svg viewBox="0 0 920 240" width="100%" role="img" aria-label="Flow graph of a swap: approve tokens, router quotes, pool swap, invariant check, tokens received" style="display:block">
+          <defs>
+            <marker id="howto-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"></path>
+            </marker>
+          </defs>
+
+          <text x="460" y="22" text-anchor="middle" font-family="'Space Grotesk','Inter',sans-serif" font-size="13" fill="#8b98ad">One Swap click → five on-chain stages, executed in a single transaction</text>
+
+          <g>
+            <rect x="16" y="45" width="150" height="112" rx="12" fill="#1b2537" stroke="#f59e0b" stroke-width="1.5"></rect>
+            <text x="91" y="85" text-anchor="middle" font-family="'Space Grotesk','Inter',sans-serif" font-size="13.5" font-weight="600" fill="#edf2f9">1 · Approve tokens</text>
+            <text x="91" y="112" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10.5" fill="#8b98ad">ERC20 (GLD/USD)</text>
+          </g>
+          <g>
+            <rect x="199" y="45" width="150" height="112" rx="12" fill="#1b2537" stroke="#f59e0b" stroke-width="1.5"></rect>
+            <text x="274" y="85" text-anchor="middle" font-family="'Space Grotesk','Inter',sans-serif" font-size="13.5" font-weight="600" fill="#edf2f9">2 · Router quotes</text>
+            <text x="274" y="112" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10.5" fill="#8b98ad">AMMRouter + AMMLibrary</text>
+          </g>
+          <g>
+            <rect x="382" y="45" width="150" height="112" rx="12" fill="#1b2537" stroke="#f59e0b" stroke-width="1.5"></rect>
+            <text x="457" y="85" text-anchor="middle" font-family="'Space Grotesk','Inter',sans-serif" font-size="13.5" font-weight="600" fill="#edf2f9">3 · Pool swap</text>
+            <text x="457" y="112" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10.5" fill="#8b98ad">AMMPair.swap</text>
+          </g>
+          <g>
+            <rect x="565" y="45" width="150" height="112" rx="12" fill="#1b2537" stroke="#f59e0b" stroke-width="1.5"></rect>
+            <text x="640" y="85" text-anchor="middle" font-family="'Space Grotesk','Inter',sans-serif" font-size="13.5" font-weight="600" fill="#edf2f9">4 · Invariant check</text>
+            <text x="640" y="112" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10.5" fill="#8b98ad">AMMPair (x·y = k)</text>
+          </g>
+          <g>
+            <rect x="748" y="45" width="150" height="112" rx="12" fill="#1b2537" stroke="#f59e0b" stroke-width="1.5"></rect>
+            <text x="823" y="85" text-anchor="middle" font-family="'Space Grotesk','Inter',sans-serif" font-size="13.5" font-weight="600" fill="#edf2f9">5 · Tokens received</text>
+            <text x="823" y="112" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="10.5" fill="#8b98ad">ERC20 → your wallet</text>
+          </g>
+
+          <line x1="169" y1="101" x2="195" y2="101" stroke="#2563eb" stroke-width="2.5" marker-end="url(#howto-arrow)"></line>
+          <line x1="352" y1="101" x2="378" y2="101" stroke="#2563eb" stroke-width="2.5" marker-end="url(#howto-arrow)"></line>
+          <line x1="535" y1="101" x2="561" y2="101" stroke="#2563eb" stroke-width="2.5" marker-end="url(#howto-arrow)"></line>
+          <line x1="718" y1="101" x2="744" y2="101" stroke="#2563eb" stroke-width="2.5" marker-end="url(#howto-arrow)"></line>
+
+          <rect x="16" y="200" width="14" height="14" rx="4" fill="#f59e0b"></rect>
+          <text x="38" y="211" font-family="'Inter',sans-serif" font-size="11.5" fill="#8b98ad">on-chain action</text>
+          <rect x="128" y="200" width="14" height="14" rx="4" fill="#2563eb"></rect>
+          <text x="150" y="211" font-family="'Inter',sans-serif" font-size="11.5" fill="#8b98ad">token flow</text>
+          <text x="904" y="211" text-anchor="end" font-family="'JetBrains Mono',monospace" font-size="11" fill="#8b98ad">Sepolia · 0.3% fee</text>
+        </svg>
+      </div>
+    </section>
+
     <!-- ===================== FOOTER ===================== -->
     <footer class="site-footer">
       <span>AMM DEX · constant-product from scratch — router <span id="footer-address">not configured</span></span>
