@@ -33,6 +33,7 @@ jobs:
           - 19-mawarid-rwa
           - 20-tamweel-credit
           - 21-sahm-exchange
+          - 22-rahala-payments
     steps:
       - uses: actions/checkout@v4
 
