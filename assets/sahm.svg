@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" font-family="'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5b8def"/>
+      <stop offset="1" stop-color="#d4e157"/>
+    </linearGradient>
+  </defs>
+
+  <!-- trading terminal (static) -->
+  <rect width="1200" height="300" fill="#12161f"/>
+  <circle cx="140" cy="60" r="150" fill="#5b8def" opacity="0.10"/>
+  <circle cx="1070" cy="250" r="160" fill="#d4e157" opacity="0.06"/>
+
+  <!-- identity -->
+  <text x="60" y="112" font-size="40" font-weight="700" fill="#e2e8f0" opacity="0">
+    Sahm — Exchange
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.3s"/>
+  </text>
+  <text x="62" y="150" font-size="19" font-weight="600" fill="#5b8def" opacity="0">
+    Decentralized exchange &amp; derivatives · eleven contracts
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="0.7s"/>
+  </text>
+  <text x="62" y="178" font-size="13.5" fill="#8494a8" opacity="0">
+    order book · AMM pools · margin · circuit breakers · insurance · governance
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" fill="freeze" begin="1s"/>
+  </text>
+
+  <!-- terminal panel -->
+  <g transform="translate(700 40)">
+    <rect width="460" height="220" rx="14" fill="#1a202b" stroke="#2c3648" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.4s"/>
+    </rect>
+
+    <text x="20" y="42" font-size="13.5" font-weight="700" fill="#e2e8f0" opacity="0">
+      ETH / AED-S · order book
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" fill="freeze" begin="1.5s"/>
+    </text>
+
+    <g opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.8s"/>
+      <rect x="20" y="60" width="420" height="30" rx="8" fill="#202a3a"/>
+      <text x="34" y="79" font-size="11" fill="#d4e157" font-family="ui-monospace, Menlo, monospace">BID #1 · 4 @ 2000 · escrow 8,000</text>
+      <rect x="20" y="96" width="420" height="30" rx="8" fill="#202a3a"/>
+      <text x="34" y="115" font-size="11" fill="#f26d6d" font-family="ui-monospace, Menlo, monospace">ASK #2 · 4 @ 2000 · filled 8,012</text>
+      <rect x="20" y="132" width="420" height="30" rx="8" fill="#202a3a"/>
+      <text x="34" y="151" font-size="11" fill="#8494a8" font-family="ui-monospace, Menlo, monospace">swap 1,000 → 0.454 ✓ · fee 0.3%</text>
+    </g>
+
+    <rect x="20" y="174" width="420" height="30" rx="8" fill="#202a3a" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.4s"/>
+    </rect>
+    <text x="34" y="193" font-size="11" fill="#5b8def" opacity="0">
+      📟 5x long · health 114% · breaker: live
+      <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.5s"/>
+    </text>
+  </g>
+</svg>

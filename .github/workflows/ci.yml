@@ -32,6 +32,7 @@ jobs:
           - 18-zakat-engine
           - 19-mawarid-rwa
           - 20-tamweel-credit
+          - 21-sahm-exchange
     steps:
       - uses: actions/checkout@v4
 

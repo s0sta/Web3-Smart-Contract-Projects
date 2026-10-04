@@ -8,22 +8,22 @@
 
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.26-363636?logo=solidity&logoColor=white)
 ![Foundry](https://img.shields.io/badge/Foundry-1.5.1-8b5cf6)
-![Tests](https://img.shields.io/badge/tests-567%20passing-brightgreen)
-![CI](https://img.shields.io/badge/CI-20%2F20%20green-2ea44f)
+![Tests](https://img.shields.io/badge/tests-612%20passing-brightgreen)
+![CI](https://img.shields.io/badge/CI-21%2F21%20green-2ea44f)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Live](https://img.shields.io/badge/Live-20%20dApps%20on%20s0sta.com-06b6d4)
+![Live](https://img.shields.io/badge/Live-21%20dApps%20on%20s0sta.com-06b6d4)
 
 ---
 
 ## The repository
 
-**20 complete protocols · 567 passing tests · 23,000+ lines of Solidity · zero external
-dependencies · CI green on all 20 projects.** Every contract in this repository is written
+**21 complete protocols · 612 passing tests · 26,000+ lines of Solidity · zero external
+dependencies · CI green on all 21 projects.** Every contract in this repository is written
 **from scratch** — no OpenZeppelin, no libraries — then exercised the way an auditor would:
 invariant tests, fuzz tests, attack PoCs, time-travel edge cases, deploy scripts, and a
 production-style dApp live on Sepolia for each project.
 
-All 20 dApps are hosted under one roof: **[s0sta.com](https://s0sta.com)** — the portal hub.
+All 21 dApps are hosted under one roof: **[s0sta.com](https://s0sta.com)** — the portal hub.
 
 ---
 
@@ -73,12 +73,13 @@ All 20 dApps are hosted under one roof: **[s0sta.com](https://s0sta.com)** — t
 |---|---------|-----------|--------------------|:---:|
 | 19 | [Mawarid RWA Platform](19-mawarid-rwa) 🖥️ [live](https://s0sta.com/mawarid) | **End-to-end tokenized real estate** — registry, KYC, primary issuance, OTC exchange, rental epochs, governance, treasury, insurance (9 contracts) | Full institutional workflow: phased subscriptions, order books, snapshot epochs, token-weighted governance, reserve floors | 53 ✅ |
 | 20 | [Tamweel Credit Protocol](20-tamweel-credit) 🖥️ [live](https://s0sta.com/tamweel) | **A complete digital bank** — deposits, utilization rates, collateralized credit, installment loans, Dutch auctions, insurance, governance (10 contracts) | Health factors, EMA oracle, per-second interest indices, credit-score gating, charity late fees | 47 ✅ |
+| 21 | [Sahm Exchange](21-sahm-exchange) 🖥️ [live](https://s0sta.com/sahm) | **A decentralized exchange & derivatives venue** — order book, AMM pools, leveraged margin, risk breakers, insurance, governance (11 contracts) | Price–time matching, x·y=k with fees, funding + liquidations, circuit breakers, LP governance | 45 ✅ |
 
 ---
 
 ## Stats
 
-| 20 protocols | 567 tests · 0 failures | 23,000+ Solidity lines | 0 external dependencies | CI 20/20 green | 20 live dApps |
+| 21 protocols | 612 tests · 0 failures | 26,000+ Solidity lines | 0 external dependencies | CI 21/21 green | 21 live dApps |
 |---|---|---|---|---|---|
 
 Every project ships with: **from-scratch contracts + NatSpec** · **foundry.toml / remappings** ·
@@ -91,7 +92,7 @@ One portal, 18 apps — **[s0sta.com](https://s0sta.com)** (source: [`portal/`](
 
 `/erc20-token` · `/crowdfund` · `/multisig` · `/escrow` · `/nft` · `/stake` · `/vesting` ·
 `/dex` · `/dao` · `/lend` · `/hoa` · `/estate` · `/waqf` · `/vara` · `/sukuk` · `/takaful` ·
-`/murabaha` · `/zakat` · `/mawarid` · `/tamweel`
+`/murabaha` · `/zakat` · `/mawarid` · `/tamweel` · `/sahm`
 
 ## Security methodology
 
@@ -135,7 +136,7 @@ forge build && forge test
 forge snapshot   # gas report
 ```
 
-GitHub Actions runs `forge build` + `forge test` on **all 20 projects** for every push —
+GitHub Actions runs `forge build` + `forge test` on **all 21 projects** for every push —
 check the checks tab on any commit.
 
 ## Working together

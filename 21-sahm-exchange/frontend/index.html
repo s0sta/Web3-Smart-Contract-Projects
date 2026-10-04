@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sahm — Decentralized Exchange | s0sta.com/sahm</title>
+  <meta name="description" content="A real-world-usable exchange on-chain: limit orders, AMM pools, leveraged margin, circuit breakers and LP governance." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">📟</span>
+      <div>
+        <span class="brand-name">Sahm <span class="brand-tag">EXCHANGE</span></span>
+        <span class="brand-sub">Decentralized exchange &amp; derivatives · s0sta.com/sahm</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙</button>
+      <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+    </div>
+  </header>
+
+  <main class="sahm">
+
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Collateral desk not configured yet</h3>
+          <p>Paste your deployed <strong>SahmCollateral</strong> address below, or deploy locally:
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… collateral address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this desk</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Collateral address <input type="text" id="set-collateral-address" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+        <label>Network <select id="set-chain"></select></label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- TICKER TAPE -->
+    <section class="tape">
+      <div class="tape-cell"><span class="tape-label">ETH</span><span class="tape-value" id="tape-price">—</span></div>
+      <div class="tape-cell"><span class="tape-label">24h volume</span><span class="tape-value" id="tape-volume">—</span></div>
+      <div class="tape-cell"><span class="tape-label">AMM price</span><span class="tape-value" id="tape-amm">—</span></div>
+      <div class="tape-cell"><span class="tape-label">Fees</span><span class="tape-value" id="tape-fees">—</span></div>
+      <div class="tape-cell"><span class="tape-label">Breaker</span><span class="tape-value" id="tape-halt">—</span></div>
+    </section>
+
+    <div class="sahm-grid">
+
+      <!-- ORDER BOOK -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">📖</span><h2>Order Book</h2></div>
+        <div class="order-list" id="order-list">
+          <p class="muted">no open orders</p>
+        </div>
+        <div class="act-form">
+          <label>Bid — price <input type="number" id="bid-price" placeholder="0.0" min="0" step="any" /></label>
+          <label>Amount <input type="number" id="bid-amount" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-accent" id="btn-bid">Place bid</button>
+        </div>
+        <div class="act-form">
+          <label>Ask — price <input type="number" id="ask-price" placeholder="0.0" min="0" step="any" /></label>
+          <label>Amount <input type="number" id="ask-amount" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-ask">Place ask</button>
+        </div>
+      </section>
+
+      <!-- AMM + MARGIN -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">💱</span><h2>Swap &amp; Margin</h2></div>
+        <table class="kpi-table">
+          <tr><td>Your margin balance</td><td class="mono" id="mx-balance">—</td></tr>
+          <tr><td>Locked margin</td><td class="mono" id="mx-locked">—</td></tr>
+        </table>
+        <div class="act-form">
+          <label>Deposit margin <input type="number" id="margin-amount" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-margin-deposit">Deposit</button>
+        </div>
+        <div class="act-form">
+          <label>Swap quote → ETH <input type="number" id="swap-amount" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-primary" id="btn-swap">Swap</button>
+        </div>
+        <div class="act-form">
+          <label>Open long — margin <input type="number" id="long-margin" placeholder="0.0" min="0" step="any" /></label>
+          <label>Leverage (e.g. 2 = 200) <input type="number" id="long-lev" placeholder="200" min="1" step="1" /></label>
+          <button class="btn btn-accent" id="btn-long">Open long</button>
+        </div>
+      </section>
+
+      <!-- GOVERNANCE -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">⚖</span><h2>Governance</h2></div>
+        <div class="prop-list" id="gov-list">
+          <p class="muted">no proposals yet</p>
+        </div>
+        <div class="act-form">
+          <label>Propose AMM fee (bps) <input type="number" id="gov-fee" placeholder="30" min="0" max="1000" step="1" /></label>
+          <button class="btn btn-ghost" id="btn-propose">Propose</button>
+        </div>
+        <div class="act-form">
+          <label>Add AMM liquidity — tokens <input type="number" id="liq-token" placeholder="0.0" min="0" step="any" /></label>
+          <label>Quote <input type="number" id="liq-quote" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-liq">Add liquidity</button>
+        </div>
+      </section>
+    </div>
+
+    <footer class="site-footer">
+      <span>Sahm · exchange from scratch — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/sahm</span>
+      </span>
+    </footer>
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
