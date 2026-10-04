@@ -31,6 +31,7 @@ jobs:
           - 17-murabaha-finance
           - 18-zakat-engine
           - 19-mawarid-rwa
+          - 20-tamweel-credit
     steps:
       - uses: actions/checkout@v4
 
