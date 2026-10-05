@@ -36,6 +36,7 @@ jobs:
           - 22-rahala-payments
           - 23-huwiyya-identity
           - 24-silsila-supplychain
+          - 25-daman-insurance
     steps:
       - uses: actions/checkout@v4
 

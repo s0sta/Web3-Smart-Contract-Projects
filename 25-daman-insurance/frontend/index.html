@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daman — Decentralized Insurance | s0sta.com/daman</title>
+  <meta name="description" content="A real-world-usable mutual insurer: actuarial pricing, policies, claims, parametric payouts, reinsurance and surplus." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">🛡</span>
+      <div>
+        <span class="brand-name">Daman <span class="brand-tag">MUTUAL</span></span>
+        <span class="brand-sub">Decentralized insurance &amp; parametric payouts · s0sta.com/daman</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙</button>
+      <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+    </div>
+  </header>
+
+  <main class="daman">
+
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Registry not configured yet</h3>
+          <p>Paste your deployed <strong>DamanRegistry</strong> address below, or deploy locally:
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… registry address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this registry</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Registry address <input type="text" id="set-registry-address" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+        <label>Network <select id="set-chain"></select></label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- COVERAGE STRIP -->
+    <section class="strip">
+      <div class="strip-cell"><span class="strip-label">Travel pool</span><span class="strip-value" id="strip-pool">—</span></div>
+      <div class="strip-cell"><span class="strip-label">Premiums</span><span class="strip-value" id="strip-premiums">—</span></div>
+      <div class="strip-cell"><span class="strip-label">Fees</span><span class="strip-value" id="strip-fees">—</span></div>
+      <div class="strip-cell"><span class="strip-label">Your policies</span><span class="strip-value" id="strip-policies">—</span></div>
+      <div class="strip-cell"><span class="strip-label">Condition 0</span><span class="strip-value" id="strip-condition">—</span></div>
+    </section>
+
+    <div class="daman-grid">
+
+      <!-- QUOTES & BUY -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">🧾</span><h2>Get Covered</h2></div>
+        <table class="kpi-table">
+          <tr><td>Travel base rate</td><td class="mono" id="q-rate">—</td></tr>
+          <tr><td>Your quote</td><td class="mono accent" id="q-quote">—</td></tr>
+        </table>
+        <div class="act-form">
+          <label>Register as policyholder</label>
+          <button class="btn btn-ghost" id="btn-register">Register</button>
+        </div>
+        <div class="act-form">
+          <label>Line <select id="buy-line">
+            <option value="1">Travel</option><option value="2">Flight Delay</option>
+            <option value="3">Property</option><option value="4">Health</option>
+          </select></label>
+          <label>Cover <input type="number" id="buy-cover" placeholder="0.0" min="0" step="any" /></label>
+          <label>Days <input type="number" id="buy-days" placeholder="30" min="1" step="1" /></label>
+          <label>Risk <select id="buy-risk">
+            <option value="0">Low</option><option value="1" selected>Standard</option>
+            <option value="2">High</option>
+          </select></label>
+          <button class="btn btn-primary" id="btn-buy">Buy policy</button>
+        </div>
+      </section>
+
+      <!-- MY POLICIES & CLAIMS -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">📑</span><h2>Policies &amp; Claims</h2></div>
+        <div class="prop-list" id="policy-list">
+          <p class="muted">no policies yet</p>
+        </div>
+        <div class="act-form">
+          <label>File claim — policy # <input type="number" id="claim-policy" placeholder="0" min="0" step="1" /> amount <input type="number" id="claim-amount" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-accent" id="btn-claim">File claim</button>
+        </div>
+      </section>
+
+      <!-- PARAMETRIC & GOV -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">🌦</span><h2>Parametric &amp; Governance</h2></div>
+        <div class="act-form">
+          <label>Buy parametric cover — payout <input type="number" id="par-payout" placeholder="0.0" min="0" step="any" /> window days <input type="number" id="par-days" placeholder="7" min="1" step="1" /></label>
+          <button class="btn btn-ghost" id="btn-par">Buy cover (condition 0)</button>
+        </div>
+        <div class="prop-list" id="gov-list">
+          <p class="muted">no proposals yet</p>
+        </div>
+        <div class="act-form">
+          <label>Propose travel rate (bps) <input type="number" id="gov-rate" placeholder="300" min="0" max="10000" step="1" /></label>
+          <button class="btn btn-ghost" id="btn-propose">Propose</button>
+        </div>
+      </section>
+    </div>
+
+    <footer class="site-footer">
+      <span>Daman · insurance mutual from scratch — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/daman</span>
+      </span>
+    </footer>
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
