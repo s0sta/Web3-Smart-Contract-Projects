@@ -4,16 +4,17 @@
 
 window.APP_CONFIG = {
   // Deployed on Sepolia testnet (owner: 0x319899FaAAD730519B8a2Bd72d2Eba2370a9B853).
-  registryAddress: "0x1e64F582DA7b9d869c4AbDE9cc5155BF3B8e30cf",
-  oracleAddress: "0x6982639F40Cebd593a9bC7325985696a28E9D7A6",
-  zakatAddress: "0x8f550F2a0B02caB48fC66CF4472ad003Be856330",
-  vaultAddress: "0x5BB057139Bf81822Db668cF3E14fAd7A626096A8",
-  donationsAddress: "0x6141632F653BF311a96bdb6875E3A0D7866587d1",
-  allocationsAddress: "0xE6a6299991B74548feF9E43F13aB5554fC654217",
-  emergencyAddress: "0x72F08d89224D4B83728e7264C5E346afe7Fa9c0b",
-  sponsorshipsAddress: "0xA9408f4CE22e76d0f3742F011aaD2C6b641BF9E5",
-  governorAddress: "0x0503B66b0f897394A19de7CD6adEDD6880aE65A3",
-  aedsAddress: "0xAcA41b03aD8D9A6d22DDB98a13Fb730744B9025D",
+  // Settlement currency: AtaaStable (SAR-S) — pegged to the Saudi Riyal.
+  registryAddress: "0xeE9fd5f7b8Eb2250963F3d948fEcfc62D5A02018",
+  oracleAddress: "0xA367b6403dbFbD37B4A7Ca9c899DF6CF6dA7e87B",
+  zakatAddress: "0x3f998976D1aB813412147Ed172938d86f85A9B83",
+  vaultAddress: "0x68De795501811130F7D319C1237CbC879C241eA9",
+  donationsAddress: "0x548a3B476B560953fCb5f428Cfa0ABd87e2df088",
+  allocationsAddress: "0x657f702d63aa521e69eF882797D1F258471Ddc5b",
+  emergencyAddress: "0xC232C7805bc4f6000e72261e422A5fC89559b7F0",
+  sponsorshipsAddress: "0xebDf721Fd99B65C6338A9ce583c1Fc539dD81f0D",
+  governorAddress: "0xb8282ABE0d9a2b6d113C1bF555DBDA6Cf4A56b27",
+  aedsAddress: "0xbCe8783ED240814a6C80D43be8909Fb3Dd6D9aC5",
 
   defaultChainId: 11155111,
 

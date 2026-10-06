@@ -2,7 +2,7 @@
 pragma solidity 0.8.26;
 
 import {Script, console2} from "forge-std/Script.sol";
-import {MockStable} from "../src/MockStable.sol";
+import {AtaaStable} from "../src/AtaaStable.sol";
 import {AtaaRegistry} from "../src/AtaaRegistry.sol";
 import {AtaaOracle} from "../src/AtaaOracle.sol";
 import {AtaaZakat} from "../src/AtaaZakat.sol";
@@ -16,7 +16,7 @@ import {AtaaGovernor} from "../src/AtaaGovernor.sol";
 /// @title DeployAtaa
 contract DeployAtaaStruct {
     struct Data {
-        MockStable aeds;
+        AtaaStable aeds;
         AtaaRegistry registry;
         AtaaOracle oracle;
         AtaaZakat zakat;
@@ -57,7 +57,7 @@ contract DeployAtaa is Script {
         }
         vm.stopBroadcast();
 
-        console2.log("AED-S       :", address(d.aeds));
+        console2.log("SAR-S       :", address(d.aeds));
         console2.log("Registry    :", address(d.registry));
         console2.log("Oracle      :", address(d.oracle));
         console2.log("Zakat       :", address(d.zakat), "| nisab 25,000");
@@ -70,7 +70,7 @@ contract DeployAtaa is Script {
     }
 
     function _deploy() internal returns (DeployAtaaStruct.Data memory d) {
-        d.aeds = new MockStable();
+        d.aeds = new AtaaStable("Ataa Saudi Riyal", "SAR-S");
         d.registry = new AtaaRegistry();
         d.oracle = new AtaaOracle(1 hours, 24 hours);
         d.vault = new AtaaVault(d.aeds);
@@ -102,7 +102,7 @@ contract DeployAtaa is Script {
         d.oracle.grantRole(d.oracle.GUARDIAN_ROLE(), guardian);
 
         d.oracle.setAssets(address(0x60), address(0x51));
-        d.oracle.postPrice(address(0x60), 300 ether);
+        d.oracle.postPrice(address(0x60), 300 ether); // 300 SAR per gram of gold
         d.oracle.postPrice(address(0x51), 5 ether);
         d.zakat.setCashNisab(25_000 ether);
     }

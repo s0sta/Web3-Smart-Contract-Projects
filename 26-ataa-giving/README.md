@@ -9,7 +9,7 @@
 > **Difficulty: ★★★★★★** · The eighth flagship · 🌐 **Live demo: [https://s0sta.com/ataa](https://s0sta.com/ataa)**
 > — see [`frontend/README.md`](frontend/README.md)
 >
-> 📍 **Deployed on Sepolia: [`AtaaRegistry 0x1e64F582DA7b9d869c4AbDE9cc5155BF3B8e30cf`](https://sepolia.etherscan.io/address/0x1e64F582DA7b9d869c4AbDE9cc5155BF3B8e30cf)** — 10 contracts live (registry, oracle, zakat, vault, donations, allocations, emergency, sponsorships, governor) · the owner's donor profile, the first beneficiary (orphan sponsorship) and a 100,000 AED-S wealth declaration are live — a comprehensive charitable
+> 📍 **Deployed on Sepolia: [`AtaaRegistry 0xeE9fd5f7b8Eb2250963F3d948fEcfc62D5A02018`](https://sepolia.etherscan.io/address/0xeE9fd5f7b8Eb2250963F3d948fEcfc62D5A02018)** — 10 contracts live (registry, oracle, zakat, vault, donations, allocations, emergency, sponsorships, governor) · the owner's donor profile, the first beneficiary (orphan sponsorship) and a 100,000 SAR-S wealth declaration are live — a comprehensive charitable
 > giving platform: a full zakat calculator across seven asset classes, sadaqa
 > donations, **per-donation donor tracking** (see exactly where your money
 > went), emergency campaigns, monthly sponsorships and donor governance.
@@ -54,7 +54,7 @@ forge script script/Deploy.s.sol --rpc-url http://127.0.0.1:8545 --broadcast
 
 ## Production hardening
 
-- Licensed zakat authorities for nisab calibration, fiat rails for real AED,
+- Licensed zakat authorities for nisab calibration, fiat rails for real SAR,
   independent audit before real funds.
 
 ## License

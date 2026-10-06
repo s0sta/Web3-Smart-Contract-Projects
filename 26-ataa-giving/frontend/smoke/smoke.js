@@ -55,7 +55,8 @@ async function main() {
   }
 
   console.log("== deploy the platform ==");
-  const aeds = await new ethers.ContractFactory(art("MockStable").abi, art("MockStable").bytecode, funder).deploy();
+  const aeds = await new ethers.ContractFactory(art("AtaaStable").abi, art("AtaaStable").bytecode, funder)
+    .deploy("Ataa Saudi Riyal", "SAR-S");
   await aeds.waitForDeployment();
   const registry = await new ethers.ContractFactory(art("AtaaRegistry").abi, art("AtaaRegistry").bytecode, funder).deploy();
   await registry.waitForDeployment();

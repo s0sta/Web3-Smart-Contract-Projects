@@ -16,7 +16,7 @@
   const ABI_ALC = window.ATAAALLOCATIONS_ABI || [];
   const ABI_SPO = window.ATAASPONSORSHIPS_ABI || [];
   const ABI_GOV = window.ATAAGOVERNOR_ABI || [];
-  const ABI_AED = window.ATAA_AEDS_ABI || [];
+  const ABI_SAR = window.ATAA_SARS_ABI || [];
 
   const LS_ADDRESS = "ataa.registryAddress";
   const LS_CHAIN = "ataa.chainId";
@@ -56,7 +56,7 @@
     RO.allocations = new ethers.Contract(cfg.allocationsAddress, ABI_ALC, readProvider);
     RO.sponsorships = new ethers.Contract(cfg.sponsorshipsAddress, ABI_SPO, readProvider);
     RO.governor = new ethers.Contract(cfg.governorAddress, ABI_GOV, readProvider);
-    RO.aeds = new ethers.Contract(cfg.aedsAddress, ABI_AED, readProvider);
+    RO.aeds = new ethers.Contract(cfg.aedsAddress, ABI_SAR, readProvider);
   }
 
   function shortAddr(a) {
@@ -260,15 +260,15 @@
         RO.registry.beneficiaryCount(),
         RO.zakat.cashNisab(),
       ]);
-      $("#strip-pool").textContent = fmtUnits(pool) + " AED-S";
+      $("#strip-pool").textContent = fmtUnits(pool) + " SAR-S";
       $("#strip-beneficiaries").textContent = String(beneficiaries);
-      $("#zk-nisab").textContent = fmtUnits(nisab) + " AED-S";
+      $("#zk-nisab").textContent = fmtUnits(nisab) + " SAR-S";
 
       if (account) {
         const report = await RO.vault.donorReport(account);
-        $("#strip-given").textContent = fmtUnits(report.totalGiven) + " AED-S";
-        $("#strip-alloc").textContent = fmtUnits(report.totalAllocated) + " AED-S";
-        $("#strip-unalloc").textContent = fmtUnits(report.totalUnallocated) + " AED-S";
+        $("#strip-given").textContent = fmtUnits(report.totalGiven) + " SAR-S";
+        $("#strip-alloc").textContent = fmtUnits(report.totalAllocated) + " SAR-S";
+        $("#strip-unalloc").textContent = fmtUnits(report.totalUnallocated) + " SAR-S";
 
         // tracking rows
         let rows = "";
@@ -286,7 +286,7 @@
           }
           rows +=
             '<div class="item-row"><span class="mono">#' + cid.toString() + "</span>" +
-            '<span class="muted small">' + fmtUnits(c.amount).short + " AED-S · " + (Number(c.zakatClass) === 0 ? "sadaqa" : "zakat (" + CLASSES[Number(c.zakatClass)] + ")") + "</span>" +
+            '<span class="muted small">' + fmtUnits(c.amount).short + " SAR-S · " + (Number(c.zakatClass) === 0 ? "sadaqa" : "zakat (" + CLASSES[Number(c.zakatClass)] + ")") + "</span>" +
             '<span class="item-right">' + where + "</span></div>";
         }
         $("#track-list").innerHTML = rows || '<p class="muted">no contributions yet</p>';
@@ -294,7 +294,7 @@
         // my zakat position
         const ac = BigInt($("#zk-class").value);
         const pos = await RO.zakat.positions(account, ac);
-        $("#zk-due").textContent = fmtUnits(await RO.zakat.due(account, ac)) + " AED-S";
+        $("#zk-due").textContent = fmtUnits(await RO.zakat.due(account, ac)) + " SAR-S";
       } else {
         $("#strip-given").textContent = "—";
         $("#zk-due").textContent = "—";

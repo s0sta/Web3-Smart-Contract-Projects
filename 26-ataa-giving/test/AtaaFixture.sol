@@ -2,7 +2,7 @@
 pragma solidity 0.8.26;
 
 import {Test, console2} from "forge-std/Test.sol";
-import {MockStable} from "../src/MockStable.sol";
+import {AtaaStable} from "../src/AtaaStable.sol";
 import {AtaaRegistry} from "../src/AtaaRegistry.sol";
 import {AtaaOracle} from "../src/AtaaOracle.sol";
 import {AtaaZakat} from "../src/AtaaZakat.sol";
@@ -20,7 +20,7 @@ import {AtaaGovernor} from "../src/AtaaGovernor.sol";
 ///         2-of-3 allocations desk with category budgets, emergency campaigns,
 ///         monthly sponsorships and the donor-weighted governor.
 abstract contract AtaaFixture is Test {
-    MockStable internal aeds;
+    AtaaStable internal aeds;
     AtaaRegistry internal registry;
     AtaaOracle internal oracle;
     AtaaZakat internal zakat;
@@ -43,7 +43,7 @@ abstract contract AtaaFixture is Test {
     uint256 internal beneficiaryId;
 
     function setUp() public virtual {
-        aeds = new MockStable();
+        aeds = new AtaaStable("Ataa Saudi Riyal", "SAR-S");
         registry = new AtaaRegistry();
         oracle = new AtaaOracle(1 hours, 24 hours);
         vault = new AtaaVault(aeds);
@@ -91,7 +91,7 @@ abstract contract AtaaFixture is Test {
         beneficiaryId = registry.registerBeneficiary(bytes32("orphan-center"), AtaaRegistry.Category.Orphans, 1_000 ether, "orphan sponsorship");
 
         // funds
-        aeds.setMinter(address(this));
+        // the test contract holds ISSUER_ROLE (constructor grant)
         aeds.mint(donor, 1_000_000 ether);
         vm.prank(donor);
         aeds.approve(address(vault), 1_000_000 ether);
