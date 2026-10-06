@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ataa — Zakat & Giving Platform | s0sta.com/ataa</title>
+  <meta name="description" content="Calculate and pay your zakat across seven asset classes, give sadaqa, and track exactly where your donation went — transparent giving on-chain." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">🤲</span>
+      <div>
+        <span class="brand-name">Ataa <span class="brand-tag">GIVING</span></span>
+        <span class="brand-sub">Zakat, sadaqa &amp; donor tracking · s0sta.com/ataa</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="chain-badge" id="chain-badge">—</span>
+      <button class="btn btn-ghost btn-sm" id="btn-settings" title="Settings">⚙</button>
+      <button class="btn btn-primary" id="btn-connect">Connect Wallet</button>
+    </div>
+  </header>
+
+  <main class="ataa">
+
+    <section id="setup-banner" hidden>
+      <div class="banner">
+        <div class="banner-icon">🛠</div>
+        <div>
+          <h3>Registry not configured yet</h3>
+          <p>Paste your deployed <strong>AtaaRegistry</strong> address below, or deploy locally:
+             <code>anvil</code> + <code>forge script script/Deploy.s.sol --broadcast</code>.</p>
+          <form id="form-setup" class="row">
+            <input type="text" id="setup-address" placeholder="0x… registry address" autocomplete="off" spellcheck="false" />
+            <button class="btn btn-primary" type="submit">Use this registry</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="card settings-panel" id="settings-panel" hidden>
+      <h3>Settings</h3>
+      <div class="grid-2">
+        <label>Registry address <input type="text" id="set-registry-address" placeholder="0x…" autocomplete="off" spellcheck="false" /></label>
+        <label>Network <select id="set-chain"></select></label>
+      </div>
+      <div class="row">
+        <button class="btn btn-primary" id="btn-save-settings">Save &amp; reload</button>
+        <button class="btn btn-ghost" id="btn-cancel-settings">Cancel</button>
+      </div>
+    </section>
+
+    <!-- MY GIVING STRIP -->
+    <section class="strip">
+      <div class="strip-cell"><span class="strip-label">Total given</span><span class="strip-value" id="strip-given">—</span></div>
+      <div class="strip-cell"><span class="strip-label">Allocated</span><span class="strip-value" id="strip-alloc">—</span></div>
+      <div class="strip-cell"><span class="strip-label">Unallocated</span><span class="strip-value" id="strip-unalloc">—</span></div>
+      <div class="strip-cell"><span class="strip-label">Pool</span><span class="strip-value" id="strip-pool">—</span></div>
+      <div class="strip-cell"><span class="strip-label">Beneficiaries</span><span class="strip-value" id="strip-beneficiaries">—</span></div>
+    </section>
+
+    <div class="ataa-grid">
+
+      <!-- ZAKAT WIZARD -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">🧮</span><h2>Zakat Calculator</h2></div>
+        <div class="act-form">
+          <label>Register as a donor</label>
+          <button class="btn btn-ghost" id="btn-register">Register</button>
+        </div>
+        <div class="act-form">
+          <label>Asset class <select id="zk-class">
+            <option value="1">Cash / savings</option>
+            <option value="2">Gold</option>
+            <option value="3">Silver</option>
+            <option value="4">Crypto</option>
+            <option value="5">Produce (harvest)</option>
+            <option value="7">Rikaz (found treasure)</option>
+          </select></label>
+          <label>Wealth <input type="number" id="zk-amount" placeholder="0.0" min="0" step="any" /></label>
+          <label>Produce: kg <input type="number" id="zk-kg" placeholder="0" min="0" step="1" /> price/kg <input type="number" id="zk-pricekg" placeholder="0.0" min="0" step="any" /></label>
+          <div class="kpi-table">
+            <table><tr><td>Nisab</td><td class="mono" id="zk-nisab">—</td></tr>
+            <tr><td>Your zakat due</td><td class="mono accent" id="zk-due">—</td></tr></table>
+          </div>
+          <div class="row">
+            <button class="btn btn-ghost" id="btn-declare">Declare wealth</button>
+            <button class="btn btn-primary" id="btn-pay-zakat">Pay zakat</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- GIVE & BENEFICIARIES -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">💝</span><h2>Give Sadaqa</h2></div>
+        <div class="act-form">
+          <label>Amount <input type="number" id="sad-amount" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-primary" id="btn-sadaqa">Donate</button>
+        </div>
+        <div class="prop-list" id="ben-list">
+          <p class="muted">no beneficiaries yet</p>
+        </div>
+        <div class="act-form">
+          <label>Sponsor beneficiary # <input type="number" id="sp-bid" placeholder="0" min="0" step="1" /> monthly <input type="number" id="sp-amount" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-sponsor">Start sponsorship</button>
+        </div>
+      </section>
+
+      <!-- MY TRACKING & GOV -->
+      <section class="card">
+        <div class="card-head"><span class="card-ico">🔎</span><h2>Where My Money Went</h2></div>
+        <div class="prop-list" id="track-list">
+          <p class="muted">no contributions yet</p>
+        </div>
+        <div class="prop-list" id="gov-list">
+          <p class="muted">no proposals yet</p>
+        </div>
+        <div class="act-form">
+          <label>Propose orphan budget (tokens) <input type="number" id="gov-budget" placeholder="0.0" min="0" step="any" /></label>
+          <button class="btn btn-ghost" id="btn-propose">Propose</button>
+        </div>
+      </section>
+    </div>
+
+    <footer class="site-footer">
+      <span>Ataa · giving platform from scratch — <span id="footer-address">not configured</span></span>
+      <span>
+        <a id="footer-github" href="#" target="_blank" rel="noopener">GitHub</a> ·
+        <a id="footer-explorer" href="#" target="_blank" rel="noopener">Explorer</a> ·
+        <span class="muted">s0sta.com/ataa</span>
+      </span>
+    </footer>
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.umd.min.js"></script>
+  <script src="js/abi.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

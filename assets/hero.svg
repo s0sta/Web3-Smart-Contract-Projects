@@ -100,11 +100,11 @@
     </g>
     <g>
       <rect x="352" y="196" width="104" height="26" rx="13" fill="#1b2440" stroke="#3b4a75"/>
-      <text x="404" y="213" font-size="12" text-anchor="middle" fill="#6ee7b7" font-family="ui-monospace, Menlo, monospace">756 tests ✓</text>
+      <text x="404" y="213" font-size="12" text-anchor="middle" fill="#6ee7b7" font-family="ui-monospace, Menlo, monospace">792 tests ✓</text>
     </g>
     <g>
       <rect x="466" y="196" width="110" height="26" rx="13" fill="#1b2440" stroke="#3b4a75"/>
-      <text x="521" y="213" font-size="12" text-anchor="middle" fill="#fcd34d" font-family="ui-monospace, Menlo, monospace">25 dApps live</text>
+      <text x="521" y="213" font-size="12" text-anchor="middle" fill="#fcd34d" font-family="ui-monospace, Menlo, monospace">26 dApps live</text>
     </g>
   </g>
 
@@ -126,15 +126,15 @@
     </rect>
 
     <text x="26" y="96" font-size="15" fill="#10b981" font-family="ui-monospace, Menlo, monospace" opacity="0">
-      ✔ 25 suites · 756 tests · 0 failures
+      ✔ 26 suites · 792 tests · 0 failures
       <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.8s"/>
     </text>
     <text x="26" y="126" font-size="15" fill="#10b981" font-family="ui-monospace, Menlo, monospace" opacity="0">
-      ✔ 38,000+ lines Solidity · zero dependencies
+      ✔ 41,000+ lines Solidity · zero dependencies
       <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.5s"/>
     </text>
     <text x="26" y="156" font-size="15" fill="#fcd34d" font-family="ui-monospace, Menlo, monospace" opacity="0">
-      ✔ CI 25/25 green · 25 dApps live on Sepolia
+      ✔ CI 26/26 green · 26 dApps live on Sepolia
       <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="3.2s"/>
     </text>
     <text x="26" y="186" font-size="15" fill="#8b96ab" font-family="ui-monospace, Menlo, monospace" opacity="0">
