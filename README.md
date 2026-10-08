@@ -9,9 +9,9 @@
 ![Solidity](https://img.shields.io/badge/Solidity-0.8.26-363636?logo=solidity&logoColor=white)
 ![Foundry](https://img.shields.io/badge/Foundry-1.5.1-8b5cf6)
 ![Tests](https://img.shields.io/badge/tests-792%20passing-brightgreen)
-![CI](https://img.shields.io/badge/CI-26%2F26%20green-2ea44f)
+![CI](https://img.shields.io/badge/CI-27%2F27%20green-2ea44f)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Live](https://img.shields.io/badge/Live-26%20dApps%20on%20s0sta.com-06b6d4)
+![Live](https://img.shields.io/badge/Live-27%20dApps%20on%20s0sta.com-06b6d4)
 
 ---
 
@@ -23,7 +23,7 @@ dependencies · CI green on all 26 projects.** Every contract in this repository
 invariant tests, fuzz tests, attack PoCs, time-travel edge cases, deploy scripts, and a
 production-style dApp live on Sepolia for each project.
 
-All 26 dApps are hosted under one roof: **[s0sta.com](https://s0sta.com)** — the portal hub.
+All 27 dApps are hosted under one roof: **[s0sta.com](https://s0sta.com)** — the portal hub.
 
 ---
 
@@ -78,8 +78,8 @@ All 26 dApps are hosted under one roof: **[s0sta.com](https://s0sta.com)** — t
 | 23 | [Huwiyya Identity](23-huwiyya-identity) 🖥️ [live](https://s0sta.com/huwiyya) | **A decentralized identity & credentials platform** — DIDs, verifiable credentials, selective disclosure, attestations, reputation, gates, recovery (10 contracts) | Merkle-proof disclosure, weighted reputation with decay, 2-of-3 guardian recovery, reputation-weighted governance | 30 ✅ |
 | 24 | [Silsila Supply Chain](24-silsila-supplychain) 🖥️ [live](https://s0sta.com/silsila) | **A supply chain & logistics platform** — purchase orders, shipment tracking, quality inspections, milestone payments, cargo insurance, reputation (12 contracts) | POD-tracked milestones, milestone-gated escrow, 2-of-3 adjuster claims, delivery-based reputation | 43 ✅ |
 | 25 | [Daman Insurance](25-daman-insurance) 🖥️ [live](https://s0sta.com/daman) | **A decentralized insurance & parametric payouts platform** — actuarial pricing, policies, claims, parametric triggers, reinsurance, surplus (12 contracts) | Risk-class pricing, 2-of-3 adjusters, oracle-triggered auto-payouts, attachment-point recoveries, mutual surplus | 34 ✅ |
-| 26 | [Taqa Energy](26-taqa-energy) 🖥️ [live](https://s0sta.com/taqa) | **A decentralized energy & carbon markets platform** — RECs, carbon credits, P2P energy trading, green-claim retirement (12 contracts) | Auditor-attested minting, escrowed certificate exchange, double-retirement-proof claims, certificate-weighted governance | 31 ✅ |
 | 26 | [Ataa Giving](26-ataa-giving) 🖥️ [live](https://s0sta.com/ataa) | **A zakat & giving platform with donor tracking** — 7 asset classes, nisab/hawl, 2.5–20% rates, sadaqa, campaigns, sponsorships (10 contracts) | Multi-class zakat math, FIFO donation provenance, 2-of-3 allocations, monthly pledges | 36 ✅ |
+| 27 | [Taqa Energy](26-taqa-energy) 🖥️ [live](https://s0sta.com/taqa) | **A decentralized energy & carbon markets platform** — RECs, carbon credits, P2P energy trading, green-claim retirement (12 contracts) | Auditor-attested minting, escrowed certificate exchange, double-retirement-proof claims, certificate-weighted governance | 31 ✅ |
 
 ---
 
@@ -98,7 +98,7 @@ One portal, 18 apps — **[s0sta.com](https://s0sta.com)** (source: [`portal/`](
 
 `/erc20-token` · `/crowdfund` · `/multisig` · `/escrow` · `/nft` · `/stake` · `/vesting` ·
 `/dex` · `/dao` · `/lend` · `/hoa` · `/estate` · `/waqf` · `/vara` · `/sukuk` · `/takaful` ·
-`/murabaha` · `/zakat` · `/mawarid` · `/tamweel` · `/sahm` · `/rahala` · `/huwiyya` · `/silsila` · `/daman` · `/taqa` · `/ataa`
+`/murabaha` · `/zakat` · `/mawarid` · `/tamweel` · `/sahm` · `/rahala` · `/huwiyya` · `/silsila` · `/daman` · `/taqa` · `/ataa` · `/ataa`
 
 ## Security methodology
 
@@ -142,7 +142,7 @@ forge build && forge test
 forge snapshot   # gas report
 ```
 
-GitHub Actions runs `forge build` + `forge test` on **all 26 projects** for every push —
+GitHub Actions runs `forge build` + `forge test` on **all 27 projects** for every push —
 check the checks tab on any commit.
 
 ## Working together

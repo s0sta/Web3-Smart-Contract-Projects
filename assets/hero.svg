@@ -104,7 +104,7 @@
     </g>
     <g>
       <rect x="466" y="196" width="110" height="26" rx="13" fill="#1b2440" stroke="#3b4a75"/>
-      <text x="521" y="213" font-size="12" text-anchor="middle" fill="#fcd34d" font-family="ui-monospace, Menlo, monospace">26 dApps live</text>
+      <text x="521" y="213" font-size="12" text-anchor="middle" fill="#fcd34d" font-family="ui-monospace, Menlo, monospace">27 dApps live</text>
     </g>
   </g>
 
@@ -130,11 +130,11 @@
       <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="1.8s"/>
     </text>
     <text x="26" y="126" font-size="15" fill="#10b981" font-family="ui-monospace, Menlo, monospace" opacity="0">
-      ✔ 41,000+ lines Solidity · zero dependencies
+      ✔ 45,000+ lines Solidity · zero dependencies
       <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="2.5s"/>
     </text>
     <text x="26" y="156" font-size="15" fill="#fcd34d" font-family="ui-monospace, Menlo, monospace" opacity="0">
-      ✔ CI 26/26 green · 26 dApps live on Sepolia
+      ✔ CI 27/27 green · 27 dApps live on Sepolia
       <animate attributeName="opacity" from="0" to="1" dur="0.4s" fill="freeze" begin="3.2s"/>
     </text>
     <text x="26" y="186" font-size="15" fill="#8b96ab" font-family="ui-monospace, Menlo, monospace" opacity="0">
