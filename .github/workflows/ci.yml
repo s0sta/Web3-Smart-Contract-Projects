@@ -37,6 +37,7 @@ jobs:
           - 23-huwiyya-identity
           - 24-silsila-supplychain
           - 25-daman-insurance
+          - 26-taqa-energy
           - 26-ataa-giving
     steps:
       - uses: actions/checkout@v4
