@@ -1,21 +1,21 @@
 <div align="center">
 
-<a href="https://s0sta.com/Web3-Smart-Contract-Projects/"><img src=".github/assets/banner.png" alt="27 smart contract projects. Built from zero. Live on Sepolia." width="100%"></a>
+<a href="https://s0sta.com/Web3-Smart-Contract-Projects/"><img src=".github/assets/banner.png" alt="28 smart contract projects. Built from zero. Live on Sepolia." width="100%"></a>
 
 <br>
 
 <a href="https://github.com/s0sta/Web3-Smart-Contract-Projects/actions/workflows/ci.yml"><img src="https://github.com/s0sta/Web3-Smart-Contract-Projects/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 <img src="https://img.shields.io/badge/Solidity-0.8.26-363636?style=flat-square&logo=solidity&logoColor=white" alt="Solidity 0.8.26">
 <img src="https://img.shields.io/badge/Foundry-forge-8b5cf6?style=flat-square" alt="Foundry">
-<img src="https://img.shields.io/badge/tests-838%20passing-2ea44f?style=flat-square" alt="838 tests passing">
-<a href="https://s0sta.com/Web3-Smart-Contract-Projects/"><img src="https://img.shields.io/badge/live%20dApps-27-22c3e6?style=flat-square" alt="27 live dApps"></a>
+<img src="https://img.shields.io/badge/tests-914%20passing-2ea44f?style=flat-square" alt="914 tests passing">
+<a href="https://s0sta.com/Web3-Smart-Contract-Projects/"><img src="https://img.shields.io/badge/live%20dApps-28-22c3e6?style=flat-square" alt="28 live dApps"></a>
 <img src="https://img.shields.io/badge/license-MIT-16123a?style=flat-square" alt="MIT license">
 
-### 27 smart contract projects, from a simple token to full platforms.
+### 28 smart contract projects, from a simple token to full platforms.
 
 Each one has the contracts, the tests, a deploy script and a web app you can try.
 
-**[Try the live apps](https://s0sta.com/Web3-Smart-Contract-Projects/)** · **[All projects](#the-27-projects)** · **[Run the tests](#run-it-on-your-computer)** · **[Security](SECURITY.md)**
+**[Try the live apps](https://s0sta.com/Web3-Smart-Contract-Projects/)** · **[All projects](#the-28-projects)** · **[Run the tests](#run-it-on-your-computer)** · **[Security](SECURITY.md)**
 
 </div>
 
@@ -34,13 +34,13 @@ The projects go from **easy to hard** in 5 levels:
 | ⚙️ **2 · DeFi basics** | 06 – 10 | Staking, vesting, a DEX, a DAO, lending |
 | 🏛️ **3 · Real-world law** | 11 – 12 | Owners associations and property shares (Dubai) |
 | 🕌 **4 · Islamic finance** | 13 – 18 | Waqf, sukuk, takaful, murabaha, zakat, a regulated treasury |
-| 🏢 **5 · Full platforms** | 19 – 27 | Banking, exchange, payments, identity, supply chain, insurance, giving, energy |
+| 🏢 **5 · Full platforms** | 19 – 28 | Banking, exchange, payments, identity, supply chain, insurance, giving, energy, health |
 
 <p align="center">
   <a href="https://s0sta.com/Web3-Smart-Contract-Projects/"><img src=".github/assets/website.png" alt="The live dApps page: every project is a card with its tests, contract and a button to open the app" width="100%"></a>
 </p>
 
-## The 27 projects
+## The 28 projects
 
 Click a project name to see its code. **App** opens the live web app. **Contract** opens the main contract on Sepolia Etherscan.
 
@@ -105,6 +105,7 @@ Nine complete platforms, from banking to energy. Each one has 9 to 13 contracts 
 | 25 | [**Daman Insurance**](25-daman-insurance/) | Actuarial pricing, claims, parametric payouts, reinsurance and surplus. | 34 | [App](https://s0sta.com/Web3-Smart-Contract-Projects/daman/) · [Contract](https://sepolia.etherscan.io/address/0x0476a7b394C8325B810790B765bDEb909dc71cA9) |
 | 26 | [**Ataa Giving**](26-ataa-giving/) | Zakat on 7 asset classes, sadaqa, campaigns, sponsorships and donor tracking. | 36 | [App](https://s0sta.com/Web3-Smart-Contract-Projects/ataa/) · [Contract](https://sepolia.etherscan.io/address/0xeE9fd5f7b8Eb2250963F3d948fEcfc62D5A02018) |
 | 27 | [**Taqa Energy**](26-taqa-energy/) | Renewable-energy certificates, carbon credits and peer-to-peer energy trading. | 31 | [App](https://s0sta.com/Web3-Smart-Contract-Projects/taqa/) · [Contract](https://sepolia.etherscan.io/address/0xc183fA1628d408D63b754aA9F5A8bAFF0167fb25) |
+| 28 | [**Shifa Health**](28-shifa-healthcare/) | Patient-owned medical records, consent, e-prescriptions, visits and health-insurance claims. | 76 | [App](https://s0sta.com/Web3-Smart-Contract-Projects/shifa/) · [Contract](https://sepolia.etherscan.io/address/0xB4A139e894c752765d0c2FD69CBE538f1013cA20) |
 
 ## Run it on your computer
 
@@ -125,7 +126,7 @@ forge test
 ```
 
 Change `01-erc20-token` to any other project folder to test that project.
-GitHub Actions also builds and tests **all 27 projects** on every push ([see the runs](https://github.com/s0sta/Web3-Smart-Contract-Projects/actions/workflows/ci.yml)).
+GitHub Actions also builds and tests **all 28 projects** on every push ([see the runs](https://github.com/s0sta/Web3-Smart-Contract-Projects/actions/workflows/ci.yml)).
 
 ## What is in each project folder
 

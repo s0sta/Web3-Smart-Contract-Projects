@@ -38,6 +38,7 @@ jobs:
           - 24-silsila-supplychain
           - 25-daman-insurance
           - 26-taqa-energy
+          - 28-shifa-healthcare
           - 26-ataa-giving
     steps:
       - uses: actions/checkout@v4
